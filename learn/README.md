@@ -28,7 +28,7 @@
     + JS depends on global variable for linkage
     + global variables
 
- 
+
 
 ## Grammar
 + _names_
@@ -783,6 +783,8 @@
           return method.apply(that, arguments)
         }
       })
+
+
       ```
       + note
         + `spec` is private
@@ -790,7 +792,7 @@
 
 
 ## Arrays
-+ definition
++ _definition_
   + a linear allocation of memory
   + js does not have this kind of array, array in js is an object
 + _array literal_
@@ -829,3 +831,345 @@
 + _delete_
   + `delete numbers[2]`
     + leaves a hole in the array as `undefined`
+  + `numbers.splice(2, 1)`
+    + does not leave holes
++ _type_
+  + `typeof array = 'object'`  
+  ```js
+  var is_array = function(value){
+    return value &&
+        typeof value === 'object' &&
+        typeof value.length === 'number' &&
+        typeof value.splice === 'function' &&
+        !(value.propertyIsEnumerable('length'))
+  }
+  ```
++ _dimensions_
+  ```js
+  Array.dim = function(dimension, initial){
+    var a  = [], i;
+    for(i = 0; i < dimension; i++){
+      a[i] = initial;
+    }
+    return a;
+  }
+  // array containing 10 zeros
+  var a = Array.dim(10, 0);
+
+  Array.matrix = function(m, n, initial){
+    var a, i, j, mat = [];
+    for(i = 0; i < m; i++){
+      a = [];
+      for(j = 0; j < n; j++){
+        a[j] = initial;
+      }
+      mat[i] = a;
+    }
+    return mat
+  }
+
+  // 4x4 matrix with zeros
+  var matrx = Array.matrix(4, 4, 0)
+  ```
+
+
+## Regular Expression
++ example
+  ```js
+  var parse_url = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z])(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
+  var url = "http://www.ora.com:80/goodparts?q#fragment";
+  var result = parse_url.exec(url);
+  ```
+  + `^`: beginning of string
+  + `(?:([A-Za-z]+):)?`: scheme
+    + `(?:...)` indicates nono-capturing group
+    + `()?` indicates the group is optional
+    + `()`: capturing group, given a number starting from 1
+    + `[...]`: indicates a character class
+    + `+`: matched one or more times
+  + `(\/{0,3})`: slash
+    + `\/`: means `/` is matched literally
+    + `{0, 3}`: matched 0 to 3 times
+  + `([0-9.\-A-Za-z])`: hostname
+    + `\-`: escaped `-` to prevent confusion with range hyphen
+  + `(?::(\d+))?`: optional port number
+    + `\d`: digit character
+  + `(?:\/([^?#]*))?`: optional path
+    + `[^?#]`: character class includes all chars except for `?` and `#`
+    + `*`: matched zero or more times
+  + `(?:\?([^#]*))?`: optional query
+  + `(?:#(.*))?`: hash
+    + `.`: match any character except `\n`
+  + `$`: end of string
++ _construction_
+  + regex literal
+    + `/ regex / any of g,i,m
+    + enclosed in slashes,
+    + flags
+      + `g`: global, matched multiple times,
+      + `i`: insensitive (ignore character case)
+      + `m`: multiline (`^` and `$` match line-ending characters)
+    + `var my_regexp = /"(?:\\.|[^\\\"])*"/g`
+      + matches javascript string
+        + `\"` for matching starting and ending quotes
+        + `\.` for matching escaped chars , or
+        + `[^\\\"]` for matching any char other than `\` and `"`
+        + repeat 0 or more number of times
+  + `RegExp` constructor
+    + inputs a `string` hence
+      + double backslashes
+      + escape quotes
+    + `var my_regexp = new RegExp("\"(?:\\.|[^\\\\\\\"])*\"", 'g');`
+
+
+
+
+## Methods
+
++ `array.concat(item, ...)`
+  + produce new array with shallow copy with `item` append to it
++ `array.join(separator)`
+  + makes string from `array` by making string of each element of `array` and concat them with `separator`
++ `array.pop()`
+  + removes and return last element in `array`
+  + returns `undefined` if `array` is empty
++ `array.push(item, ...)`
+  + appends `item` to end of array
+  + returns new length of array
++ `array.reverse()`
+  + reverse order and return the `array`
++ `array.shift()`
+  + removes first element from `array` and returns it
+  + returns `undefined` if `array` is empty
++ `array.slice(start, end)`
+  + makes shallow copy of portion of an array at `array[start, end)`
++ `array.sort(comparefn)`
+  + sorts content in place
+    + default assume elements to be sorted are strings
+  + `comparefn(a,b){return a-b}`
+    + for sorting integer
+    + returns
+      + 0 if equal
+      + negative if first param should come first
+      + positive if second param should come first
+  + sorting simple values
+    ```js
+    var m = ['aa', 'bb', 4, 6, 9]
+    m.sort(function(a, b){
+      if(a === b){
+        return 0;
+      }
+      if(typeof a === typeof b){
+        return a < b ? -1 : 1;
+      }
+      return typeof a < typeof b ? -1 : 1
+    })
+    // m = [4, 6, 9, 'aa', 'bb']
+    ```
++ `array.splice(start, deleteCount, item, ...)`
+  + removes element from `array` replacing them with new items.
+  + used to delete elements from array
++ `array.unshfit(item...)`
+  + push `items` to front of array
+  + return length of new `array`
++ `function.apply(thisArg, argArray)`
+  + invokes `function`, passing in the object that will be bound to `this` and an optional array of args
+  ```js
+  Function.method('bind', function(that){
+    // return a function that will call this function
+    // as htough it is a method of that object
+    var method = this,
+        slice = Array.prototype.slice,
+        args = slice.apply(arguments, [1]);
+        return function(){
+          return method.apply(that,
+              args.concat(slice.apply(arguments, [0]))
+            )
+        }
+  })
+  ```
++ `number.toExponential(fractionDigits)`
+  + converts `number` to a string in exponential form
++ `number.toFixed(fractionDigits)`
+  + converts `number` to a stirng in decimal form
++ `number.toPrecision(precision)`
+  + converts `number` to a string in decimal form
++ `number.toString(radix)`
+  + converts `number` to string with given base `radix`
++ `object.hasOwnProperty(name)`
+  + return `true` if `object` contains property with `name`; prototype chain not hcecked.
++ `regexp.exec(string)`
+  + if `regexp` is matched to `string`, returns an array, with
+    + 0: substring that matched `regex`
+    + 1: group 1
+    + ...
+  + otherwise returns `null`
++ `regexp.test(string)`
+  + if `regexp` matches `string`
+    + return true
+  + otherwise return false
+  + `var b = /&.+;/.test('frank &amp; beans`);  // true
++ `string.charAt(pos)`
+  + returns character string at position `pos` in `string`,
+  + returns empty string if out of bound
++ `string.charCodeAt(pos)`
+  + return integer representation of code point value of char at position `pos` instead
+  + return `NaN` if out of bound
++ `string.concat(string...)`
+  + makes new string by concatenating other strings together
+  + same as `+` operator
++ `string.indexOf(searchString [, position])`
+  + search for `searchString` in `string`.
+  + return position of first matched char if found
+  + `-1` if not found
+  + `position`: search begin position
++ `string.lastIndexOf(searchString, position)`
+  + search from end of string instead
++ `string.localeCompare(that)`
+  + compares 2 strings
+  + return negative if `string` is less than `that`
+  + 0 if same,
+  + used for `array.sort`
++ `string.match(regexp)`
+  + matches a string with a regular expression
+  + if no `g` flag
+    + same as `regexp.exec(string)`
+  + otherwise
+    + produce an array of all matches but excludes the capturing group
++ `string.replace(searchVal, replaceVal)`
+  + search and replace
+  + searchVal
+    + string: first `searchVal` replaced
+      + `"mother_in_law:.replace('_', '-')` gives `mother-in_law`
+    + regexp with `g` flag: every `searchVal` replaced
++ `string.search(regexp)`
+  + like `indexOf` instead takes `regexp`
+  + return position of first char of first match
+  + return -1 ir not found
++ `string.slice(start, end)`
+  + makes a new string by copying part of another string
++ `string.split(separator, limit)`
+  + creates an array of strings by splitting `string` into pieces
+  + `separator` can be `string` or `regex`
+  + examples
+    +  `"012345".spit('', 3)   // ['0', '1', '2345']`
+    + `"192.168.1.0".split('.') // ['192', '168', '1', '0']`
++ `string.substring(start, end)`
+  + use `slice` instead
++ `string.toLocaleLowerCase()` `string.toLocaleUpperCase()`
+  + produce new string by converting `string` to loewrcase/upper using rules for locale
++ `String.fromCharCode(char ...)`
+  + produces a string from a series of numbers
+  + `String.fromCharCode(67, 97, 116)` gives `'Cat'`
+
+
+
+## Comments on Language design
++ Good part   
+  + Functions as first class objects
+    + functions are lambdas with lexical scoping
+  + dynamic object with prototypal inheritance
+    + objects are class-free
+    + add any new member by ordinary assignments
+  + object and array literals
+    + creation of objects and arrays are convenient
++ bad parts
+  + _global_
+    + create global variables
+      + `var foo = value`
+      + `window.foo = value` in browser
+      + `foo = value`: implied global (no `var` in statement)
+  + _scope_
+    + block-like syntax but not block scope
+      + variable declared in a block (i.e. `if`, `while`) is visible everywhere in the function containing the block
+  + `typeof`  
+    + returns a `string` that identifies type of operands
+    + examples
+      + `typeof 98.6` returns `'number'`
+      + `typeof null` returns `'object'` instead of `'null'`
+        + `typeof` cannot distinguish `null` and `object`
+        + use `my_value === null` to test for `null`
+    + testing a value for objectness
+      + note all objects are truthy and `null` is falsy
+      + `if (my_value && typeof my_value === 'object'){}`
+  + `NaN`
+    + not a number
+      + result of converting a string to a number when string is not a number
+      + i.e. `'oops'  // NaaN`
+    + cannot use `typeof` to test for `NaN`
+      + `typeof NaN === 'number'  // true`
+    + testing to itself? No!
+      + `NaN === NaN  //false`
+      + `NaN !== NaN  // true`
+    + use `isNaN` to test for `number` and `NaN`
+      + `isNaN(NaN) // true`
+    + `isFinite` rejects both `NaN` and `Infinity`
+  + _phony arrays_
+    + js object-like array pro/con
+      + never out of bound
+      + easy to use
+      + but poor performance
+    + test for array
+      + cannot use `typeof`,
+      + `if(my_value && typeof my_value === 'object' && typeof my_value.length === 'number' && !(my_value.propertyIsEnumerable('length'))){}`
+    + `arguments` is not an array, it is an object with `length` member
+  + _falsy values_
+    + js falsy values  
+      + `0`: number
+      + `NaN`: number
+      + `''`: string
+      + `false`: boolean
+      + `null`: object
+      + `undefined`: undefined
+  + _`==`_
+    + `===` and `!==` produce appropriate output if
+      + both operands are of same type and value
+    + `==` and `!=`
+      + does type coercian first
+      +  ![](assets/README-c4cba.png)
+  + _`continue`_
+    + jumps to top of loop, could be improved to remove the `continue` statement
+  + _block-less statements_
+    + `if` and `for` without using `{}`
+    + avoid it
+  + _function statement vs. expression_
+    + statement
+      + `function foo(){}`
+    + exprssion
+      + `var foo = function foo() {}`
+    + _hoisting_
+      + function is moved to top of scope in which it is defined.
+      + so dont have to declare function before it is used
+    + _module_
+      ```js
+      (function(){
+        var hidden_variables
+        // function introduces no new global variables
+      })();
+      ```
+  + _`new`_
+    + creates new object that inherits from operands' prototype member, then calls the operand, binding the operand to `this`
+    + if forget to use `new`, get an ordinary function call, and `this` is bound to global object instead
+      + will clobber global space when attempting to initialize new members
+    + convention
+      + functino intended to be used with `new` should be given names with capital letters
+
+
+
+## JSON
++ _Syntax_
+  + 6 values
+    + object
+    + array
+    + string
+      + in double quote
+      + `\` for escaping
+    + number
+    + boolean
+    + `null`
+  + unordered container of name/value pairs
+    + name must be string
+    + value can be any JSON value
+    + nested to arbitrary depth
+  + ![](assets/README-e6630.png)
+  + ![](assets/README-86a93.png)
