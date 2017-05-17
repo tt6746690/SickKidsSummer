@@ -1,70 +1,84 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import mygene
+#  import mygene
 from scipy import stats
 import numpy as np
 import json
-mg = mygene.MyGeneInfo()
+#  mg = mygene.MyGeneInfo()
 
-SAMPLE_ANNOTATION = "../data/annotation/GTEx_Data_V6_Annotations_SampleAttributesDS.txt"
-EXON_EXPR_DATA = "../data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_exon_reads.txt"
-EXON_REF = "../data/gencode.v19.genes.patched_contigs_exons.txt"
-PHENOTYPE_ANNOTATION = "../data/annotation/GTEx_Data_V6_Annotations_SubjectPhenotypesDS.txt"
+HPF_WD="/hpf/projects/brudno/wangpeiq/sickkids_summer/"
+SAMPLE_ANNOTATION = HPF_WD + "data/annotation/GTEx_Data_V6_Annotations_SampleAttributesDS.txt"
+EXON_EXPR_DATA = HPF_WD + "data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_exon_reads.txt"
+EXON_REF = HPF_WD + "data/gencode.v19.genes.patched_contigs_exons.txt"
+PHENOTYPE_ANNOTATION = HPF_WD + "data/annotation/GTEx_Data_V6_Annotations_SubjectPhenotypesDS.txt"
 
-DEST_STORE = "../resources/exon_expr/"
+DEST_STORE = HPF_WD + "resources/exon_expr/"
 
 # GENE_SYMBOL = "TNMD"
 # TISSUES = ["Muscle -  ", "Cells - Transformed fibroblasts"]
 # MIN_THRESHOLD = 20
 
 
-exon = pd.read_table(EXON_EXPR_DATA, nrows=10)
-smp_anno = pd.read_table(SAMPLE_ANNOTATION)
-smp_anno_extr = smp_anno[["SAMPID", "SMTSD"]]
+def getChunkAtomicGene(reader):
+    df = pd.concat(reader, ignore_index=True)
+    print(df)
+    return 0 
 
 
-# Convert ensemble gene id to gene symbol
-exon["ensemblGeneId"] = exon.apply(lambda row: row["Id"].split(".")[0], axis=1)
-
-missing_symbol_count = 0
-def convertToSymbol(row):
-    d = mg.getgene(row["ensemblGeneId"])
-    if(d == None):
-        global missing_symbol_count
-        missing_symbol_count += 1
-        return None
-    return d["symbol"]
-
-exon["symbol"] = exon.apply(convertToSymbol, axis=1)
-print("missing {} of gene_id -> symbol conversion".format(missing_symbol_count))
 
 
-# Join exon reference table with exon expression table
-exon_ref = pd.read_table(EXON_REF)
 
-exon_ref["Id"] = exon_ref["Gene"]
-del exon_ref["Gene"]
 
-exon = exon.set_index('Id').join(exon_ref.set_index('Id')).reset_index()
 
-# Create a exon_count column  
-exon["exon_count"] = exon.groupby("ensemblGeneId")["ensemblGeneId"].transform('count')
+#  exon = pd.read_table(EXON_EXPR_DATA)
+#
+#
+#  smp_anno = pd.read_table(SAMPLE_ANNOTATION)
+#  smp_anno_extr = smp_anno[["SAMPID", "SMTSD"]]
+#
+#
+#  # Convert ensemble gene id to gene symbol
+#  exon["ensemblGeneId"] = exon.apply(lambda row: row["Id"].split(".")[0], axis=1)
+#
+#  #  missing_symbol_count = 0
+#  #  def convertToSymbol(row):
+#  #      d = mg.getgene(row["ensemblGeneId"])
+#  #      if(d == None):
+#  #          global missing_symbol_count
+#  #          missing_symbol_count += 1
+#  #          return None
+#  #      return d["symbol"]
+#  #
+#  #  exon["symbol"] = exon.apply(convertToSymbol, axis=1)
+#  #  print("missing {} of gene_id -> symbol conversion".format(missing_symbol_count))
+#
+#
+#  # Join exon reference table with exon expression table
+#  exon_ref = pd.read_table(EXON_REF)
+#
+#  exon_ref["Id"] = exon_ref["Gene"]
+#  del exon_ref["Gene"]
+#
+#  exon = exon.set_index('Id').join(exon_ref.set_index('Id')).reset_index()
+#
+#  # Create a exon_count column
+#  exon["exon_count"] = exon.groupby("ensemblGeneId")["ensemblGeneId"].transform('count')
 
 
 # Get proper exon number based on strand +/-
 # Given id = ENSG00000000003.10_0, exon_num = 0
 # if strand -> + : exon += 1
 # if strand -> - : exon = exon_count - exon_num
-def getProperExonNumber(row):
-    if(row.strand == "+"):
-        return int(row.Id.split("_")[1]) + 1;
-    elif(row.strand == "-"):
-        return row.exon_count - int(row.Id.split("_")[1])
-    else:
-        raise Exception("invalid strand value (not +/-)")
-        
-exon["exon"] = exon.apply(getProperExonNumber, axis=1)
+#  def getProperExonNumber(row):
+#      if(row.strand == "+"):
+#          return int(row.Id.split("_")[1]) + 1;
+#      elif(row.strand == "-"):
+#          return row.exon_count - int(row.Id.split("_")[1])
+#      else:
+#          raise Exception("invalid strand value (not +/-)")
+#
+#  exon["exon"] = exon.apply(getProperExonNumber, axis=1)
 
 
 
@@ -81,14 +95,14 @@ def extractExprForOneGene(gid):
 
     # save gene specific metadata to dataframe._metadata
     genedata = {}
-    genedata["gene_symbol"] = df["symbol"].iloc[0]
+    #  genedata["gene_symbol"] = df["symbol"].iloc[0]
     genedata["ensembl_id"] = df["ensemblGeneId"].iloc[0]
     genedata["chr"] = df["CHR"].iloc[0]
 
     # Drop irrelevant rows
     df_t.columns = df_t.loc["exon"]
     df_t = df_t.drop(["ensemblGeneId",
-                      "symbol",
+                      #  "symbol",
                       "CHR",
                       "start",
                       "stop",
@@ -118,11 +132,12 @@ def extractExprForOneGene(gid):
     with open(DEST_STORE + gid, "w+") as fp:
         json.dump(genedata, fp)
 
+
+
     
 
-for gid in exon["ensemblGeneId"].unique().tolist():
-    extractExprForOneGene(gid)
-    break
+#  for gid in exon["ensemblGeneId"].unique().tolist():
+#      extractExprForOneGene(gid)
 
 
 
@@ -220,5 +235,6 @@ def plotBarGraph(plotd):
 # plotd = getDataForPlot(subs)
 
 
-
- 
+if __name__ == "__main__":
+    reader = pd.read_table(EXON_EXPR_DATA, enginee='c', nrows=120, chunksize=50, iterator=True)
+    getChunkAtomicGene(reader)
