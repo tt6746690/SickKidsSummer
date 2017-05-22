@@ -1,5 +1,12 @@
 ./node_modules/**
-data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_exon_reads.txt
 .DS_Store
+
+./data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_exon_reads.txt
 ./resources/exon_expr
 ./analysis/qsub.sh.*
+
+__pycache__
+.idea/*
+*.pyc
+
+
