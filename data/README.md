@@ -58,7 +58,8 @@
         + `AGE`
         + `GENDER`
         + ...
-+ _exon expression data_
++ `GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_exon_reads.txt`
+    + exon expression data
     + 300000 exons x 8556 samples
     + data unnormalized. 
         + If a read overlapped multiple exons, then a fractional value equal to the portion of read contained within that exon was allotted
