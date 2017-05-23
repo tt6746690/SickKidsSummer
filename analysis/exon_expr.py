@@ -24,7 +24,6 @@ STORAGE_MAPPING = WD + "resources/mapping"
 # MIN_THRESHOLD = 20
 
 
-
 smp_anno = pd.read_table(SAMPLE_ANNOTATION)
 smp_anno_extr = smp_anno[["SAMPID", "SMTSD"]]
 
@@ -32,7 +31,6 @@ smp_anno_extr = smp_anno[["SAMPID", "SMTSD"]]
 exon_ref = pd.read_table(EXON_REF)
 exon_ref["Id"] = exon_ref["Gene"]
 del exon_ref["Gene"]
-
 
 
 # Get proper exon number based on strand +/-
@@ -51,29 +49,21 @@ def processOne(exon, line_num):
 
     gid = exon["ensemblGeneId"].iloc[0]
 
+    # exon_count is number of exon per gene; exon indicates proper exon enumeratinon 
     exon = exon.set_index('Id').join(exon_ref.set_index('Id')).reset_index()
-
-    # Create a exon_count column
     exon["exon_count"] = exon.groupby("ensemblGeneId")["ensemblGeneId"].transform('count')
     exon["exon"] = exon.apply(getProperExonNumber, axis=1)
 
-    # subset based on symbol == already subsetted
-    # df = exon.loc[
-    #     (exon["ensemblGeneId"] == gid)
-    # ]
-
+    # dataframe transposed
     df_t = exon.transpose()
     
     # save gene specific metadata to dataframe._metadata
     genedata = {}
-    #  genedata["gene_symbol"] = df["symbol"].iloc[0]
     genedata["ensembl_id"] = exon["ensemblGeneId"].iloc[0]
-    genedata["chr"] = exon["CHR"].iloc[0]
 
     # Drop irrelevant rows
     df_t.columns = df_t.loc["exon"]
     df_t = df_t.drop(["ensemblGeneId",
-                      #  "symbol",
                       "CHR",
                       "start",
                       "stop",
@@ -81,16 +71,12 @@ def processOne(exon, line_num):
                       "exon_count",
                       "exon",
                       "Id"])
-    
 
     # Group gene-specific exon expression by tissue type
     # End result a 53 (SMTSD) x ~10 (exon_counts), each cell holds an array
     # merge with sample annotation (specifically SMTSD, tissue type detail)
     # Note merging tables has to be done in this step!
-    df_tissue = df_t.join(smp_anno_extr.set_index('SAMPID')).set_index("SMTSD")
-
-
-
+    df_m = df_t.join(smp_anno_extr.set_index('SAMPID')).set_index("SMTSD")
 
     # populate list by tissue type
     # all_tissue_expr = { exon_num: {tissueType: [ expr...], ...} }
