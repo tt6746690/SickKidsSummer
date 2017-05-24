@@ -8,5 +8,6 @@ analysis/qsub.sh.*
 __pycache__/
 .idea/*
 *.pyc
+.ipynb_checkpoints/
 
 
