@@ -1,3 +1,0 @@
-export FLASK_APP=sickkidsproj
-export FLASK_DEBUG=true
-# pip3 install -e .

@@ -1,7 +1,7 @@
 from re import match
 from os import path
 
-from flask import redirect, url_for
+from flask import redirect, url_for, render_template
 
 from sickkidsproj import app, db
 from sickkidsproj.models import ExonReadsMapping
@@ -9,15 +9,14 @@ from sickkidsproj.models import ExonReadsMapping
 
 @app.route('/')
 def index():
-    mapping = ExonReadsMapping.query.all()
-    return '\n'.join([m.ensembl_id for m in mapping])
+    return render_template('index.html')
 
 
-@app.route('/api/gene/<ensembl_id>')
-def gene_exonreads(ensembl_id):
+@app.route('/api/exon_expr/<ensembl_id>', methods=['GET'])
+def gene_exonreads(ensembl_id=None):
 
     if match('^ENSG[\d]{11}$', ensembl_id) is None:
-        return redirect(url_for('not_found'))
+        return abort(404)
 
     mapping = ExonReadsMapping.query \
         .filter_by(ensembl_id = ensembl_id) \
@@ -28,6 +27,6 @@ def gene_exonreads(ensembl_id):
         return f.read()
 
 
-@app.route('/not_found')
-def nout_found():
+@app.errorhandler(404)
+def page_not_found(error):
     return "Resource not found page.."
