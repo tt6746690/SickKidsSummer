@@ -11,11 +11,18 @@ class BaseConfig(object):
     
     # setting up directory for serving templates/static files
     TEMPLATE_FOLDER = path.realpath(path.join(basedir, "static"))
-    STATIC_FOLDER = path.join(TEMPLATE_FOLDER, "dist")
+    STATIC_FOLDER  = path.realpath(path.join(basedir, "static"))
 
     # resources
     DATA_RESOURCES_DIR = path.realpath(path.join(basedir, "resources"))
+
+    # exon reads
     EXON_READS_MAPPING = path.join(DATA_RESOURCES_DIR, "mapping.rel")
+
+    # gene panels
+    GENE_PANEL_DIR = path.join(DATA_RESOURCES_DIR, "gene_panels")
+    GENE_PANEL_LIST = path.join(GENE_PANEL_DIR, "gene_panel_list")
+
 
 class ProductionConfig(BaseConfig):
     """dev config"""

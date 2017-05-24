@@ -9,7 +9,8 @@ from sickkidsproj.config import BaseConfig, DevConfig
 
 app = Flask(__name__, 
             static_folder=BaseConfig.STATIC_FOLDER, 
-            template_folder=BaseConfig.TEMPLATE_FOLDER)
+            template_folder=BaseConfig.TEMPLATE_FOLDER,
+            static_url_path='/static/')
 
 app.config.from_object(DevConfig)
 

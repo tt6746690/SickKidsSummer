@@ -1,7 +1,8 @@
 from re import match
-from os import path
+import os
+import json
 
-from flask import redirect, url_for, render_template
+from flask import redirect, url_for, render_template, jsonify
 
 from sickkidsproj import app, db
 from sickkidsproj.models import ExonReadsMapping
@@ -9,7 +10,40 @@ from sickkidsproj.models import ExonReadsMapping
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return app.send_static_file('index.html')
+
+
+@app.route('/api/gene_panels/gene_panel_list', methods=['GET'])
+def get_gene_panel_list():
+    """ Get a list of file names as available gene panels 
+        under app.config["GENE_PANEL_DIR"]"""
+
+    with open(app.config["GENE_PANEL_LIST"], 'r') as f:
+        return jsonify([panel.strip() for panel in f])
+
+
+@app.route('/api/gene_panels/<gene_panel>', methods=['GET'])
+def get_gene_panel(gene_panel):
+    """ Get a list of genes associated with gene_panel
+    @rType dict: 
+    {
+        {
+            "ensembl_id": "ENSG00000138435",
+            "symbol": "CHRNA1"
+        },
+        ...  
+    }
+    """
+    fp = os.path.join(app.config["GENE_PANEL_DIR"], gene_panel)
+    with open(fp, 'r') as f:
+        l = []
+        for line in f:
+            pair = line.split('\t')
+            l.append({
+                "symbol": pair[0].strip(),
+                "ensembl_id": pair[1].strip()
+                })
+        return jsonify(l)
 
 
 @app.route('/api/exon_expr/<ensembl_id>', methods=['GET'])
@@ -22,9 +56,16 @@ def gene_exonreads(ensembl_id=None):
         .filter_by(ensembl_id = ensembl_id) \
         .first()
 
-    fp = path.realpath(path.join(app.config['DATA_RESOURCES_DIR'], mapping.store_path))
+    fp = os.path.realpath(os.path.join(app.config['DATA_RESOURCES_DIR'], mapping.store_path))
     with open(fp, 'r') as f:
-        return f.read()
+        return json.dumps(json.loads(f.read()))
+
+@app.route('/static/<path:path>')
+def send_dist(path):
+    """ serving files from config["STATIC_FOLDER"]
+        @param path: rel path from static folder
+    """
+    return app.send_static_file(path)
 
 
 @app.errorhandler(404)

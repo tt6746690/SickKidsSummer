@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "outDir": "./dist/",
+        "sourceMap": true, 
         "removeComments": true,
         "allowJs": true,
         "module": "commonjs",

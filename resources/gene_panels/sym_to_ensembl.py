@@ -4,13 +4,13 @@ mg = mygene.MyGeneInfo()
 
 
 CONGENITAL_MYOPATHY = "./Congenital Myopathies.txt"
-CONGENITAL_MYOPATHY_OUT = "./congenital_myopathy.ensembl"
+CONGENITAL_MYOPATHY_OUT = "./congenital_myopathy"
 
 CONGENITAL_MUSCULAR_DYSTROPHY = "./Congential Muscular Dystrophies.txt"
-CONGENITAL_MUSCULAR_DYSTROPHY_OUT = "./congenital_myopathy_dystrophy.ensembl"
+CONGENITAL_MUSCULAR_DYSTROPHY_OUT = "./congenital_myopathy_dystrophy"
 
 CONGENITAL_MYASTHENIC_MYOPATHY = "./Congenital Myasthenic Myopathies.txt"
-CONGENITAL_MYASTHENIC_MYOPATHY_OUT = "./congenital_myasthenic_myopathies.ensembl"
+CONGENITAL_MYASTHENIC_MYOPATHY_OUT = "./congenital_myasthenic_myopathies"
 
 
 def sym_to_ensembl(sym_fp, out_fp):
