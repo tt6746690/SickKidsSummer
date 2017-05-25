@@ -6,6 +6,7 @@ from flask import redirect, url_for, render_template, jsonify
 
 from sickkidsproj import app, db
 from sickkidsproj.models import ExonReadsMapping
+from sickkidsproj.cors import crossdomain
 
 
 @app.route('/')
@@ -14,6 +15,7 @@ def index():
 
 
 @app.route('/api/gene_panels/gene_panel_list', methods=['GET'])
+@crossdomain(origin='*')
 def get_gene_panel_list():
     """ Get a list of file names as available gene panels 
         under app.config["GENE_PANEL_DIR"]"""
@@ -23,6 +25,7 @@ def get_gene_panel_list():
 
 
 @app.route('/api/gene_panels/<gene_panel>', methods=['GET'])
+@crossdomain(origin='*')
 def get_gene_panel(gene_panel):
     """ Get a list of genes associated with gene_panel
     @rType dict: 
@@ -47,6 +50,7 @@ def get_gene_panel(gene_panel):
 
 
 @app.route('/api/exon_expr/<ensembl_id>', methods=['GET'])
+@crossdomain(origin='*')
 def gene_exonreads(ensembl_id=None):
 
     if match('^ENSG[\d]{11}$', ensembl_id) is None:
