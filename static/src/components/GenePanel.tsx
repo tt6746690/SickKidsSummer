@@ -1,9 +1,10 @@
 import * as React from "react"
 import 'whatwg-fetch'
 
-import { Grid, Row, Col } from 'react-bootstrap'
+import { Grid, Row, Col, Button, ButtonGroup } from 'react-bootstrap'
 
 import GenePanelListing from  "./GenePanelListing"
+import TissueSiteListing from "./TissueSiteListing"
 import GenePanelContent from "./GenePanelContent"
 
 class GenePanel extends React.Component<any, any>{
@@ -13,9 +14,33 @@ class GenePanel extends React.Component<any, any>{
         this.state = {
             panelListing: [],
             panelGeneList: [],
-            exon_expr: {}
+            gene: {}, 
+            tissueSiteList: [],
+            selected: {
+                tissues: [],
+                genes: []
+            }
         }
     }
+
+    componentDidMount() {
+        fetch('http://127.0.0.1:5000/api/gene_panels/gene_panel_list', { mode: 'cors' })
+            .then((response) => response.json())
+            .then((json) => {
+                this.setState((prevState) => {
+                    return { ...prevState, panelListing: json }
+                })
+            })
+
+        fetch('http://127.0.0.1:5000/api/exon_expr/tissue_site_list', { mode: 'cors' })
+            .then((response) => response.json())
+            .then((json) => {
+                this.setState((prevState) => {
+                    return { ...prevState, tissueSiteList: json }
+                })
+            })
+    }
+
 
     onGenePanelSelect = (eventKey) => {
         fetch('http://127.0.0.1:5000/api/gene_panels/' + eventKey, { mode: 'cors' })
@@ -32,20 +57,21 @@ class GenePanel extends React.Component<any, any>{
             .then((response) => response.json())
             .then((json) => {
                 this.setState((prevState) => {
-                    return { ...prevState, exon_expr: json }
+                    return { ...prevState, gene: json }
                 })
             })
-        console.log(this.state.exon_expr)
     }
 
-    componentDidMount(){
-        fetch('http://127.0.0.1:5000/api/gene_panels/gene_panel_list', { mode: 'cors' })
-            .then((response) => response.json())
-            .then((json) => {
-                this.setState((prevState) => {
-                    return { ...prevState, panelListing: json }
-                })
-            })
+
+    onTissueListSelect = (eventKey) => {
+        this.setState((prevState) => {
+            return { 
+                ...prevState, 
+                selected: {
+                    tissues: [ ...prevState.selected.tissues, eventKey]
+                }
+            }
+        })
     }
 
     render() {
@@ -53,8 +79,9 @@ class GenePanel extends React.Component<any, any>{
             <Row className="GenePanel" >
                 <Col xs={1} >
                     <GenePanelListing panelListing={this.state.panelListing} genePanelSelect={this.onGenePanelSelect}/> 
+                    <TissueSiteListing tissueSiteList={this.state.tissueSiteList} tissueSiteSelect={this.onTissueListSelect}/>
                 </Col>
-                <Col xs={10} xsOffset={2} >
+                <Col xs={9} xsOffset={1} >
                     <GenePanelContent panelGeneList={this.state.panelGeneList} panelGeneClick={this.onPanelGeneClick}/>
                 </Col>
             </Row>

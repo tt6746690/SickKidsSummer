@@ -48,6 +48,12 @@ def get_gene_panel(gene_panel):
                 })
         return jsonify(l)
 
+@app.route('/api/exon_expr/tissue_site_list', methods=['GET'])
+@crossdomain(origin='*')
+def get_tissue_sites():
+    with open(app.config["TISSUE_SITE_LIST"], 'r') as f:
+        return jsonify([site.strip() for site in f])
+
 
 @app.route('/api/exon_expr/<ensembl_id>', methods=['GET'])
 @crossdomain(origin='*')

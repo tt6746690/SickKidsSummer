@@ -12,7 +12,7 @@ class GenePanelListing extends React.Component<any, any>{
             </MenuItem>
         )
         return (
-            <DropdownButton title="GenePanels" id="bg-nested-dropdown" onSelect={this.props.genePanelSelect}>
+            <DropdownButton title="Gene Panels" id="bg-nested-dropdown" onSelect={this.props.genePanelSelect}>
                 {panelListing}
             </DropdownButton>
         )

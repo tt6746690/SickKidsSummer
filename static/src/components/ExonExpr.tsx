@@ -1,4 +1,4 @@
-import * as React from "react"
+/*import * as React from "react"
 import * as ReactDOM from "react-dom"
 
 import { Jumbotron, Grid } from 'react-bootstrap';
@@ -12,4 +12,4 @@ const ExonExprPlot = (
         </Grid>
 )
 
-export default App
+export default */
