@@ -13,9 +13,9 @@ class GenePanel extends React.Component<any, any>{
         super(props)
         this.state = {
             panelListing: [],
+            tissueSiteList: [],
             panelGeneList: [],
             gene: {}, 
-            tissueSiteList: [],
             selected: {
                 tissues: [],
                 genes: []
