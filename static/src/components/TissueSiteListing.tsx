@@ -5,7 +5,7 @@ import { DropdownButton, MenuItem } from 'react-bootstrap'
 class TissueSiteListing extends React.Component<any, any>{
 
     render() {
-        const tissueSiteList = this.props.tissueSiteList.map((tissue, index) =>
+        const tissueSiteList = this.props.tissueSiteListing.map((tissue, index) =>
             <MenuItem eventKey={tissue} key={index.toString()}>
                 {tissue}
             </MenuItem>

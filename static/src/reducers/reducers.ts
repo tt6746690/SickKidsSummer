@@ -8,7 +8,7 @@ import { ADD_GENE,
         TOGGLE_TISSUE_SITE } from "./actions"
 
 
-import { geneEntity, genePanelEntity, tissueSiteEntity, stateInterface } from './interfaces'
+import { geneEntity, genePanelEntity, tissueSiteEntity, stateInterface } from '../interfaces'
 
 
 function toggleGeneReducer(state, action){
@@ -72,7 +72,8 @@ function ui(state, action){
 }
 
 
-function pushGene(state: geneEntity[], action){
+function pushGene(state: geneEntity[] = [], action){
+
     return [ 
         ...state, {
             ensemblId: action.ensemblId,
@@ -83,7 +84,7 @@ function pushGene(state: geneEntity[], action){
     ]
 }
 
-function pushGenePanel(state: genePanelEntity[], action) {
+function pushGenePanel(state: genePanelEntity[] = [], action) {
     return [
         ...state, {
             genePanelId: action.genePanelId,
@@ -92,7 +93,7 @@ function pushGenePanel(state: genePanelEntity[], action) {
     ]
 }
 
-function pushTissueSite(state: tissueSiteEntity[], action){
+function pushTissueSite(state: tissueSiteEntity[] = [], action){
     return [
         ...state, {
             tissueSiteId: action.tissueSiteId
@@ -102,17 +103,24 @@ function pushTissueSite(state: tissueSiteEntity[], action){
 
 
 function entities(state, action){
+
     switch(action.type){
         case ADD_GENE: 
             return {
-                ...state, 
+                ...state,
                 gene: pushGene(state.gene, action)
             }
         case ADD_GENE_PANEL: 
-            return {
-                ...state, 
-                genePanel: pushGenePanel(state.genePanel, action)
+
+            // add to gene panel if there is not one already
+            // otherwise fallout to default
+            if (state.genePanel.findIndex((e) => e.genePanelId == action.genePanelId) == -1){
+                return {
+                    ...state,
+                    genePanel: pushGenePanel(state.genePanel, action)
+                }
             }
+           
         case ADD_TISSUE_SITE:
             return {
                 ...state,

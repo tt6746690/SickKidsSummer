@@ -27,7 +27,7 @@ export interface stateInterface {
     },
     ui: {
         select: {
-            genePanel: genePanelEntity,
+            genePanel: string,
             gene: geneEntity[],
             tissueSite: tissueSiteEntity[]
         }

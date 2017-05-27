@@ -1,4 +1,4 @@
-import { geneEntity, genePanelEntity, tissueSiteEntity, stateInterface } from './interfaces'
+import { geneEntity, genePanelEntity, tissueSiteEntity, stateInterface } from '../interfaces'
 
 // actionTypes
 
