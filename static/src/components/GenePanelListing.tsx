@@ -7,8 +7,8 @@ class GenePanelListing extends React.Component<any, any>{
 
     render(){
         const panelListing = this.props.panelListing.map((panel, index) =>
-            <MenuItem eventKey={panel} key={index.toString()}>
-                {panel}
+            <MenuItem eventKey={panel.genePanelId} key={index.toString()}>
+                {panel.genePanelId}
             </MenuItem>
         )
         return (

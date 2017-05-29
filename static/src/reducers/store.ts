@@ -14,26 +14,41 @@ import rootReducer from './reducers'
 
 
 let defaultState = {
-    entities: {},
+    entities: {
+        genePanel: [],
+        gene: [],
+        tissueSite: []
+    },
     ui: {
-        select: {}
+        select: {
+            genePanel: "",
+            gene: [],
+            tissueSite: []
+        }
     }
 }
 
 
-const hydrateInitialState = (state) => {
+
+const hydrateInitialState = (store) => {
+
+    console.log("hydrate initial state...")
 
     let fetchPanelListPromise = fetch('http://127.0.0.1:5000/api/gene_panels/gene_panel_list', { mode: 'cors' })
         .then((response) => response.json())
         .then((json) => {
 
+            console.log("fetch: success in gene panel list")
             if (typeof json !== 'undefined' && json.length > 0){
-                state.entities.genePanel = json.map((genePanel) => {
-                    return {
+                json.map((genePanel) => {
+                    console.log("loop: ", genePanel)
+                    store.dispatch(addGenePanel({
                         genePanelId: genePanel
-                    }
+                    }))
+                    console.log("loop: after dispatch ", genePanel)
                 })
-                state.ui.select.genePanel = json[0]
+
+                store.dispatch(selectGenePanel(json[0]))
             }
             
         })
@@ -44,10 +59,10 @@ const hydrateInitialState = (state) => {
         .then((json) => {
 
             if (typeof json !== 'undefined' && json.length > 0) {
-                state.entities.tissueSite = json.map((tissueSite) => {
-                    return {
+                json.map((tissueSite) => {
+                    store.dispatch(addTissueSite({
                         tissueSiteId: tissueSite
-                    }
+                    }))
                 })
             } 
 
@@ -55,13 +70,16 @@ const hydrateInitialState = (state) => {
         .catch(() => console.log("fetch: /api/exon_expr/tissue_site_list"))
 
     Promise.all([fetchPanelListPromise, fetchTissueSitePromise])
-    return { ...state }
+
+    setTimeout(()=>{}, 2000)
 }
 
 
-let preloadedState = hydrateInitialState(defaultState)
-let store = createStore(rootReducer, preloadedState)
-
+// let preloadedState = hydrateInitialState(defaultState)
+let store = createStore(rootReducer, defaultState)
 let unsubscribe = store.subscribe(() => { console.log(store.getState()) })
+
+// hydrateInitialState(store)
+
 
 export default store

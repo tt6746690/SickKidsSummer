@@ -3,25 +3,64 @@ import { connect } from 'react-redux'
 import GenePanel from '../components/GenePanel'
 
 import { stateInterface } from '../interfaces'
-import { addGene, addGenePanel, selectGenePanel, 
-        toggleGene, toggleTissueSite } from '../reducers/actions'
+import { addGene, addGenePanel, addTissueSite,
+        selectGenePanel, toggleGene, toggleTissueSite } from '../reducers/actions'
 
 
 // transform current redux store state into component props
 const mapStateToProps = (state: stateInterface) => {
-
-    console.log("mapStateToProps", state.entities.genePanel, state.entities.tissueSite)
-
     return {
         genePanelListing: state.entities.genePanel,
         tissueSiteListing: state.entities.tissueSite,
-        panelGeneList: state.entities.gene
+        gene: state.entities.gene,
+        selectedGenePanel: state.ui.select.genePanel
     }
 }
 
 // receives dispath() function and returns callback props for injection
 const mapDispatchToProps = (dispatch) => {
     return {
+        /*
+            Initial state hydration, fetch
+            -- tissueSites
+            -- genePanels
+        */
+        onComponentWillMount: () => {
+
+            fetch('http://127.0.0.1:5000/api/exon_expr/tissue_site_list', { mode: 'cors' })
+                .then((response) => response.json())
+                .then((json) => {
+
+                    if (typeof json !== 'undefined' && json.length > 0) {
+                        json.map((tissueSite) => {
+                            dispatch(addTissueSite({
+                                tissueSiteId: tissueSite
+                            }))
+                        })
+                    }
+
+                })
+                .catch((err) => console.log("fetch: ", err))
+
+
+            fetch('http://127.0.0.1:5000/api/gene_panels/gene_panel_list', { mode: 'cors' })
+                .then((response) => response.json())
+                .then((json) => {
+
+                    if (typeof json !== 'undefined' && json.length > 0) {
+                        json.map((genePanel) => {
+                            dispatch(addGenePanel({
+                                genePanelId: genePanel
+                            }))
+                        })
+
+                        dispatch(selectGenePanel(json[0]))
+                    }
+
+                })
+                .catch((err) => console.log("fetch: ", err))
+        },
+
         /*
             Selecting a gene panel triggers 3 types of actions
             -- updates currently selected gene panel in ui.select.genePanel, and 
@@ -50,6 +89,8 @@ const mapDispatchToProps = (dispatch) => {
                     })
                     
                 })
+                .catch((err) => console.log("fetch: ", err))
+
         },
         /*
             Selecting a tissue toggles the currently selected tissueSite
@@ -74,9 +115,10 @@ const mapDispatchToProps = (dispatch) => {
                 .then((exonExpr) => {
                     dispatch(addGene({
                         ensemblId, 
-                        exonExpr 
+                        exonExpr: exonExpr.exon_expression 
                     }))
                 })
+                .catch((err) => console.log("fetch: ", err))
             
             // fetch on geneExpr here
         }
