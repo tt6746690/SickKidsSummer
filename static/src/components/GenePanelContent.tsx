@@ -16,13 +16,12 @@ class GenePanelContent extends React.Component<any, any>{
 
         // returns undefined if not found
         const filteredGenePanel = this.props.genePanelListing.find((panel) => {
-            return panel.genePanelId == this.props.selectedGenePanel
+            return panel.genePanelId === this.props.selectedGenePanel
         })
-
 
         if(filteredGenePanel){
             panelGeneButtons = filteredGenePanel.panelGenes.map((ensemblId, index) => {
-                let geneInfo = this.props.gene.find((gene) => gene.ensemblId == ensemblId)
+                let geneInfo = this.props.gene.find((gene) => gene.ensemblId === ensemblId)
 
                 if(geneInfo){
                     return (

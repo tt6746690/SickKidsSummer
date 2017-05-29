@@ -17,7 +17,7 @@ export const TOGGLE_TISSUE_SITE = 'TOGGLE_TISSUE_SITE'
 
 // actionCreators
 export function addGene(
-    { ensemblId, geneSymbol ="", geneExpr = {}, exonExpr = {} }: geneEntity){
+    { ensemblId, geneSymbol = "", geneExpr = {}, exonExpr = {} }: geneEntity){
     return {
         type: ADD_GENE,
         ensemblId,
