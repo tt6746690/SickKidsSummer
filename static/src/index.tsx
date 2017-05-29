@@ -11,9 +11,7 @@ import GenePanelContainer from './containers/GenePanelContainer'
 
 const App = (props) => (
     <Jumbotron>
-        <Grid>
-            <GenePanelContainer />
-        </Grid>
+        <GenePanelContainer />
     </Jumbotron>
 )
 

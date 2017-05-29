@@ -25,7 +25,10 @@ class GenePanelContent extends React.Component<any, any>{
 
                 if(geneInfo){
                     return (
-                        <Button value={geneInfo.ensemblId} key={index.toString()} onClick={this.props.onPanelGeneClick}>
+                        <Button value={geneInfo.ensemblId} 
+                                key={index.toString()} 
+                                onClick={this.props.onPanelGeneClick}
+                                bsStyle={(this.props.selectedGene.includes(geneInfo.ensemblId)) ? "success": "default"}>
                             {geneInfo.geneSymbol.toUpperCase()}
                         </Button>
                     )

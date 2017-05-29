@@ -6,12 +6,17 @@ class TissueSiteListing extends React.Component<any, any>{
 
     render() {
         const tissueSiteList = this.props.tissueSiteListing.map((tissue, index) =>
-            <MenuItem eventKey={tissue.tissueSiteId} key={index.toString()}>
+            <MenuItem eventKey={tissue.tissueSiteId} 
+                      key={index.toString()}
+                      active={this.props.selectedTissueSite.includes(tissue.tissueSiteId)}>
                 {tissue.tissueSiteId}
             </MenuItem>
         )
         return (
-            <DropdownButton title="Tissue Types" id="bg-nested-dropdown" onSelect={this.props.tissueSiteSelect}>
+            <DropdownButton title="Tissue Types" 
+                            id="bg-nested-dropdown" 
+                            onSelect={this.props.tissueSiteSelect}
+                            className="tissueSiteListing">
                 {tissueSiteList}
             </DropdownButton>
         )

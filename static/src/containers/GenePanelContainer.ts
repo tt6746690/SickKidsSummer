@@ -13,7 +13,9 @@ const mapStateToProps = (state: stateInterface) => {
         genePanelListing: state.entities.genePanel,
         tissueSiteListing: state.entities.tissueSite,
         gene: state.entities.gene,
-        selectedGenePanel: state.ui.select.genePanel
+        selectedGenePanel: state.ui.select.genePanel,
+        selectedGene: state.ui.select.gene,
+        selectedTissueSite: state.ui.select.tissueSite
     }
 }
 

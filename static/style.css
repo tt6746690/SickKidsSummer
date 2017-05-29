@@ -1,0 +1,6 @@
+
+/* restrict dropdown size */
+.tissueSiteListing + ul {
+    max-height: 400px;
+    overflow-y: auto;
+}
