@@ -2,7 +2,7 @@ import {
     SELECT_GENE_PANEL,
     TOGGLE_GENE,
     TOGGLE_TISSUE_SITE
-} from "./actions"
+} from "./Actions"
 
 
 import { geneEntity, genePanelEntity, tissueSiteEntity, stateInterface } from '../interfaces'

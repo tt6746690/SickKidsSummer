@@ -1,8 +1,8 @@
 import 'whatwg-fetch'
 import { createStore } from 'redux'
 
-import { stateInterface } from '../interfaces'
-import rootReducer from '../reducers/root'
+import { stateInterface } from '../Interfaces'
+import rootReducer from '../reducers/Root'
 
 /* 
     Testing reducer with 

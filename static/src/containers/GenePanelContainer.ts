@@ -2,9 +2,9 @@ import { connect } from 'react-redux'
 
 import GenePanel from '../components/GenePanel'
 
-import { stateInterface } from '../interfaces'
+import { stateInterface } from '../Interfaces'
 import { addGene, addGenePanel, addTissueSite,
-        selectGenePanel, toggleGene, toggleTissueSite } from '../reducers/actions'
+        selectGenePanel, toggleGene, toggleTissueSite } from '../reducers/Actions'
 
 
 // transform current redux store state into component props

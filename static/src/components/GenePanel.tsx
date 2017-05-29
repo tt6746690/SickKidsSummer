@@ -41,9 +41,14 @@ class GenePanel extends React.Component<any, any>{
                     </Col>
                 </Row>
 
-                <Row> 
-                    <Col xs={10}>
-                        <BarPlot />
+                <Row className="BarPlot"> 
+                    <Col xs={10} xsOffset={1}>
+                        <BarPlot selectedGenePanel={this.props.selectedGenePanel} 
+                                 selectedGene={this.props.selectedGene}
+                                 selectedTissueSite={this.props.selectedTissueSite}
+
+
+                                 />
                     </Col>
                 </Row>
             </Grid>

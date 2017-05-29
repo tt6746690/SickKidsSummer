@@ -1,7 +1,7 @@
-import entities from "./entities"
-import ui from "./ui"
+import entities from "./Entities"
+import ui from "./Ui"
 
-import { stateInterface } from "../interfaces"
+import { stateInterface } from "../Interfaces"
 
 export default function rootReducer(state: stateInterface, action) {
 

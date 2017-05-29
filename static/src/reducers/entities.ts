@@ -2,7 +2,7 @@ import {
     ADD_GENE,
     ADD_GENE_PANEL,
     ADD_TISSUE_SITE
-} from "./actions"
+} from "./Actions"
 
 
 import { geneEntity, genePanelEntity, tissueSiteEntity, stateInterface } from '../interfaces'

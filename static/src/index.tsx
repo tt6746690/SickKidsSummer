@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { Jumbotron, Grid } from 'react-bootstrap'
 
 // import GenePanel from './components/GenePanel'
-import store from './store/store'
+import store from './store/Store'
 import GenePanelContainer from './containers/GenePanelContainer'
 
 
