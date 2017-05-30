@@ -47,6 +47,7 @@ class GenePanel extends React.Component<any, any>{
                                  selectedGene={this.props.selectedGene}
                                  selectedTissueSite={this.props.selectedTissueSite}
 
+                                 gene={this.props.gene}
 
                                  />
                     </Col>

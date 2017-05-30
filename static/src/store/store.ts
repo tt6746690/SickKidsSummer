@@ -11,7 +11,7 @@ import rootReducer from '../reducers/Root'
     -- unsubscribe()
 */
 
-let defaultState = {
+let defaultState: stateInterface = {
     entities: {
         genePanel: [],
         gene: [],

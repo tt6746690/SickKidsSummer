@@ -6,6 +6,7 @@ import {
 
 
 import { geneEntity, genePanelEntity, tissueSiteEntity, stateInterface } from '../interfaces'
+import { isEmptyObject } from "../utils/Utils"
 
 
 function pushGene(state: geneEntity[] = [], action) {
@@ -22,12 +23,13 @@ function pushGene(state: geneEntity[] = [], action) {
     } else {
         return state.map((gene) => {
             if (gene.ensemblId === action.ensemblId) {
+
                 return {
                     ...gene,
                     ensemblId: action.ensemblId,
                     geneSymbol: (gene.geneSymbol === "") ? action.geneSymbol : gene.geneSymbol,
-                    geneExpr: (gene.geneExpr === {}) ? action.geneExpr : gene.geneExpr,
-                    exonExpr: (gene.exonExpr === {}) ? action.exonExpr : gene.exonExpr,
+                    geneExpr: (isEmptyObject(gene.geneExpr)) ? action.geneExpr : gene.geneExpr,
+                    exonExpr: (isEmptyObject(gene.exonExpr)) ? action.exonExpr : gene.exonExpr,
                 }
             } else {
                 return { ...gene }
