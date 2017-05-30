@@ -6,8 +6,9 @@ import { Grid, Row, Col, Button, ButtonGroup } from 'react-bootstrap'
 import GenePanelListing from  "./GenePanelListing"
 import TissueSiteListing from "./TissueSiteListing"
 import GenePanelContent from "./GenePanelContent"
+import ExonBarPlotContainer from "../containers/ExonBarPlotContainer"
 
-import BarPlot from "./BarPlot"
+import ExonBarPlot from "./ExonBarPlot"
 
 class GenePanel extends React.Component<any, any>{
 
@@ -43,13 +44,7 @@ class GenePanel extends React.Component<any, any>{
 
                 <Row className="BarPlot"> 
                     <Col xs={10} xsOffset={1}>
-                        <BarPlot selectedGenePanel={this.props.selectedGenePanel} 
-                                 selectedGene={this.props.selectedGene}
-                                 selectedTissueSite={this.props.selectedTissueSite}
-
-                                 gene={this.props.gene}
-
-                                 />
+                        <ExonBarPlotContainer />
                     </Col>
                 </Row>
             </Grid>

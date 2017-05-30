@@ -28,8 +28,8 @@ export interface stateInterface {
     ui: {
         select: {
             genePanel: string,
-            gene: geneEntity[],
-            tissueSite: tissueSiteEntity[]
+            gene: string[],
+            tissueSite: string[]
         }
     }
 }

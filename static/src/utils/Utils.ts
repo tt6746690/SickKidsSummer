@@ -12,7 +12,7 @@ export function getGeneEntityByIdList(genes: geneEntity[], ensemblIds: string[])
     let filtered =  genes.filter((gene) => {
         return ensemblIds.includes(gene.ensemblId)
     })
-    return filtered 
+    return filtered || [] as geneEntity[]
 } 
   
 
