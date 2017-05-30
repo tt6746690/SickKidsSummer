@@ -64,10 +64,18 @@ const mapStateToProps = (state: stateInterface) => {
 
     let color = d3.scaleOrdinal(d3.schemeCategory10)
 
+    let zoomHandler = () => {
+        alert('zooming')
+    }
+    let zoomListener = d3.zoom()
+        .scaleExtent([0, 500])
+        .on("zoom", zoomHandler)
+
     // data & data-specific config 
     let geneEntities = getGeneEntityByIdList(gene, selectedGene)        // defaults to []
     let tissueNum = selectedTissueSite.length                           // defaults to 0
     let exonNum = 0
+    let xGroupingWidth = 1
 
     /* 
         Precondition for computing data for exon expression plot 
@@ -96,12 +104,14 @@ const mapStateToProps = (state: stateInterface) => {
         y.domain([0, 1000])     // later change the upper y limit to reflect data
 
         xAxis.tickValues(exons);
-        yAxis.tickArguments([0, 500])
+        yAxis.tickValues([0, 10, 20, 50, 100, 200, 500, 1000])
+
+        xGroupingWidth = x(1) * 0.4
     }
 
     return {
         width, height, x, y, xAxisLength, yAxisLength, xAxis, yAxis, offset, color,
-        geneEntities, data, tissueNum, exonNum
+        geneEntities, data, tissueNum, exonNum, xGroupingWidth
     }
 }
 
