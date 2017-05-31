@@ -14,6 +14,24 @@ export const TOGGLE_GENE = 'TOGGLE_GENE'
 export const TOGGLE_TISSUE_SITE = 'TOGGLE_TISSUE_SITE'
 
 
+// display plots 
+export const SET_PLOT_DISPLAY = "SET_PLOT_DISPLAY"
+export const PLOT_DISPLAY_TYPE = {
+    GENE_EXPR_PLOT: "GENE_EXPR_PLOT",
+    EXON_EXPR_PLOT: "EXON_EXPR_PLOT"
+}
+
+
+export function setPlotDisplay(
+    plotDisplayType = PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT) {
+    return {
+        type: SET_PLOT_DISPLAY,
+        plotDisplayType
+    }
+}
+
+
+
 
 // actionCreators
 export function addGene(

@@ -1,7 +1,8 @@
 import {
     SELECT_GENE_PANEL,
     TOGGLE_GENE,
-    TOGGLE_TISSUE_SITE
+    TOGGLE_TISSUE_SITE,
+    SET_PLOT_DISPLAY
 } from "./Actions"
 
 
@@ -54,6 +55,11 @@ function select(state, action) {
 
 export default function ui(state, action) {
     switch (action.type) {
+        case SET_PLOT_DISPLAY: 
+            return {
+                ...state, 
+                plotDisplayType: action.plotDisplayType
+            }
         case SELECT_GENE_PANEL:
         case TOGGLE_GENE:
         case TOGGLE_TISSUE_SITE:

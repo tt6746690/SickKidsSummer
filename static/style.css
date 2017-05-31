@@ -1,4 +1,14 @@
 
+/* changes to default react bootstrap  */
+.jumbotron {
+    padding-top: 10px
+}
+
+ul.nav-stacked {
+    float: left;
+}
+
+
 /* restrict dropdown size */
 .tissueSiteListing + ul {
     max-height: 400px;
@@ -6,6 +16,6 @@
 }
 
 
-.BarPlot {
-    padding-top: 50px;
+#gene-panel {
+    height: 150px
 }

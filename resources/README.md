@@ -1,10 +1,11 @@
 
-`./exon_expr`
-    + exon expression of genes,
-    + each file identified by its ensemblId
-`./gene_panels`
-    + available gene panels
++ `./exon_expr`
+    + exon expression of genes 
+    + each file identified by its ensemblId 
++ `./gene_panels` 
+    + available gene panels 
 
+    
 + `python3 to_rel_path.py`
     + format `mapping` by converting to relative path based on current directory
 + `./subset`

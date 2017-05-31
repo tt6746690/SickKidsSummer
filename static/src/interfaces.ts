@@ -30,6 +30,7 @@ export interface stateInterface {
             genePanel: string,
             gene: string[],
             tissueSite: string[]
-        }
+        },
+        plotDisplayType: string
     }
 }

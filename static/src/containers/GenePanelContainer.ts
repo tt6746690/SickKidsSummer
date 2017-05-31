@@ -3,8 +3,13 @@ import { connect } from 'react-redux'
 import GenePanel from '../components/GenePanel'
 
 import { stateInterface } from '../Interfaces'
-import { addGene, addGenePanel, addTissueSite,
-        selectGenePanel, toggleGene, toggleTissueSite } from '../reducers/Actions'
+import { addGene, 
+        addGenePanel, 
+        addTissueSite,
+        selectGenePanel, 
+        toggleGene, 
+        toggleTissueSite,
+        setPlotDisplay} from '../reducers/Actions'
 
 
 // transform current redux store state into component props
@@ -13,9 +18,12 @@ const mapStateToProps = (state: stateInterface) => {
         genePanelListing: state.entities.genePanel,
         tissueSiteListing: state.entities.tissueSite,
         gene: state.entities.gene,
+
         selectedGenePanel: state.ui.select.genePanel,
         selectedGene: state.ui.select.gene,
-        selectedTissueSite: state.ui.select.tissueSite
+        selectedTissueSite: state.ui.select.tissueSite,
+
+        plotDisplayType: state.ui.plotDisplayType
     }
 }
 
@@ -123,6 +131,16 @@ const mapDispatchToProps = (dispatch) => {
                 .catch((err) => console.log("fetch: ", err))
             
             // fetch on geneExpr here
+        },
+
+
+        /*
+            select plot to display 
+            -- gene 
+            -- exon 
+        */
+        onPlotTabSelect: (tabType) => {
+            dispatch(setPlotDisplay(tabType))
         }
 
     }
