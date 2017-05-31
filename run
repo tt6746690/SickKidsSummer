@@ -1,4 +1,11 @@
 export FLASK_APP=sickkidsproj
 export FLASK_DEBUG=true
+
+# for hpf
+if [ `uname -s` = 'Linux' ]; 
+then 
+    module load python/3.5.2
+fi
+
 # pip3 install -e .
 python3 -m flask run
