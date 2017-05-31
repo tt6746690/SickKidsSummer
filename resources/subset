@@ -1,0 +1,18 @@
+
+gene_panels="
+congenital_myopathy
+congenital_myasthenic_myopathies
+congenital_myopathy_dystrophy
+"
+
+for gp in $gene_panels;
+do
+    echo working on panel $gp...
+    l=`cat ./gene_panels/$gp | awk '{ print $2  }'`
+    for g in $l;
+    do 
+        dp=`grep $g mapping.rel | head -n 1 | cut -c 17-` 
+        echo adding $dp...
+        git add $dp
+    done
+done
