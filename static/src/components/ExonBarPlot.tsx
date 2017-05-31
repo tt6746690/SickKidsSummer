@@ -17,15 +17,58 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
         svg: {}
     }
 
+
+    /*
+        zoomHandler 
+        -- updates x, y scale 
+        -- updated x, y scale reflected in 
+        ---- expression cutoff line 
+        ---- x, y axis 
+        ---- position of data points 
+    */
+    zoomHandler = () => {
+        let { x, y, offset, xAxis, yAxis, yAxisLength, width, height, color,
+            data, geneEntities, exonNum, tissueNum, xGroupingWidthRatio } = this.props
+
+        console.log("zoomhandler", this.props)
+
+        let svg: any = this.state.svg
+
+        let rescaledX = d3.event.transform.rescaleX(x)
+        let rescaledY = d3.event.transform.rescaleY(y)
+
+        svg.select(".x.axis").call(xAxis.scale(rescaledX))
+        svg.select(".y.axis").call(yAxis.scale(rescaledY))
+
+        svg.select(".ExpressionCutOffLine")
+            .attr("x1", rescaledX(0))
+            .attr("y1", rescaledY(20))
+            .attr("x2", rescaledX(exonNum + 1))
+            .attr("y2", rescaledY(20))
+
+        Object.keys(data).map((dataByTissue, index) => {
+
+            let xGroupingWidth = rescaledX(1) * xGroupingWidthRatio
+            let xTicOffset = (tissueNum == 1) ? 0 : xGroupingWidth * (index / (tissueNum - 1) - 0.5)
+
+            svg.selectAll(".dot")
+                .attr("transform", (d) => {
+                    return "translate(" + (rescaledX(d[0]) + xTicOffset) + "," + rescaledY(d[1]) + ")"
+                })
+        })
+    }
+
+
     /* 
         Set up 
         -- toplevel svg, g 
         -- perform appropriate transformation 
-        -- global even hanlder
+        -- global event handler 
+        ---- zoom
     */
     setup = () => {
 
-        let { width, height, offset, x, y, zoomListener } = this.props
+        let { width, height, offset, x, y, xGroupingWidthRatio } = this.props
 
         let svg = d3.select("#ExonBarPlot")
             .append("svg")
@@ -34,30 +77,8 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             .append("g")
                 .attr("transform", "translate(" + offset + "," + offset + ")")
                 .classed("ExonBarPlotGroup", true)
-            .call(zoomListener);
-        
+
         this.setState({ svg: svg })
-    }
-
-    zoom = () => {
-        console.log(alert("zooming"))
-
-        let { x, y, offset, xAxis, yAxis, yAxisLength, width, height, color,
-            data, geneEntities, exonNum, tissueNum, xGroupingWidth } = this.props
-
-        let svg: any = this.state.svg
-
-        Object.keys(data).map((dataByTissue, index) => {
-            svg.select(".x.axis").call(xAxis);
-            svg.select(".y.axis").call(yAxis);
-
-            let xTicOffset = (tissueNum == 1) ? 0 : xGroupingWidth * (index / (tissueNum - 1) - 0.5)
-
-            svg.selectAll(".dot")
-                .attr("transform", (d) => {
-                    return "translate(" + (x(d[0]) + xTicOffset) + "," + y(d[1]) + ")"
-                })
-        })
     }
 
     /*
@@ -67,10 +88,12 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
     */
     tearDown = () => {
         d3.select(".ExonBarPlotGroup").selectAll("*").remove()
+        d3.select("#ExonBarPlot").select("svg").on(".zoom", null)
     }
 
     cleanup = () => {
         d3.select("#ExonBarPlot").selectAll("*").remove()
+        
     }
 
     /* 
@@ -81,10 +104,15 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
     plot = () => {
         
         let { x, y, offset, xAxis, yAxis, yAxisLength, width, height, color,
-            data, geneEntities, exonNum, tissueNum, xGroupingWidth } = this.props
+            data, geneEntities, exonNum, tissueNum, xGroupingWidthRatio } = this.props
         let svg: any = this.state.svg 
 
         console.log("plotting...", this.props)
+
+        d3.select("#ExonBarPlot").select("svg")
+            .call(d3.zoom()
+                .scaleExtent([0, 100])
+                .on("zoom", this.zoomHandler))
 
         svg.append("g")
             .classed("x axis", true)
@@ -121,17 +149,21 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
                 index/tissueNum - 0.5 \in [-0.5, 0.5]
                 scaled to xGroupingWidth to compute the xTicOffset
             */
+            let xGroupingWidth = x(1) * xGroupingWidthRatio
             let xTicOffset = (tissueNum == 1) ? 0: xGroupingWidth * (index / (tissueNum - 1) - 0.5)
 
             svg.selectAll(".dot")
-                .data(data[dataByTissue])
+                    .data(data[dataByTissue])
                 .enter().append("circle")
-                .classed("dot", true)
-                .attr("r", 2)
-                .attr("transform", (d) => {
-                    return "translate(" + (x(d[0]) + xTicOffset ) + "," + y(d[1]) + ")"
-                })
-                .style("fill", (d) => color(index))
+                    .classed("tissue_index_" + index, true)
+                    .classed("dot", true)
+                    .attr("r", 2)
+                    .attr("transform", (d) => {
+                        /* handles situation where counts = 0, log scale -> Infinity */
+                        let ytrans = (d[1] == 0) ? y(0.01) : y(d[1])
+                        return "translate(" + (x(d[0]) + xTicOffset ) + "," + ytrans + ")"
+                    })
+                    .style("fill", (d) => color(index))
             
            
         })

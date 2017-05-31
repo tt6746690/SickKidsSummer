@@ -57,25 +57,19 @@ const mapStateToProps = (state: stateInterface) => {
     let yAxisLength = height - offset * 2
 
     let x = d3.scaleLinear().range([0, xAxisLength]).nice()
-    let y = d3.scaleLinear().range([yAxisLength, 0]).nice()
+    let y = d3.scaleLog().range([yAxisLength, 0]).base(10)
 
     let xAxis = d3.axisBottom(x)
-    let yAxis = d3.axisLeft(y)
+    let yAxis = d3.axisLeft(y).tickFormat(d3.format(".5"))
 
     let color = d3.scaleOrdinal(d3.schemeCategory10)
 
-    let zoomHandler = () => {
-        alert('zooming')
-    }
-    let zoomListener = d3.zoom()
-        .scaleExtent([0, 500])
-        .on("zoom", zoomHandler)
 
     // data & data-specific config 
     let geneEntities = getGeneEntityByIdList(gene, selectedGene)        // defaults to []
     let tissueNum = selectedTissueSite.length                           // defaults to 0
     let exonNum = 0
-    let xGroupingWidth = 1
+    let xGroupingWidthRatio = 0.4
 
     /* 
         Precondition for computing data for exon expression plot 
@@ -101,17 +95,15 @@ const mapStateToProps = (state: stateInterface) => {
         exonNum = exons.length
 
         x.domain([0, exonNum + 1])
-        y.domain([0, 1000])     // later change the upper y limit to reflect data
+        y.domain([0.01, 10000])     // later change the upper y limit to reflect data
 
         xAxis.tickValues(exons);
-        yAxis.tickValues([0, 10, 20, 50, 100, 200, 500, 1000])
-
-        xGroupingWidth = x(1) * 0.4
+        yAxis.tickValues([0.01, 0.1, 1, 10, 100, 1000, 10000])
     }
 
     return {
         width, height, x, y, xAxisLength, yAxisLength, xAxis, yAxis, offset, color,
-        geneEntities, data, tissueNum, exonNum, xGroupingWidth
+        geneEntities, data, tissueNum, exonNum, xGroupingWidthRatio
     }
 }
 
