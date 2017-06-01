@@ -9,8 +9,8 @@ GTEX_GENE_RPKM = "../data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_gene_rpkm.gct"
 SAMPLE_ANNOTATION ="../data/annotation/GTEx_Data_V6_Annotations_SampleAttributesDS.txt"
 
 
-# WD="/hpf/projects/brudno/wangpeiq/sickkids_summer/"
-WD = "../"
+WD="/hpf/projects/brudno/wangpeiq/sickkids_summer/"
+#  WD = "../"
 DEST_STORE = WD + "resources/gene_expr"
 STORAGE_MAPPING = WD + "resources/gene_expr.mapping"
 
@@ -68,7 +68,7 @@ def processOne(reader, line_num):
                  
     
 def iterProcess():
-    reader = pd.read_table(GTEX_GENE_RPKM, skiprows=2, chunksize=1, nrows=5)
+    reader = pd.read_table(GTEX_GENE_RPKM, skiprows=2, chunksize=1)
             
     line_num = 1
     while True:        
@@ -82,6 +82,7 @@ def iterProcess():
         
 
 if __name__ == '__main__':
+    print("starting...")
     iterProcess()
 
 

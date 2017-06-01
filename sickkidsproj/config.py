@@ -17,11 +17,15 @@ class BaseConfig(object):
     DATA_RESOURCES_DIR = path.realpath(path.join(basedir, "resources"))
 
     # exon reads
-    EXON_READS_MAPPING = path.join(DATA_RESOURCES_DIR, "mapping.rel")
+    EXON_READS_MAPPING = path.join(DATA_RESOURCES_DIR, "exon_expr.mapping")
+    GENE_RPKM_MAPPING = path.join(DATA_RESOURCES_DIR, "gene_expr.mapping")
 
     # exon_expr dir
     EXON_EXPR_DIR= path.join(DATA_RESOURCES_DIR, "exon_expr")
     TISSUE_SITE_LIST = path.join(EXON_EXPR_DIR, "tissue_site_list")
+
+    # gene_expr dir 
+    GENE_EXPR_DIR= path.join(DATA_RESOURCES_DIR, "gene_expr")
 
     # gene panels
     GENE_PANEL_DIR = path.join(DATA_RESOURCES_DIR, "gene_panels")
