@@ -4,8 +4,11 @@ import 'whatwg-fetch'
 import { Grid, Row, Col, Button, ButtonGroup, Tab, Nav, NavItem, Panel } from 'react-bootstrap'
 
 import GenePanelListing from  "./GenePanelListing"
-import TissueSiteListing from "./TissueSiteListing"
 import GenePanelContent from "./GenePanelContent"
+
+import TissueSiteListing from "./TissueSiteListing"
+import TissueSiteContent from "./TIssueSiteContent"
+
 import ExonBarPlotContainer from "../containers/ExonBarPlotContainer"
 import ExonBarPlot from "./ExonBarPlot"
 
@@ -27,12 +30,8 @@ class GenePanel extends React.Component<any, any>{
                                 selectedGenePanel={this.props.selectedGenePanel}
                                 panelListing={this.props.genePanelListing}
                                 genePanelSelect={this.props.onGenePanelSelect} />
-                            <TissueSiteListing
-                                selectedTissueSite={this.props.selectedTissueSite}
-                                tissueSiteListing={this.props.tissueSiteListing}
-                                tissueSiteSelect={this.props.onTissueListSelect} />
                         </Col>
-                        <Col xs={9} xsOffset={1} >
+                        <Col xs={10} xsOffset={1}>
                             <GenePanelContent
                                 selectedGene={this.props.selectedGene}
                                 selectedGenePanel={this.props.selectedGenePanel}
@@ -45,11 +44,21 @@ class GenePanel extends React.Component<any, any>{
                     </Panel>
                 </Row>
 
-                {/*<Row className="BarPlot"> 
-                    <Col xs={10} xsOffset={1}>
-                        <ExonBarPlotContainer />
-                    </Col>
-                </Row>*/}
+                <Row id="tissue">
+                    <Panel> 
+                        <Col xs={1}>
+                            <TissueSiteListing
+                                selectedTissueSite={this.props.selectedTissueSite}
+                                tissueSiteListing={this.props.tissueSiteListing}
+                                onTissueSiteSelect={this.props.onTissueListSelect}/>
+                        </Col>
+                        <Col xs={9} xsOffset={1}>
+                            <TissueSiteContent
+                                selectedTissueSite={this.props.selectedTissueSite}
+                                onTissueSiteClick={this.props.onTissueSiteClick} />
+                        </Col>
+                    </Panel> 
+                </Row> 
  
                 <Tab.Container id='main-display' 
                                 activeKey={this.props.plotDisplayType}

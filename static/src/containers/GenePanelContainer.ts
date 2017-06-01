@@ -103,9 +103,17 @@ const mapDispatchToProps = (dispatch) => {
 
         },
         /*
-            Selecting a tissue toggles the currently selected tissueSite
+            Selecting a tissue toggles the currently selected tissueSite in the dropdown list
         */
         onTissueListSelect: (tissueSite: string) => {
+            dispatch(toggleTissueSite(tissueSite)) 
+        },
+
+        /* 
+            Clicking a tissueSite button updates ui.select.tissueSite
+        */
+        onTissueSiteClick: (evt) => {
+            let tissueSite = evt.target.value
             dispatch(toggleTissueSite(tissueSite)) 
         },
 

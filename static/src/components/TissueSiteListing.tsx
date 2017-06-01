@@ -15,7 +15,7 @@ class TissueSiteListing extends React.Component<any, any>{
         return (
             <DropdownButton title="Tissue Types" 
                             id="bg-nested-dropdown" 
-                            onSelect={this.props.tissueSiteSelect}
+                            onSelect={this.props.onTissueSiteSelect}
                             className="tissueSiteListing">
                 {tissueSiteList}
             </DropdownButton>
