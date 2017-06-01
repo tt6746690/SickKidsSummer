@@ -2,8 +2,14 @@
 node_modules/
 .DS_Store
 
+analysis/gene_expr.ipynb
+
 data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_exon_reads.txt
+data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_gene_reads.gct
+data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_gene_rpkm.gct
+data/biobank_collection_20170601_014834.txt
 /* resources/exon_expr */
+*/ resources/gene_expr */
 analysis/qsub.sh.*
 
 __pycache__/

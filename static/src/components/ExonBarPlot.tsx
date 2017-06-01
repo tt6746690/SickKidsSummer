@@ -17,7 +17,6 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
         svg: {}
     }
 
-
     /*
         zoomHandler 
         -- updates x, y scale 
@@ -53,7 +52,9 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
 
             svg.selectAll(".dot")
                 .attr("transform", (d) => {
-                    return "translate(" + (rescaledX(d[0]) + xTicOffset) + "," + rescaledY(d[1]) + ")"
+                    /* handles situation where counts = 0, log scale -> Infinity */
+                    let ytrans = (d[1] == 0) ? rescaledY(0.01) : rescaledY(d[1])
+                    return "translate(" + (rescaledX(d[0]) + xTicOffset) + "," + ytrans + ")"
                 })
         })
     }
