@@ -50,7 +50,7 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             let xGroupingWidth = rescaledX(1) * xGroupingWidthRatio
             let xTicOffset = (tissueNum == 1) ? 0 : xGroupingWidth * (index / (tissueNum - 1) - 0.5)
 
-            svg.selectAll(".dot")
+            svg.selectAll(".tissueSite_" + index)
                 .attr("transform", (d) => {
                     /* handles situation where counts = 0, log scale -> Infinity */
                     let ytrans = (d[1] == 0) ? rescaledY(0.01) : rescaledY(d[1])
@@ -62,6 +62,7 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
 
     /* 
         Set up 
+        
         -- toplevel svg, g 
         -- perform appropriate transformation 
         -- global event handler 
@@ -153,11 +154,11 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             let xGroupingWidth = x(1) * xGroupingWidthRatio
             let xTicOffset = (tissueNum == 1) ? 0: xGroupingWidth * (index / (tissueNum - 1) - 0.5)
 
-            svg.selectAll(".dot")
+            svg.selectAll(".tissueSite_" + index)
                     .data(data[dataByTissue])
                 .enter().append("circle")
-                    .classed("tissue_index_" + index, true)
                     .classed("dot", true)
+                    .classed("tissueSite_" + index, true)
                     .attr("r", 2)
                     .attr("transform", (d) => {
                         /* handles situation where counts = 0, log scale -> Infinity */
@@ -166,7 +167,6 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
                     })
                     .style("fill", (d) => color(index))
             
-           
         })
 
         
