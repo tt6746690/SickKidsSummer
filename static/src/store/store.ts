@@ -1,4 +1,5 @@
 import 'whatwg-fetch'
+import * as d3 from "d3" 
 import { createStore } from 'redux'
 
 import { stateInterface } from '../Interfaces'
@@ -25,7 +26,10 @@ let defaultState: stateInterface = {
             gene: [],
             tissueSite: []
         },
-        plotDisplayType: PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT
+        plotDisplayType: PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT,
+        plot: {
+            color: d3.scaleOrdinal(d3.schemeCategory20c)
+        }
     }
 }
 

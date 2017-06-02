@@ -3,7 +3,7 @@ import * as d3 from "d3"
 
 import { PanelGroup, Panel } from 'react-bootstrap'
 
-import { getGeneEntityById, getGeneEntityByIdList, isNonEmptyArray, isEmptyObject } from "../utils/Utils"
+import { isEmptyObject } from "../utils/Utils"
 import { tissueSiteEntity } from "../Interfaces"
 
 
@@ -45,12 +45,12 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             .attr("x2", rescaledX(exonNum + 1))
             .attr("y2", rescaledY(20))
 
-        Object.keys(data).map((dataByTissue, index) => {
+        Object.keys(data).map((tissue, index) => {
 
             let xGroupingWidth = rescaledX(1) * xGroupingWidthRatio
             let xTicOffset = (tissueNum == 1) ? 0 : xGroupingWidth * (index / (tissueNum - 1) - 0.5)
 
-            svg.selectAll(".dot")
+            svg.selectAll(".tissueSite_" + index)
                 .attr("transform", (d) => {
                     /* handles situation where counts = 0, log scale -> Infinity */
                     let ytrans = (d[1] == 0) ? rescaledY(0.01) : rescaledY(d[1])
@@ -62,6 +62,7 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
 
     /* 
         Set up 
+        
         -- toplevel svg, g 
         -- perform appropriate transformation 
         -- global event handler 
@@ -104,8 +105,9 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
     */
     plot = () => {
         
-        let { x, y, offset, xAxis, yAxis, yAxisLength, width, height, color,
-            data, geneEntities, exonNum, tissueNum, xGroupingWidthRatio } = this.props
+        let { x, y, offset, xAxis, yAxis, xAxisLength, yAxisLength, 
+                xLabel, yLabel, width, height, color,
+                data, geneEntities, exonNum, tissueNum, xGroupingWidthRatio } = this.props
         let svg: any = this.state.svg 
 
         console.log("plotting...", this.props)
@@ -121,9 +123,12 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             .call(xAxis)
             .append("text")
             .classed("label", true)
-            .attr("x", width / 2)
-            .attr("y", -10)
-            .text("exonExpr")
+            .attr("x", xAxisLength / 2)
+            .attr("y", offset*0.7)
+            .style("fill", "darkgray")
+            .style("text-anchor", "middle")
+            .style("font-size", "15px")
+            .text(xLabel)
 
         svg.append("g")
             .classed("y axis", true)
@@ -132,9 +137,12 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             .append("text")
             .classed("label", true)
             .attr("transform", "rotate(-90)")
-            .attr("x", 10)
-            .attr("y", height / 2)
-            .text("Read Counts")
+            .attr("x", - yAxisLength / 2)
+            .attr("y", -offset*0.7)
+            .style("fill", "darkgray")
+            .style("text-anchor", "middle")
+            .style("font-size", "15px")
+            .text(yLabel)
 
         svg.append("line")
             .classed("ExpressionCutOffLine", true)
@@ -145,7 +153,7 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             .style("stroke", "darkgray")
             .style("stroke-dasharray", ("3, 3"))
 
-        Object.keys(data).map((dataByTissue, index) => {
+        Object.keys(data).map((tissue, index) => {
             /*  index/tissueNum \in [0, 1]
                 index/tissueNum - 0.5 \in [-0.5, 0.5]
                 scaled to xGroupingWidth to compute the xTicOffset
@@ -153,20 +161,19 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             let xGroupingWidth = x(1) * xGroupingWidthRatio
             let xTicOffset = (tissueNum == 1) ? 0: xGroupingWidth * (index / (tissueNum - 1) - 0.5)
 
-            svg.selectAll(".dot")
-                    .data(data[dataByTissue])
+            svg.selectAll(".tissueSite_" + index)
+                    .data(data[tissue])
                 .enter().append("circle")
-                    .classed("tissue_index_" + index, true)
                     .classed("dot", true)
+                    .classed("tissueSite_" + index, true)
                     .attr("r", 2)
                     .attr("transform", (d) => {
                         /* handles situation where counts = 0, log scale -> Infinity */
                         let ytrans = (d[1] == 0) ? y(0.01) : y(d[1])
                         return "translate(" + (x(d[0]) + xTicOffset ) + "," + ytrans + ")"
                     })
-                    .style("fill", (d) => color(index))
+                    .style("fill", (d) => color(tissue))
             
-           
         })
 
         

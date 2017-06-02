@@ -39,6 +39,7 @@ def get_gene_panel(gene_panel):
     """
     fp = os.path.join(app.config["GENE_PANEL_DIR"], gene_panel)
     with open(fp, 'r') as f:
+        print(f)
         l = []
         for line in f:
             pair = line.split('\t')
