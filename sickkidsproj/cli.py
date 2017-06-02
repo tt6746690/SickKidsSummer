@@ -1,5 +1,5 @@
 from sickkidsproj import app,  db
-from sickkidsproj.models import ExonReadsMapping
+from sickkidsproj.models import ExonReadsMapping, GeneReadsMapping
 
 def create_db():
     """initialize database"""
@@ -17,6 +17,23 @@ def load_exonreadsmapping():
                 continue
 
             mapping = ExonReadsMapping(entry[0], entry[1])
+            db.session.add(mapping) 
+            print("Adding entry {}".format(entry))
+
+            db.session.commit()
+
+def load_genereadsmapping():
+    """ load mapping file into ExonReads table"""
+    with open(app.config['GENE_READS_MAPPING'], 'r') as f:
+
+        for line in f.read().split('\n'): 
+            entry = line.split('\t')
+
+            if len(entry) != 2:
+                print("Entry not valid {}".format(entry))
+                continue
+
+            mapping = GeneReadsMapping(entry[0], entry[1])
             db.session.add(mapping) 
             print("Adding entry {}".format(entry))
 
@@ -44,6 +61,7 @@ def c_create_db():
 @app.cli.command('load')
 def c_load_exonreadsmapping():
     app.logger.info("cli::load_exonreadsmapping")
+    app.logger.info("cli::load_genereadsmapping")
     load_exonreadsmapping()
 
 @app.cli.command('clear')
@@ -61,6 +79,7 @@ def refresh_db():
     app.logger.info("cli::refresh")
     clear_db()
     create_db()
+    load_genereadsmapping()
     load_exonreadsmapping()
 
 

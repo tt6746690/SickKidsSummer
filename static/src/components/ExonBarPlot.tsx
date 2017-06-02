@@ -33,28 +33,26 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
 
         let svg: any = this.state.svg
 
-        let rescaledX = d3.event.transform.rescaleX(x)
         let rescaledY = d3.event.transform.rescaleY(y)
 
-        svg.select(".x.axis").call(xAxis.scale(rescaledX))
         svg.select(".y.axis").call(yAxis.scale(rescaledY))
 
         svg.select(".ExpressionCutOffLine")
-            .attr("x1", rescaledX(0))
+            .attr("x1", x(0))
             .attr("y1", rescaledY(20))
-            .attr("x2", rescaledX(exonNum + 1))
+            .attr("x2", x(exonNum + 1))
             .attr("y2", rescaledY(20))
 
         Object.keys(data).map((tissue, index) => {
 
-            let xGroupingWidth = rescaledX(1) * xGroupingWidthRatio
+            let xGroupingWidth = x(1) * xGroupingWidthRatio
             let xTicOffset = (tissueNum == 1) ? 0 : xGroupingWidth * (index / (tissueNum - 1) - 0.5)
 
             svg.selectAll(".tissueSite_" + index)
                 .attr("transform", (d) => {
                     /* handles situation where counts = 0, log scale -> Infinity */
                     let ytrans = (d[1] == 0) ? rescaledY(0.01) : rescaledY(d[1])
-                    return "translate(" + (rescaledX(d[0]) + xTicOffset) + "," + ytrans + ")"
+                    return "translate(" + (x(d[0]) + xTicOffset) + "," + ytrans + ")"
                 })
         })
     }

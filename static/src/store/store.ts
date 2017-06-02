@@ -26,9 +26,9 @@ let defaultState: stateInterface = {
             gene: [],
             tissueSite: []
         },
-        plotDisplayType: PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT,
+        plotDisplayType: PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT,
         plot: {
-            color: d3.scaleOrdinal(d3.schemeCategory20c)
+            color: d3.scaleOrdinal(d3.schemeCategory20)
         }
     }
 }

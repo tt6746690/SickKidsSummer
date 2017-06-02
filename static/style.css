@@ -26,3 +26,9 @@ ul.nav-stacked {
     max-height: 400px;
     overflow-y: auto;
 }
+
+
+/* adds padding to panel Gene buttno */
+.panelGeneButton {
+    margin: 1px;
+}

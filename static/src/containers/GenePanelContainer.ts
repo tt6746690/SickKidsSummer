@@ -9,7 +9,8 @@ import { addGene,
         selectGenePanel, 
         toggleGene, 
         toggleTissueSite,
-        setPlotDisplay} from '../reducers/Actions'
+        setPlotDisplay,
+        PLOT_DISPLAY_TYPE } from '../reducers/Actions'
 
 
 // transform current redux store state into component props
@@ -121,6 +122,7 @@ const mapDispatchToProps = (dispatch) => {
         */
         onTissueListSelect: (tissueSite: string) => {
             dispatch(toggleTissueSite(tissueSite)) 
+            dispatch(setPlotDisplay(PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT))
         },
 
         /* 
@@ -129,6 +131,7 @@ const mapDispatchToProps = (dispatch) => {
         onTissueSiteClick: (evt) => {
             let tissueSite = evt.target.value
             dispatch(toggleTissueSite(tissueSite)) 
+            dispatch(setPlotDisplay(PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT))
         },
 
         /*
@@ -152,7 +155,17 @@ const mapDispatchToProps = (dispatch) => {
                 })
                 .catch((err) => console.log("fetch: ", err))
             
-            // fetch on geneExpr here
+
+            fetch('http://127.0.0.1:5000/api/gene_expr/' + ensemblId, { mode: 'cors' })
+                .then((response) => response.json())
+                .then((geneExpr) => {
+                    dispatch(addGene({
+                        ensemblId,
+                        geneExpr: geneExpr
+                    }))
+                })
+                .catch((err) => console.log("fetch: ", err))
+        
         },
 
 

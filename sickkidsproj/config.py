@@ -18,7 +18,7 @@ class BaseConfig(object):
 
     # exon reads
     EXON_READS_MAPPING = path.join(DATA_RESOURCES_DIR, "exon_expr.mapping")
-    GENE_RPKM_MAPPING = path.join(DATA_RESOURCES_DIR, "gene_expr.mapping")
+    GENE_READS_MAPPING = path.join(DATA_RESOURCES_DIR, "gene_expr.mapping")
 
     # exon_expr dir
     EXON_EXPR_DIR= path.join(DATA_RESOURCES_DIR, "exon_expr")

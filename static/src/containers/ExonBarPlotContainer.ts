@@ -53,9 +53,9 @@ const mapStateToProps = (state: stateInterface) => {
     } = state
 
     // plot config
-    let width = 800   // 945
-    let height = 600  // 645
-    let offset = 40
+    let width = 945
+    let height = 645
+    let offset = 80
 
     let xAxisLength = width - offset * 2
     let yAxisLength = height - offset * 2

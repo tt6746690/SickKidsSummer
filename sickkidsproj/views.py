@@ -5,7 +5,7 @@ import json
 from flask import redirect, url_for, render_template, jsonify
 
 from sickkidsproj import app, db
-from sickkidsproj.models import ExonReadsMapping
+from sickkidsproj.models import ExonReadsMapping, GeneReadsMapping
 from sickkidsproj.cors import crossdomain
 
 
@@ -64,6 +64,21 @@ def gene_exonreads(ensembl_id=None):
         return abort(404)
 
     mapping = ExonReadsMapping.query \
+        .filter_by(ensembl_id = ensembl_id) \
+        .first()
+
+    fp = os.path.realpath(os.path.join(app.config['DATA_RESOURCES_DIR'], mapping.store_path))
+    with open(fp, 'r') as f:
+        return json.dumps(json.loads(f.read()))
+    
+@app.route('/api/gene_expr/<ensembl_id>', methods=['GET'])
+@crossdomain(origin='*')
+def gene_rpkmreads(ensembl_id=None):
+
+    if match('^ENSG[\d]{11}$', ensembl_id) is None:
+        return abort(404)
+
+    mapping = GeneReadsMapping.query \
         .filter_by(ensembl_id = ensembl_id) \
         .first()
 

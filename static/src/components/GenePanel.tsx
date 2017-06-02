@@ -10,6 +10,8 @@ import TissueSiteListing from "./TissueSiteListing"
 import TissueSiteContent from "./TIssueSiteContent"
 
 import ExonBarPlotContainer from "../containers/ExonBarPlotContainer"
+import GeneBarPlotContainer from "../containers/GeneBarPlotContainer"
+
 import ExonBarPlot from "./ExonBarPlot"
 
 import { PLOT_DISPLAY_TYPE } from "../reducers/Actions"
@@ -39,7 +41,8 @@ class GenePanel extends React.Component<any, any>{
                                 genePanel={this.props.genePanel}
                                 gene={this.props.gene}
 
-                                onPanelGeneClick={this.props.onPanelGeneClick} />
+                                onPanelGeneClick={this.props.onPanelGeneClick} 
+                                color={this.props.color} />
                         </Col>
                     </Panel>
                 </Row>
@@ -80,7 +83,7 @@ class GenePanel extends React.Component<any, any>{
                         <Col sm={10}>
                             <Tab.Content animation> 
                                 <Tab.Pane eventKey={PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT}>
-                                    gene expr here
+                                    <GeneBarPlotContainer />
                                 </Tab.Pane>
                                 <Tab.Pane eventKey={PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT}>
                                     <ExonBarPlotContainer />
