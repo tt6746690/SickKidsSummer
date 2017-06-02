@@ -14,16 +14,30 @@ import { addGene,
 
 // transform current redux store state into component props
 const mapStateToProps = (state: stateInterface) => {
+
+    let {
+        entities: {
+            gene,
+            genePanel, 
+            tissueSite
+        },
+        ui: {
+            select: {
+                gene: selectedGene,
+                genePanel: selectedGenePanel,
+                tissueSite: selectedTissueSite
+            },
+            plotDisplayType,
+            plot: {
+                color
+            }
+        }
+    } = state
+
     return {
-        genePanelListing: state.entities.genePanel,
-        tissueSiteListing: state.entities.tissueSite,
-        gene: state.entities.gene,
-
-        selectedGenePanel: state.ui.select.genePanel,
-        selectedGene: state.ui.select.gene,
-        selectedTissueSite: state.ui.select.tissueSite,
-
-        plotDisplayType: state.ui.plotDisplayType
+        gene, genePanel, tissueSite,
+        selectedGene, selectedGenePanel, selectedTissueSite,
+        plotDisplayType, color
     }
 }
 

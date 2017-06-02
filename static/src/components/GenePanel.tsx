@@ -28,15 +28,15 @@ class GenePanel extends React.Component<any, any>{
                         <Col xs={1} >
                             <GenePanelListing
                                 selectedGenePanel={this.props.selectedGenePanel}
-                                panelListing={this.props.genePanelListing}
-                                genePanelSelect={this.props.onGenePanelSelect} />
+                                genePanel={this.props.genePanel}
+                                onGenePanelSelect={this.props.onGenePanelSelect} />
                         </Col>
                         <Col xs={10} xsOffset={1}>
                             <GenePanelContent
                                 selectedGene={this.props.selectedGene}
                                 selectedGenePanel={this.props.selectedGenePanel}
 
-                                genePanelListing={this.props.genePanelListing}
+                                genePanel={this.props.genePanel}
                                 gene={this.props.gene}
 
                                 onPanelGeneClick={this.props.onPanelGeneClick} />
@@ -49,13 +49,16 @@ class GenePanel extends React.Component<any, any>{
                         <Col xs={1}>
                             <TissueSiteListing
                                 selectedTissueSite={this.props.selectedTissueSite}
-                                tissueSiteListing={this.props.tissueSiteListing}
+                                tissueSite={this.props.tissueSite}
+
                                 onTissueSiteSelect={this.props.onTissueListSelect}/>
                         </Col>
                         <Col xs={9} xsOffset={1}>
                             <TissueSiteContent
                                 selectedTissueSite={this.props.selectedTissueSite}
-                                onTissueSiteClick={this.props.onTissueSiteClick} />
+                                onTissueSiteClick={this.props.onTissueSiteClick}
+                                
+                                color={this.props.color}/>
                         </Col>
                     </Panel> 
                 </Row> 

@@ -31,6 +31,9 @@ export interface stateInterface {
             gene: string[],
             tissueSite: string[]
         },
-        plotDisplayType: string
+        plotDisplayType: string,
+        plot: {
+            color: any
+        }
     }
 }

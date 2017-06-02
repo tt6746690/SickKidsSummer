@@ -44,6 +44,9 @@ const mapStateToProps = (state: stateInterface) => {
                 gene: selectedGene,
                 genePanel: selectedGenePanel,
                 tissueSite: selectedTissueSite
+            },
+            plot: {
+                color
             }
         }
     } = state
@@ -61,8 +64,6 @@ const mapStateToProps = (state: stateInterface) => {
 
     let xAxis = d3.axisBottom(x)
     let yAxis = d3.axisLeft(y).tickFormat(d3.format(".5"))
-
-    let color = d3.scaleOrdinal(d3.schemeCategory10)
 
 
     // data & data-specific config 

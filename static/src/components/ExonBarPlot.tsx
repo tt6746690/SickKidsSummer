@@ -45,7 +45,7 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             .attr("x2", rescaledX(exonNum + 1))
             .attr("y2", rescaledY(20))
 
-        Object.keys(data).map((dataByTissue, index) => {
+        Object.keys(data).map((tissue, index) => {
 
             let xGroupingWidth = rescaledX(1) * xGroupingWidthRatio
             let xTicOffset = (tissueNum == 1) ? 0 : xGroupingWidth * (index / (tissueNum - 1) - 0.5)
@@ -146,7 +146,7 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             .style("stroke", "darkgray")
             .style("stroke-dasharray", ("3, 3"))
 
-        Object.keys(data).map((dataByTissue, index) => {
+        Object.keys(data).map((tissue, index) => {
             /*  index/tissueNum \in [0, 1]
                 index/tissueNum - 0.5 \in [-0.5, 0.5]
                 scaled to xGroupingWidth to compute the xTicOffset
@@ -155,7 +155,7 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             let xTicOffset = (tissueNum == 1) ? 0: xGroupingWidth * (index / (tissueNum - 1) - 0.5)
 
             svg.selectAll(".tissueSite_" + index)
-                    .data(data[dataByTissue])
+                    .data(data[tissue])
                 .enter().append("circle")
                     .classed("dot", true)
                     .classed("tissueSite_" + index, true)
@@ -165,7 +165,7 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
                         let ytrans = (d[1] == 0) ? y(0.01) : y(d[1])
                         return "translate(" + (x(d[0]) + xTicOffset ) + "," + ytrans + ")"
                     })
-                    .style("fill", (d) => color(index))
+                    .style("fill", (d) => color(tissue))
             
         })
 

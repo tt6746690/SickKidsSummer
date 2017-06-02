@@ -15,7 +15,7 @@ class GenePanelContent extends React.Component<any, any>{
         let panelGeneButtons
 
         // returns undefined if not found
-        const filteredGenePanel = this.props.genePanelListing.find((panel) => {
+        const filteredGenePanel = this.props.genePanel.find((panel) => {
             return panel.genePanelId === this.props.selectedGenePanel
         })
 

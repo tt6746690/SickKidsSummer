@@ -9,6 +9,7 @@ class TissueSiteContent extends React.Component<any, any>{
             return(
                 <Button value={tissueSiteId}
                     key={index.toString()}
+                    style={{"backgroundColor":this.props.color(tissueSiteId)}}
                     onClick={this.props.onTissueSiteClick}>
                     {tissueSiteId}
                 </Button>
