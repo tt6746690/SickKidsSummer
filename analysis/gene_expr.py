@@ -3,15 +3,14 @@ import matplotlib.pyplot as plt
 import os
 import json
 
-GTEX_GENE_EXPRESSION = "../data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_gene_reads.gct"
-GTEX_GENE_RPKM = "../data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_gene_rpkm.gct"
-
-SAMPLE_ANNOTATION ="../data/annotation/GTEx_Data_V6_Annotations_SampleAttributesDS.txt"
-
 
 WD="/hpf/projects/brudno/wangpeiq/sickkids_summer/"
 #  WD = "../"
-DEST_STORE = WD + "resources/gene_expr"
+GTEX_GENE_EXPRESSION = WD + "data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_gene_reads.gct"
+GTEX_GENE_RPKM = WD + "data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_gene_rpkm.gct"
+SAMPLE_ANNOTATION = WD + "data/annotation/GTEx_Data_V6_Annotations_SampleAttributesDS.txt"
+
+DEST_STORE = WD + "resources/gene_expr/"
 STORAGE_MAPPING = WD + "resources/gene_expr.mapping"
 
 sample_anno = pd.read_table(SAMPLE_ANNOTATION)
