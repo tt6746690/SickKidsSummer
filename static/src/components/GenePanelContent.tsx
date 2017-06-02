@@ -1,6 +1,9 @@
 import * as React from "react"
-
 import { ButtonGroup, Button } from "react-bootstrap"
+
+import { isEmptyObject, isNonEmptyArray } from "../utils/Utils"
+import { getGenePanelEntityById, getGeneEntityByIdList } from "../store/Query"
+import { geneEntity } from "../Interfaces"
 
 
 class GenePanelContent extends React.Component<any, any>{
@@ -8,32 +11,27 @@ class GenePanelContent extends React.Component<any, any>{
     render() {
         /*
             Displays gene symbol associated with currently selected genePanel
-            -- query genePanelList for matching genePanelId with selectedGenePanel
-            -- look up info related to gene in this.props.gene
-            -- maps gene.geneSymbol to a list of Buttons
+            -- query entities.genePanel to get list of genes associatted with selectedGenePanel
+            -- query entities.gene to get geneSymbol info for each gene
+            -- map to a list of Buttons
         */
         let panelGeneButtons
+        let genePanel = getGenePanelEntityById(this.props.genePanel, this.props.selectedGenePanel)
 
-        // returns undefined if not found
-        const filteredGenePanel = this.props.genePanel.find((panel) => {
-            return panel.genePanelId === this.props.selectedGenePanel
-        })
+        if(!isEmptyObject(genePanel) && 
+            isNonEmptyArray(genePanel.panelGenes)){
 
-        if(filteredGenePanel){
-            panelGeneButtons = filteredGenePanel.panelGenes.map((ensemblId, index) => {
-                let geneInfo = this.props.gene.find((gene) => gene.ensemblId === ensemblId)
+            let genes = getGeneEntityByIdList(this.props.gene, genePanel.panelGenes)
 
-                if(geneInfo){
-                    return (
-                        <Button value={geneInfo.ensemblId} 
+            panelGeneButtons = genes.map((gene: geneEntity, index) => {
+               return (
+                    <Button value={gene.ensemblId} 
                                 key={index.toString()} 
                                 onClick={this.props.onPanelGeneClick}
-                                bsStyle={(this.props.selectedGene.includes(geneInfo.ensemblId)) ? "success": "default"}>
-                            {geneInfo.geneSymbol.toUpperCase()}
-                        </Button>
-                    )
-                } 
-                
+                                bsStyle={(this.props.selectedGene.includes(gene.ensemblId)) ? "success": "default"}>
+                            {gene.geneSymbol.toUpperCase()}
+                    </Button>
+               )
             })
         }
 

@@ -2,7 +2,8 @@ import { connect } from 'react-redux'
 import * as d3 from "d3" 
 
 import ExonBarPlot from '../components/ExonBarPlot'
-import { getGeneEntityById, getGeneEntityByIdList, isNonEmptyArray } from "../utils/Utils"
+import { isNonEmptyArray } from "../utils/Utils"
+import { getGeneEntityByIdList } from "../store/Query"
 import { geneEntity, stateInterface } from '../Interfaces'
 import {
     addGene, addGenePanel, addTissueSite,
@@ -52,8 +53,8 @@ const mapStateToProps = (state: stateInterface) => {
     } = state
 
     // plot config
-    let width = 945
-    let height = 645
+    let width = 800   // 945
+    let height = 600  // 645
     let offset = 40
 
     let xAxisLength = width - offset * 2
@@ -65,6 +66,8 @@ const mapStateToProps = (state: stateInterface) => {
     let xAxis = d3.axisBottom(x)
     let yAxis = d3.axisLeft(y).tickFormat(d3.format(".5"))
 
+    let xLabel = "Exon Number"
+    let yLabel = "Raw Read Counts (log scaled)"
 
     // data & data-specific config 
     let geneEntities = getGeneEntityByIdList(gene, selectedGene)        // defaults to []
@@ -103,7 +106,8 @@ const mapStateToProps = (state: stateInterface) => {
     }
 
     return {
-        width, height, x, y, xAxisLength, yAxisLength, xAxis, yAxis, offset, color,
+        width, height, x, y, xAxisLength, yAxisLength, xAxis, yAxis, 
+        xLabel, yLabel, offset, color,
         geneEntities, data, tissueNum, exonNum, xGroupingWidthRatio
     }
 }

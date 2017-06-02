@@ -3,7 +3,7 @@ import * as d3 from "d3"
 
 import { PanelGroup, Panel } from 'react-bootstrap'
 
-import { getGeneEntityById, getGeneEntityByIdList, isNonEmptyArray, isEmptyObject } from "../utils/Utils"
+import { isEmptyObject } from "../utils/Utils"
 import { tissueSiteEntity } from "../Interfaces"
 
 
@@ -105,8 +105,9 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
     */
     plot = () => {
         
-        let { x, y, offset, xAxis, yAxis, yAxisLength, width, height, color,
-            data, geneEntities, exonNum, tissueNum, xGroupingWidthRatio } = this.props
+        let { x, y, offset, xAxis, yAxis, xAxisLength, yAxisLength, 
+                xLabel, yLabel, width, height, color,
+                data, geneEntities, exonNum, tissueNum, xGroupingWidthRatio } = this.props
         let svg: any = this.state.svg 
 
         console.log("plotting...", this.props)
@@ -122,9 +123,12 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             .call(xAxis)
             .append("text")
             .classed("label", true)
-            .attr("x", width / 2)
-            .attr("y", -10)
-            .text("exonExpr")
+            .attr("x", xAxisLength / 2)
+            .attr("y", offset*0.7)
+            .style("fill", "darkgray")
+            .style("text-anchor", "middle")
+            .style("font-size", "15px")
+            .text(xLabel)
 
         svg.append("g")
             .classed("y axis", true)
@@ -133,9 +137,12 @@ class ExonBarPlot extends React.Component<any, stateInterface>{
             .append("text")
             .classed("label", true)
             .attr("transform", "rotate(-90)")
-            .attr("x", 10)
-            .attr("y", height / 2)
-            .text("Read Counts")
+            .attr("x", - yAxisLength / 2)
+            .attr("y", -offset*0.7)
+            .style("fill", "darkgray")
+            .style("text-anchor", "middle")
+            .style("font-size", "15px")
+            .text(yLabel)
 
         svg.append("line")
             .classed("ExpressionCutOffLine", true)

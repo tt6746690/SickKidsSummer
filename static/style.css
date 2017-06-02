@@ -1,5 +1,17 @@
+/* font */
+@import url('https://fonts.googleapis.com/css?family=Inconsolata|Lato');
 
-/* changes to default react bootstrap  */
+body {
+    font-family: 'Lato', sans-serif;
+    /*font-family: 'Inconsolata', monospace;*/
+}
+.x.axis,
+.y.axis{
+    font-family: 'Lato', sans-serif;
+}
+
+
+/* change default bootstrap styles  */
 .jumbotron {
     padding-top: 10px
 }
@@ -14,8 +26,3 @@ ul.nav-stacked {
     max-height: 400px;
     overflow-y: auto;
 }
-
-/*
-#gene-panel {
-    height: 150px
-}*/
