@@ -9,31 +9,33 @@ import {
   toggleGene,
   toggleTissueSite
 } from "../reducers/Actions";
-import GeneBarPlot from "../components/GeneBarPlot";
-import { isNonEmptyArray } from "../utils/Utils";
+import ExonBoxPlot from "../components/ExonBoxPlot";
+import { isNonEmptyArray, log } from "../utils/Utils";
 import { getGeneEntityByIdList } from "../store/Query";
 import { geneEntity, stateInterface } from "../Interfaces";
 
 /* 
-    Formats gene expression data for plotting 
+    Formats exon expression data for plotting 
     Returns data: {
-        <tissueSite>: [ ...[exonNum, [ ... readCounts ]]  ],
-        ...
-    }
+            <tissueSite>: [ ...[exonNum, [ ... readCounts ]]  ],
+            ...
+        } 
 */
-const formatDataforPlot = geneEntities => {
-  let data = {};
+const formatDataforPlot = (exonExpr: Object, tissues: string[]) => {
+  let flattened = {};
+  let tissue;
 
-  geneEntities.forEach(geneEntity => {
-    data[geneEntity.ensemblId] = [];
-
-    Object.keys(geneEntity.geneExpr).map(tissue => {
-      geneEntity.geneExpr[tissue].map(rpkm => {
-        data[geneEntity.ensemblId].push([tissue, rpkm]);
+  tissues.forEach((tissue: string) => {
+    flattened[tissue] = [];
+    Object.keys(exonExpr).forEach((exonNum: string) => {
+      let reads = exonExpr[exonNum][tissue];
+      reads.map(read => {
+        flattened[tissue].push([parseInt(exonNum), read]);
       });
     });
   });
-  return data;
+
+  return flattened;
 };
 
 const mapStateToProps = (state: stateInterface) => {
@@ -50,46 +52,55 @@ const mapStateToProps = (state: stateInterface) => {
   } = state;
 
   // plot config
-  let plotName = "GeneBarPlot";
-  let xLabel = "Tissue Types";
-  let yLabel = "Reads (rpkm)";
+  let plotName = "ExonBarPlot";
+  let xLabel = "Exon Number";
+  let yLabel = "Raw Read Counts (log scaled)";
 
   let svg = d3.select("." + plotName + "Group");
 
   let xAxisLength = width - offset * 2;
   let yAxisLength = height - offset * 4;
 
-  let x = d3.scaleBand().range([0, xAxisLength]).paddingOuter(0.25);
+  let x = d3.scaleLinear().range([0, xAxisLength]).nice();
   let y = d3.scaleLog().range([yAxisLength, 0]).base(10);
 
   let xAxis = d3.axisBottom(x);
   let yAxis = d3.axisLeft(y).tickFormat(d3.format(".5"));
 
-  let numPerTick = selectedGene.length;
+  let numPerTick = selectedTissueSite.length;
   let xGroupingWidthRatio = 0.4;
 
-  let xTicks: string[];
+  let xTicks: number[];
   let xTickCount = 0;
 
   let data = {};
   let geneEntities = getGeneEntityByIdList(gene, selectedGene); // defaults to []
 
   /* 
-        Precondition for computing data for gene expression plot 
+        Precondition for computing data for exon expression plot 
         -- select.gene array non empty and query for exonExpr in entities yield valid result
+        -- select.tissueSite array non empty
         -- select.genePanel
     */
-  if (selectedGenePanel !== "" && isNonEmptyArray(geneEntities)) {
-    data = formatDataforPlot(geneEntities);
+  if (
+    selectedGenePanel !== "" &&
+    isNonEmptyArray(selectedGene) &&
+    isNonEmptyArray(selectedTissueSite)
+  ) {
+    let lastGeneClicked = geneEntities[geneEntities.length - 1];
 
-    xTicks = Object.keys(geneEntities[0].geneExpr);
+    data = formatDataforPlot(lastGeneClicked.exonExpr, selectedTissueSite);
+
+    xTicks = Object.keys(lastGeneClicked.exonExpr).map(x => parseInt(x));
     xTickCount = xTicks.length;
 
-    x.domain(xTicks);
-    y.domain([0.01, 10000]); // later change the upper y limit to reflect data
+    x.domain([0, xTickCount + 1]);
+    y.domain([0.01, 10000]);
 
     xAxis.tickValues(xTicks);
     yAxis.tickValues([0.01, 0.1, 1, 10, 100, 1000, 10000]);
+
+    log({ xTicks, xTickCount, data });
   }
 
   /*
@@ -106,21 +117,22 @@ const mapStateToProps = (state: stateInterface) => {
     let rescaledY = d3.event.transform.rescaleY(y);
     svg.select(".y.axis").call(yAxis.scale(rescaledY));
 
+    svg
+      .select(".ExpressionCutOffLine")
+      .attr("x1", x(0))
+      .attr("y1", rescaledY(20))
+      .attr("x2", x(xTickCount + 1))
+      .attr("y2", rescaledY(20));
+
     Object.keys(data).map((id, index) => {
-      let xGroupingWidth = x(xTicks[0]) * xGroupingWidthRatio;
+      let xGroupingWidth = x(1) * xGroupingWidthRatio;
       let xTicOffset = numPerTick == 1
         ? 0
         : xGroupingWidth * (index / (numPerTick - 1) - 0.5);
 
       svg.selectAll("." + plotName + index).attr("transform", d => {
         let ytrans = d[1] == 0 ? rescaledY(0.01) : rescaledY(d[1]);
-        return (
-          "translate(" +
-          (x(d[0]) + xTicOffset + x.bandwidth()) +
-          "," +
-          ytrans +
-          ")"
-        );
+        return "translate(" + (x(d[0]) + xTicOffset) + "," + ytrans + ")";
       });
     });
   };
@@ -174,11 +186,6 @@ const mapStateToProps = (state: stateInterface) => {
         .classed("x axis", true)
         .attr("transform", "translate(0," + yAxisLength + ")")
         .call(xAxis)
-        .selectAll("text")
-        .attr("dy", ".30em")
-        .attr("x", 5)
-        .attr("transform", "rotate(30)")
-        .style("text-anchor", "start")
         .append("text")
         .classed("label", true)
         .attr("x", xAxisLength / 2)
@@ -202,6 +209,15 @@ const mapStateToProps = (state: stateInterface) => {
         .style("text-anchor", "middle")
         .style("font-size", "15px")
         .text(yLabel);
+      svg
+        .append("line")
+        .classed("ExpressionCutOffLine", true)
+        .attr("x1", x(0))
+        .attr("y1", y(20))
+        .attr("x2", x(xTickCount + 1))
+        .attr("y2", y(20))
+        .style("stroke", "darkgray")
+        .style("stroke-dasharray", "3, 3");
 
       Object.keys(data).map((id, index) => {
         /*  index/tissueNum \in [0, 1]
@@ -224,14 +240,8 @@ const mapStateToProps = (state: stateInterface) => {
           .attr("transform", d => {
             /* handles situation where counts = 0, log scale -> Infinity */
             let ytrans = d[1] == 0 ? y(0.01) : y(d[1]);
-
-            return (
-              "translate(" +
-              (x(d[0]) + xTicOffset + x.bandwidth()) +
-              "," +
-              ytrans +
-              ")"
-            );
+            // console.log(x(d[0]), xTicOffset);
+            return "translate(" + (x(d[0]) + xTicOffset) + "," + ytrans + ")";
           })
           .style("fill", d => color(id));
       });
@@ -244,8 +254,8 @@ const mapDispatchToProps = dispatch => {
   return {};
 };
 
-const GeneBarPlotContainer = connect(mapStateToProps, mapDispatchToProps)(
-  GeneBarPlot
+const ExonBoxPlotContainer = connect(mapStateToProps, mapDispatchToProps)(
+  ExonBoxPlot
 );
 
-export default GeneBarPlotContainer;
+export default ExonBoxPlotContainer;

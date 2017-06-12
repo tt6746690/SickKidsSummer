@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import { PanelGroup, Panel } from "react-bootstrap";
 import { isEmptyObject } from "../utils/Utils";
 
-class GeneBarPlot extends React.Component<any, any> {
+class ExonBoxPlot extends React.Component<any, any> {
   componentDidMount() {
     let { setup } = this.props;
     setup();
@@ -24,8 +24,8 @@ class GeneBarPlot extends React.Component<any, any> {
     }
   }
   render() {
-    return <div id="GeneBarPlot" />;
+    return <div id="ExonBarPlot" />;
   }
 }
 
-export default GeneBarPlot;
+export default ExonBoxPlot;

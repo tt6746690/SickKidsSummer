@@ -2,9 +2,9 @@ import * as React from "react";
 import * as d3 from "d3";
 
 import { PanelGroup, Panel } from "react-bootstrap";
-import { isEmptyObject } from "../utils/Utils";
+import { isNonEmptyArray } from "../utils/Utils";
 
-class ExonBarPlot extends React.Component<any, any> {
+class GeneBoxPlot extends React.Component<any, any> {
   componentDidMount() {
     let { setup } = this.props;
     setup();
@@ -19,13 +19,14 @@ class ExonBarPlot extends React.Component<any, any> {
   }
   componentDidUpdate() {
     let { data, plot } = this.props;
-    if (typeof data !== "undefined" && !isEmptyObject(data)) {
+    if (typeof data !== "undefined" && isNonEmptyArray(data)) {
+      console.log("plotting here genebar", data);
       plot();
     }
   }
   render() {
-    return <div id="ExonBarPlot" />;
+    return <div id="GeneBarPlot" />;
   }
 }
 
-export default ExonBarPlot;
+export default GeneBoxPlot;

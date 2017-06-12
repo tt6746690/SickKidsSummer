@@ -16,8 +16,8 @@ import GenePanelListingContainer from "../containers/GenePanelListingContainer";
 import GenePanelInfoContainer from "../containers/GenePanelInfoContainer";
 import TissueSiteListingContainer from "../containers/TissueSiteListingContainer";
 import TissueSiteInfoContainer from "../containers/TissueSiteInfoContainer";
-import ExonBarPlotContainer from "../containers/ExonBarPlotContainer";
-import GeneBarPlotContainer from "../containers/GeneBarPlotContainer";
+import ExonBoxPlotContainer from "../containers/ExonBoxPlotContainer";
+import GeneBoxPlotContainer from "../containers/GeneBoxPlotContainer";
 
 import { PLOT_DISPLAY_TYPE } from "../reducers/Actions";
 
@@ -73,10 +73,10 @@ class Layout extends React.Component<any, any> {
             <Col sm={10}>
               <Tab.Content animation>
                 <Tab.Pane eventKey={PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT}>
-                  <GeneBarPlotContainer />
+                  <GeneBoxPlotContainer />
                 </Tab.Pane>
                 <Tab.Pane eventKey={PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT}>
-                  <ExonBarPlotContainer />
+                  <ExonBoxPlotContainer />
                 </Tab.Pane>
               </Tab.Content>
             </Col>
