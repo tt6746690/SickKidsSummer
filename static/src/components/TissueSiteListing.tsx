@@ -1,26 +1,35 @@
-import * as React from "react"
+import * as React from "react";
 
-import { DropdownButton, MenuItem } from 'react-bootstrap'
+import { DropdownButton, MenuItem } from "react-bootstrap";
 
-class TissueSiteListing extends React.Component<any, any>{
+class TissueSiteListing extends React.Component<any, any> {
+  render() {
+    let { tissueSite, selectedTissueSite, onTissueSiteListSelect } = this.props;
 
-    render() {
-        const tissueSiteList = this.props.tissueSite.map((tissue, index) =>
-            <MenuItem eventKey={tissue.tissueSiteId} 
-                      key={index.toString()}
-                      active={this.props.selectedTissueSite.includes(tissue.tissueSiteId)}>
-                {tissue.tissueSiteId}
-            </MenuItem>
-        )
-        return (
-            <DropdownButton title="Tissue Types" 
-                            id="bg-nested-dropdown" 
-                            onSelect={this.props.onTissueSiteSelect}
-                            className="tissueSiteListing">
-                {tissueSiteList}
-            </DropdownButton>
-        )
-    }
+    const tissueSiteList = tissueSite.map((tissue, index) => {
+      let tissueId = tissue.tissueSiteId;
+      return (
+        <MenuItem
+          eventKey={tissueId}
+          key={index.toString()}
+          active={selectedTissueSite.includes(tissueId)}
+        >
+          {tissueId}
+        </MenuItem>
+      );
+    });
+
+    return (
+      <DropdownButton
+        title="Tissue Types"
+        id="bg-nested-dropdown"
+        onSelect={onTissueSiteListSelect}
+        className="tissueSiteListing"
+      >
+        {tissueSiteList}
+      </DropdownButton>
+    );
+  }
 }
 
-export default TissueSiteListing
+export default TissueSiteListing;

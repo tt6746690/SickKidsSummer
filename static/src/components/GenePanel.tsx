@@ -16,11 +16,10 @@ import {
 import GenePanelListing from "./GenePanelListing";
 import GenePanelContent from "./GenePanelContent";
 
-import TissueSiteListing from "./TissueSiteListing";
-import TissueSiteContent from "./TIssueSiteContent";
-
 import ExonBarPlotContainer from "../containers/ExonBarPlotContainer";
 import GeneBarPlotContainer from "../containers/GeneBarPlotContainer";
+import TissueSiteListingContainer from "../containers/TissueSiteListingContainer";
+import TissueSiteInfoContainer from "../containers/TissueSiteInfoContainer";
 
 import { PLOT_DISPLAY_TYPE } from "../reducers/Actions";
 
@@ -57,18 +56,10 @@ class GenePanel extends React.Component<any, any> {
         <Row id="tissue">
           <Panel>
             <Col xs={1}>
-              <TissueSiteListing
-                selectedTissueSite={this.props.selectedTissueSite}
-                tissueSite={this.props.tissueSite}
-                onTissueSiteSelect={this.props.onTissueListSelect}
-              />
+              <TissueSiteListingContainer />
             </Col>
             <Col xs={9} xsOffset={1}>
-              <TissueSiteContent
-                selectedTissueSite={this.props.selectedTissueSite}
-                onTissueSiteClick={this.props.onTissueSiteClick}
-                color={this.props.color}
-              />
+              <TissueSiteInfoContainer />
             </Col>
           </Panel>
         </Row>
