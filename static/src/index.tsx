@@ -5,11 +5,11 @@ import { Provider } from "react-redux";
 import { Jumbotron, Grid } from "react-bootstrap";
 
 import store from "./store/Store";
-import GenePanelContainer from "./containers/GenePanelContainer";
+import LayoutContainer from "./containers/LayoutContainer";
 
 const App = props =>
   <Jumbotron>
-    <GenePanelContainer />
+    <LayoutContainer />
   </Jumbotron>;
 
 ReactDOM.render(

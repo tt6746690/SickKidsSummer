@@ -1,10 +1,6 @@
 import { connect } from "react-redux";
 import * as d3 from "d3";
 
-import ExonBarPlot from "../components/ExonBarPlot";
-import { isNonEmptyArray, log } from "../utils/Utils";
-import { getGeneEntityByIdList } from "../store/Query";
-import { geneEntity, stateInterface } from "../Interfaces";
 import {
   addGene,
   addGenePanel,
@@ -13,6 +9,10 @@ import {
   toggleGene,
   toggleTissueSite
 } from "../reducers/Actions";
+import ExonBarPlot from "../components/ExonBarPlot";
+import { isNonEmptyArray, log } from "../utils/Utils";
+import { getGeneEntityByIdList } from "../store/Query";
+import { geneEntity, stateInterface } from "../Interfaces";
 
 /* 
     Formats exon expression data for plotting 

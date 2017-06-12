@@ -1,10 +1,6 @@
 import { connect } from "react-redux";
 import * as d3 from "d3";
 
-import GeneBarPlot from "../components/GeneBarPlot";
-import { isNonEmptyArray } from "../utils/Utils";
-import { getGeneEntityByIdList } from "../store/Query";
-import { geneEntity, stateInterface } from "../Interfaces";
 import {
   addGene,
   addGenePanel,
@@ -13,6 +9,10 @@ import {
   toggleGene,
   toggleTissueSite
 } from "../reducers/Actions";
+import GeneBarPlot from "../components/GeneBarPlot";
+import { isNonEmptyArray } from "../utils/Utils";
+import { getGeneEntityByIdList } from "../store/Query";
+import { geneEntity, stateInterface } from "../Interfaces";
 
 /* 
     Formats gene expression data for plotting 
@@ -37,7 +37,6 @@ const formatDataforPlot = geneEntities => {
 };
 
 const mapStateToProps = (state: stateInterface) => {
-  // destructuring state
   let {
     entities: { gene, genePanel, tissueSite },
     ui: {

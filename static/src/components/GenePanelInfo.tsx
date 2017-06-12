@@ -5,7 +5,7 @@ import { isEmptyObject, isNonEmptyArray } from "../utils/Utils";
 import { getGenePanelEntityById, getGeneEntityByIdList } from "../store/Query";
 import { geneEntity } from "../Interfaces";
 
-class GenePanelContent extends React.Component<any, any> {
+class GenePanelInfo extends React.Component<any, any> {
   render() {
     let {
       gene,
@@ -72,4 +72,4 @@ class GenePanelContent extends React.Component<any, any> {
   }
 }
 
-export default GenePanelContent;
+export default GenePanelInfo;

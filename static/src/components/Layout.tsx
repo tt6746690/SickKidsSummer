@@ -1,6 +1,5 @@
 import * as React from "react";
 import "whatwg-fetch";
-
 import {
   Grid,
   Row,
@@ -13,42 +12,33 @@ import {
   Panel
 } from "react-bootstrap";
 
-import GenePanelListing from "./GenePanelListing";
-import GenePanelContent from "./GenePanelContent";
-
-import ExonBarPlotContainer from "../containers/ExonBarPlotContainer";
-import GeneBarPlotContainer from "../containers/GeneBarPlotContainer";
+import GenePanelListingContainer from "../containers/GenePanelListingContainer";
+import GenePanelInfoContainer from "../containers/GenePanelInfoContainer";
 import TissueSiteListingContainer from "../containers/TissueSiteListingContainer";
 import TissueSiteInfoContainer from "../containers/TissueSiteInfoContainer";
+import ExonBarPlotContainer from "../containers/ExonBarPlotContainer";
+import GeneBarPlotContainer from "../containers/GeneBarPlotContainer";
 
 import { PLOT_DISPLAY_TYPE } from "../reducers/Actions";
 
-class GenePanel extends React.Component<any, any> {
+class Layout extends React.Component<any, any> {
   componentWillMount() {
-    this.props.onComponentWillMount();
+    let { onComponentWillMount } = this.props;
+    onComponentWillMount();
   }
 
   render() {
+    let { plotDisplayType, onPlotTabSelect } = this.props;
+
     return (
       <Grid>
         <Row id="gene-panel">
           <Panel>
             <Col xs={1}>
-              <GenePanelListing
-                selectedGenePanel={this.props.selectedGenePanel}
-                genePanel={this.props.genePanel}
-                onGenePanelSelect={this.props.onGenePanelSelect}
-              />
+              <GenePanelListingContainer />
             </Col>
             <Col xs={10} xsOffset={1}>
-              <GenePanelContent
-                selectedGene={this.props.selectedGene}
-                selectedGenePanel={this.props.selectedGenePanel}
-                genePanel={this.props.genePanel}
-                gene={this.props.gene}
-                onPanelGeneClick={this.props.onPanelGeneClick}
-                color={this.props.color}
-              />
+              <GenePanelInfoContainer />
             </Col>
           </Panel>
         </Row>
@@ -66,8 +56,8 @@ class GenePanel extends React.Component<any, any> {
 
         <Tab.Container
           id="main-display"
-          activeKey={this.props.plotDisplayType}
-          onSelect={this.props.onPlotTabSelect}
+          activeKey={plotDisplayType}
+          onSelect={onPlotTabSelect}
         >
           <Row>
             <Col sm={2}>
@@ -98,4 +88,4 @@ class GenePanel extends React.Component<any, any> {
   }
 }
 
-export default GenePanel;
+export default Layout;

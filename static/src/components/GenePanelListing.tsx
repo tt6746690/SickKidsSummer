@@ -4,11 +4,12 @@ import { DropdownButton, MenuItem } from "react-bootstrap";
 
 class GenePanelListing extends React.Component<any, any> {
   render() {
-    const panelListing = this.props.genePanel.map((panel, index) =>
+    let { genePanel, selectedGenePanel, onGenePanelListSelect } = this.props;
+    const panelListing = genePanel.map((panel, index) =>
       <MenuItem
         eventKey={panel.genePanelId}
         key={index.toString()}
-        active={this.props.selectedGenePanel === panel.genePanelId}
+        active={selectedGenePanel === panel.genePanelId}
       >
         {panel.genePanelId}
       </MenuItem>
@@ -17,7 +18,7 @@ class GenePanelListing extends React.Component<any, any> {
       <DropdownButton
         title="Gene Panels"
         id="bg-nested-dropdown"
-        onSelect={this.props.onGenePanelSelect}
+        onSelect={onGenePanelListSelect}
       >
         {panelListing}
       </DropdownButton>
