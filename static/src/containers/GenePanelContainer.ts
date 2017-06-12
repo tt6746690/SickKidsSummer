@@ -11,6 +11,7 @@ import { addGene,
         toggleTissueSite,
         setPlotDisplay,
         PLOT_DISPLAY_TYPE } from '../reducers/Actions'
+import { isNonEmptyArray } from '../utils/Utils'
 
 
 // transform current redux store state into component props
@@ -54,10 +55,10 @@ const mapDispatchToProps = (dispatch) => {
 
             fetch('http://127.0.0.1:5000/api/exon_expr/tissue_site_list', { mode: 'cors' })
                 .then((response) => response.json())
-                .then((json) => {
+                .then((tissueList) => {
 
-                    if (typeof json !== 'undefined' && json.length > 0) {
-                        json.map((tissueSite) => {
+                    if (isNonEmptyArray(tissueList)) {
+                        tissueList.map((tissueSite) => {
                             dispatch(addTissueSite({
                                 tissueSiteId: tissueSite
                             }))
@@ -70,16 +71,16 @@ const mapDispatchToProps = (dispatch) => {
 
             fetch('http://127.0.0.1:5000/api/gene_panels/gene_panel_list', { mode: 'cors' })
                 .then((response) => response.json())
-                .then((json) => {
+                .then((panelList) => {
 
-                    if (typeof json !== 'undefined' && json.length > 0) {
-                        json.map((genePanel) => {
+                    if (isNonEmptyArray(panelList)) {
+                        panelList.map((genePanel) => {
                             dispatch(addGenePanel({
                                 genePanelId: genePanel
                             }))
                         })
 
-                        dispatch(selectGenePanel(json[0]))
+                        dispatch(selectGenePanel(panelList[0]))
                     }
 
                 })

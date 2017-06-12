@@ -1,11 +1,11 @@
-import 'whatwg-fetch'
-import * as d3 from "d3" 
-import { createStore } from 'redux'
+import "whatwg-fetch";
+import * as d3 from "d3";
+import { createStore } from "redux";
 
-import { stateInterface } from '../Interfaces'
-import rootReducer from '../reducers/Root'
+import { stateInterface } from "../Interfaces";
+import rootReducer from "../reducers/Root";
 
-import { PLOT_DISPLAY_TYPE } from "../reducers/Actions"
+import { PLOT_DISPLAY_TYPE } from "../reducers/Actions";
 
 /* 
     Testing reducer with 
@@ -15,27 +15,31 @@ import { PLOT_DISPLAY_TYPE } from "../reducers/Actions"
 */
 
 let defaultState: stateInterface = {
-    entities: {
-        genePanel: [],
-        gene: [],
-        tissueSite: []
+  entities: {
+    genePanel: [],
+    gene: [],
+    tissueSite: []
+  },
+  ui: {
+    select: {
+      genePanel: "",
+      gene: [],
+      tissueSite: []
     },
-    ui: {
-        select: {
-            genePanel: "",
-            gene: [],
-            tissueSite: []
-        },
-        plotDisplayType: PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT,
-        plot: {
-            color: d3.scaleOrdinal(d3.schemeCategory20)
-        }
+    plotDisplayType: PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT,
+    plot: {
+      color: d3.scaleOrdinal(d3.schemeCategory20),
+      width: 945,
+      height: 600,
+      offset: 60
     }
-}
+  }
+};
 
+let store = createStore(rootReducer, defaultState);
+let unsubscribe = store.subscribe(() => {
+  let s = store.getState();
+  console.log(s.entities, s.ui);
+});
 
-let store = createStore(rootReducer, defaultState)
-let unsubscribe = store.subscribe(() => { let s = store.getState(); console.log(s.entities, s.ui) })
-
-
-export default store
+export default store;

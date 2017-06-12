@@ -1,26 +1,20 @@
-import * as React from "react"
-import * as ReactDOM from "react-dom"
-import { Provider } from 'react-redux'
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 
-import { Jumbotron, Grid } from 'react-bootstrap'
+import { Jumbotron, Grid } from "react-bootstrap";
 
-// import GenePanel from './components/GenePanel'
-import store from './store/Store'
-import GenePanelContainer from './containers/GenePanelContainer'
+import store from "./store/Store";
+import GenePanelContainer from "./containers/GenePanelContainer";
 
-
-const App = (props) => (
-    <Jumbotron>
-        <GenePanelContainer />
-    </Jumbotron>
-)
+const App = props =>
+  <Jumbotron>
+    <GenePanelContainer />
+  </Jumbotron>;
 
 ReactDOM.render(
-    (
-        <Provider store={store}>
-            <App />
-        </Provider>
-    ),
-    document.getElementById('root')
-)
-
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("root")
+);

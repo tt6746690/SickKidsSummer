@@ -17,6 +17,7 @@ class GenePanelContent extends React.Component<any, any>{
             -- query entities.gene to get geneSymbol info for each gene
             -- map to a list of Buttons
         */
+
         let panelGeneButtons
         let genePanelEntity = getGenePanelEntityById(genePanel, selectedGenePanel)
 
@@ -26,7 +27,6 @@ class GenePanelContent extends React.Component<any, any>{
             let genes = getGeneEntityByIdList(gene, genePanelEntity.panelGenes)
 
             panelGeneButtons = genes.map((gene: geneEntity, index) => {
-
 
                 let getStyle = () => {
 

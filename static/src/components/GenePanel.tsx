@@ -1,103 +1,110 @@
-import * as React from "react"
-import 'whatwg-fetch'
+import * as React from "react";
+import "whatwg-fetch";
 
-import { Grid, Row, Col, Button, ButtonGroup, Tab, Nav, NavItem, Panel } from 'react-bootstrap'
+import {
+  Grid,
+  Row,
+  Col,
+  Button,
+  ButtonGroup,
+  Tab,
+  Nav,
+  NavItem,
+  Panel
+} from "react-bootstrap";
 
-import GenePanelListing from  "./GenePanelListing"
-import GenePanelContent from "./GenePanelContent"
+import GenePanelListing from "./GenePanelListing";
+import GenePanelContent from "./GenePanelContent";
 
-import TissueSiteListing from "./TissueSiteListing"
-import TissueSiteContent from "./TIssueSiteContent"
+import TissueSiteListing from "./TissueSiteListing";
+import TissueSiteContent from "./TIssueSiteContent";
 
-import ExonBarPlotContainer from "../containers/ExonBarPlotContainer"
-import GeneBarPlotContainer from "../containers/GeneBarPlotContainer"
+import ExonBarPlotContainer from "../containers/ExonBarPlotContainer";
+import GeneBarPlotContainer from "../containers/GeneBarPlotContainer";
 
-import ExonBarPlot from "./ExonBarPlot"
+import { PLOT_DISPLAY_TYPE } from "../reducers/Actions";
 
-import { PLOT_DISPLAY_TYPE } from "../reducers/Actions"
+class GenePanel extends React.Component<any, any> {
+  componentWillMount() {
+    this.props.onComponentWillMount();
+  }
 
-class GenePanel extends React.Component<any, any>{
+  render() {
+    return (
+      <Grid>
+        <Row id="gene-panel">
+          <Panel>
+            <Col xs={1}>
+              <GenePanelListing
+                selectedGenePanel={this.props.selectedGenePanel}
+                genePanel={this.props.genePanel}
+                onGenePanelSelect={this.props.onGenePanelSelect}
+              />
+            </Col>
+            <Col xs={10} xsOffset={1}>
+              <GenePanelContent
+                selectedGene={this.props.selectedGene}
+                selectedGenePanel={this.props.selectedGenePanel}
+                genePanel={this.props.genePanel}
+                gene={this.props.gene}
+                onPanelGeneClick={this.props.onPanelGeneClick}
+                color={this.props.color}
+              />
+            </Col>
+          </Panel>
+        </Row>
 
-    componentWillMount(){
-        this.props.onComponentWillMount()
-    }
- 
-    render() {        
-        return (
-            <Grid>
-                <Row id="gene-panel" >
-                    <Panel> 
-                        <Col xs={1} >
-                            <GenePanelListing
-                                selectedGenePanel={this.props.selectedGenePanel}
-                                genePanel={this.props.genePanel}
-                                onGenePanelSelect={this.props.onGenePanelSelect} />
-                        </Col>
-                        <Col xs={10} xsOffset={1}>
-                            <GenePanelContent
-                                selectedGene={this.props.selectedGene}
-                                selectedGenePanel={this.props.selectedGenePanel}
+        <Row id="tissue">
+          <Panel>
+            <Col xs={1}>
+              <TissueSiteListing
+                selectedTissueSite={this.props.selectedTissueSite}
+                tissueSite={this.props.tissueSite}
+                onTissueSiteSelect={this.props.onTissueListSelect}
+              />
+            </Col>
+            <Col xs={9} xsOffset={1}>
+              <TissueSiteContent
+                selectedTissueSite={this.props.selectedTissueSite}
+                onTissueSiteClick={this.props.onTissueSiteClick}
+                color={this.props.color}
+              />
+            </Col>
+          </Panel>
+        </Row>
 
-                                genePanel={this.props.genePanel}
-                                gene={this.props.gene}
+        <Tab.Container
+          id="main-display"
+          activeKey={this.props.plotDisplayType}
+          onSelect={this.props.onPlotTabSelect}
+        >
+          <Row>
+            <Col sm={2}>
+              <Nav bsStyle="pills" stacked>
+                <NavItem eventKey={PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT}>
+                  Gene Expression
+                </NavItem>
+                <NavItem eventKey={PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT}>
+                  Exon Expression
+                </NavItem>
+              </Nav>
+            </Col>
+            <Col sm={10}>
+              <Tab.Content animation>
+                <Tab.Pane eventKey={PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT}>
+                  <GeneBarPlotContainer />
+                </Tab.Pane>
+                <Tab.Pane eventKey={PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT}>
+                  <ExonBarPlotContainer />
+                </Tab.Pane>
+              </Tab.Content>
+            </Col>
+          </Row>
+        </Tab.Container>
 
-                                onPanelGeneClick={this.props.onPanelGeneClick} 
-                                color={this.props.color} />
-                        </Col>
-                    </Panel>
-                </Row>
-
-                <Row id="tissue">
-                    <Panel> 
-                        <Col xs={1}>
-                            <TissueSiteListing
-                                selectedTissueSite={this.props.selectedTissueSite}
-                                tissueSite={this.props.tissueSite}
-
-                                onTissueSiteSelect={this.props.onTissueListSelect}/>
-                        </Col>
-                        <Col xs={9} xsOffset={1}>
-                            <TissueSiteContent
-                                selectedTissueSite={this.props.selectedTissueSite}
-                                onTissueSiteClick={this.props.onTissueSiteClick}
-                                
-                                color={this.props.color}/>
-                        </Col>
-                    </Panel> 
-                </Row> 
- 
-                <Tab.Container id='main-display' 
-                                activeKey={this.props.plotDisplayType}
-                                onSelect={this.props.onPlotTabSelect}>
-                    <Row>
-                        <Col sm={2}>
-                            <Nav bsStyle="pills" stacked>
-                                <NavItem eventKey={PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT}>
-                                    Gene Expression
-                                </NavItem>
-                                <NavItem eventKey={PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT}>
-                                    Exon Expression
-                                </NavItem>
-                            </Nav>
-                        </Col>
-                        <Col sm={10}>
-                            <Tab.Content animation> 
-                                <Tab.Pane eventKey={PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT}>
-                                    <GeneBarPlotContainer />
-                                </Tab.Pane>
-                                <Tab.Pane eventKey={PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT}>
-                                    <ExonBarPlotContainer />
-                                </Tab.Pane>
-                            </Tab.Content>
-                        </Col>
-                    </Row>
-                </Tab.Container>
-
-            </Grid>
-        )
-
-    }
+      </Grid>
+    );
+  }
 }
 
-
-export default GenePanel
+export default GenePanel;

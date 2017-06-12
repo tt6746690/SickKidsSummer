@@ -9,7 +9,7 @@ import {
 import { geneEntity, genePanelEntity, tissueSiteEntity, stateInterface } from '../interfaces'
 
 
-function toggleGeneReducer(state, action) {
+function toggleGeneReducer(state: geneEntity[], action) {
     if (state.includes(action.ensemblId)) {
         return state.filter((ensemblId) => {
             return ensemblId !== action.ensemblId
@@ -19,7 +19,7 @@ function toggleGeneReducer(state, action) {
     }
 }
 
-function toggleTissueSiteReducer(state, action) {
+function toggleTissueSiteReducer(state: tissueSiteEntity[], action) {
     if (state.includes(action.tissueSite)) {
         return state.filter((tissueSite) => {
             return tissueSite !== action.tissueSite

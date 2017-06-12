@@ -32,7 +32,6 @@ export function setPlotDisplay(
 
 
 
-
 // actionCreators
 export function addGene(
     { ensemblId, geneSymbol = "", geneExpr = {}, exonExpr = {} }: geneEntity){
