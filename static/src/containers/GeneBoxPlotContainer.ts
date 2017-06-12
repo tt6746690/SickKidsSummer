@@ -290,13 +290,17 @@ const mapStateToProps = (state: stateInterface) => {
           ? 0
           : xGroupingWidth * (index / (numPerTick - 1) - 0.5);
 
+      let ysafe = val => {
+        return val < 0.01 ? y(0.01) : y(val);
+      };
+
       box
         .append("line")
         .attr("class", plotName + "_upperWhisker")
         .attr("x1", d => x(d.x) + xTicOffset(d.i) - xGroupingWidthPer / 2)
         .attr("x2", d => x(d.x) + xTicOffset(d.i) + xGroupingWidthPer / 2)
-        .attr("y1", d => y(d.upperWhisker))
-        .attr("y2", d => y(d.upperWhisker))
+        .attr("y1", d => ysafe(d.upperWhisker))
+        .attr("y2", d => ysafe(d.upperWhisker))
         .style("stroke", "lightgrey");
 
       box
@@ -304,26 +308,17 @@ const mapStateToProps = (state: stateInterface) => {
         .attr("class", plotName + "_lowerWhisker")
         .attr("x1", d => x(d.x) + xTicOffset(d.i) - xGroupingWidthPer / 2)
         .attr("x2", d => x(d.x) + xTicOffset(d.i) + xGroupingWidthPer / 2)
-        .attr("y1", d => y(d.lowerWhisker))
-        .attr("y2", d => y(d.lowerWhisker))
+        .attr("y1", d => ysafe(d.lowerWhisker))
+        .attr("y2", d => ysafe(d.lowerWhisker))
         .style("stroke", "lightgrey");
-
-      box
-        .append("line")
-        .attr("class", plotName + "_median")
-        .attr("x1", d => x(d.x) + xTicOffset(d.i) - xGroupingWidthPer / 2)
-        .attr("x2", d => x(d.x) + xTicOffset(d.i) + xGroupingWidthPer / 2)
-        .attr("y1", d => y(d.median))
-        .attr("y2", d => y(d.median))
-        .style("stroke", "black");
 
       box
         .append("line")
         .attr("class", plotName + "_whiskerDash")
         .attr("x1", d => x(d.x) + xTicOffset(d.i))
         .attr("x2", d => x(d.x) + xTicOffset(d.i))
-        .attr("y1", d => y(d.lowerWhisker))
-        .attr("y2", d => y(d.upperWhisker))
+        .attr("y1", d => ysafe(d.lowerWhisker))
+        .attr("y2", d => ysafe(d.upperWhisker))
         .style("stroke", "lightgrey");
 
       box
@@ -332,9 +327,18 @@ const mapStateToProps = (state: stateInterface) => {
         .attr("stroke", "lightgrey")
         .attr("fill", d => color(d.ensemblId))
         .attr("x", d => x(d.x) + xTicOffset(d.i) - xGroupingWidthPer / 2)
-        .attr("y", d => y(d.thirdQuartile))
+        .attr("y", d => ysafe(d.thirdQuartile))
         .attr("width", xGroupingWidthPer)
-        .attr("height", d => y(d.firstQuartile) - y(d.thirdQuartile));
+        .attr("height", d => ysafe(d.firstQuartile) - ysafe(d.thirdQuartile));
+
+      box
+        .append("line")
+        .attr("class", plotName + "_median")
+        .attr("x1", d => x(d.x) + xTicOffset(d.i) - xGroupingWidthPer / 2)
+        .attr("x2", d => x(d.x) + xTicOffset(d.i) + xGroupingWidthPer / 2)
+        .attr("y1", d => ysafe(d.median))
+        .attr("y2", d => ysafe(d.median))
+        .style("stroke", "#838383");
     }
   };
 };
