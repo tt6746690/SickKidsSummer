@@ -10,33 +10,13 @@ import {
   toggleTissueSite
 } from "../reducers/Actions";
 import ExonBoxPlot from "../components/ExonBoxPlot";
-import { isNonEmptyArray, log } from "../utils/Utils";
+import { isNonEmptyArray } from "../utils/Utils";
+import {
+  formatExonBoxPlotData,
+  formatExonScatterPlotData
+} from "../utils/Plot";
 import { getGeneEntityByIdList } from "../store/Query";
 import { geneEntity, stateInterface } from "../Interfaces";
-
-/* 
-    Formats exon expression data for plotting 
-    Returns data: {
-            <tissueSite>: [ ...[exonNum, [ ... readCounts ]]  ],
-            ...
-        } 
-*/
-const formatDataforPlot = (exonExpr: Object, tissues: string[]) => {
-  let flattened = {};
-  let tissue;
-
-  tissues.forEach((tissue: string) => {
-    flattened[tissue] = [];
-    Object.keys(exonExpr).forEach((exonNum: string) => {
-      let reads = exonExpr[exonNum][tissue];
-      reads.map(read => {
-        flattened[tissue].push([parseInt(exonNum), read]);
-      });
-    });
-  });
-
-  return flattened;
-};
 
 const mapStateToProps = (state: stateInterface) => {
   let {
@@ -73,7 +53,7 @@ const mapStateToProps = (state: stateInterface) => {
   let xTicks: number[];
   let xTickCount = 0;
 
-  let data = {};
+  let data = [];
   let geneEntities = getGeneEntityByIdList(gene, selectedGene); // defaults to []
 
   /* 
@@ -89,18 +69,16 @@ const mapStateToProps = (state: stateInterface) => {
   ) {
     let lastGeneClicked = geneEntities[geneEntities.length - 1];
 
-    data = formatDataforPlot(lastGeneClicked.exonExpr, selectedTissueSite);
+    data = formatExonBoxPlotData(lastGeneClicked.exonExpr, selectedTissueSite);
 
     xTicks = Object.keys(lastGeneClicked.exonExpr).map(x => parseInt(x));
     xTickCount = xTicks.length;
 
     x.domain([0, xTickCount + 1]);
-    y.domain([0.01, 10000]);
+    y.domain([1, 10000]);
 
     xAxis.tickValues(xTicks);
-    yAxis.tickValues([0.01, 0.1, 1, 10, 100, 1000, 10000]);
-
-    log({ xTicks, xTickCount, data });
+    yAxis.tickValues([1, 10, 100, 1000, 10000]);
   }
 
   /*
@@ -219,32 +197,96 @@ const mapStateToProps = (state: stateInterface) => {
         .style("stroke", "darkgray")
         .style("stroke-dasharray", "3, 3");
 
-      Object.keys(data).map((id, index) => {
-        /*  index/tissueNum \in [0, 1]
-            index/tissueNum - 0.5 \in [-0.5, 0.5]
-            scaled to xGroupingWidth to compute the xTicOffset
-        */
-        let xGroupingWidth = x(xTicks[0]) * xGroupingWidthRatio;
-        let xTicOffset = numPerTick == 1
+      let box = svg
+        .selectAll("." + plotName + "_box")
+        .data(data)
+        .enter()
+        .append("g")
+        .classed(plotName + "_box", true);
+
+      let xGroupingWidth = x(xTicks[0]) * xGroupingWidthRatio;
+      let xGroupingWidthPer = xGroupingWidth / numPerTick;
+      let xTicOffset = index =>
+        numPerTick === 1
           ? 0
           : xGroupingWidth * (index / (numPerTick - 1) - 0.5);
 
-        svg
-          .selectAll("." + plotName + index)
-          .data(data[id])
-          .enter()
-          .append("circle")
-          .classed("dot", true)
-          .classed(plotName + index, true)
-          .attr("r", 2)
-          .attr("transform", d => {
-            /* handles situation where counts = 0, log scale -> Infinity */
-            let ytrans = d[1] == 0 ? y(0.01) : y(d[1]);
-            // console.log(x(d[0]), xTicOffset);
-            return "translate(" + (x(d[0]) + xTicOffset) + "," + ytrans + ")";
-          })
-          .style("fill", d => color(id));
-      });
+      let ysafe = val => {
+        return val < 1 ? y(1) : y(val);
+      };
+
+      box
+        .append("line")
+        .attr("class", plotName + "_upperWhisker")
+        .attr("x1", d => x(d.x) + xTicOffset(d.i) - xGroupingWidthPer / 2)
+        .attr("x2", d => x(d.x) + xTicOffset(d.i) + xGroupingWidthPer / 2)
+        .attr("y1", d => ysafe(d.upperWhisker))
+        .attr("y2", d => ysafe(d.upperWhisker))
+        .style("stroke", "lightgrey");
+
+      box
+        .append("line")
+        .attr("class", plotName + "_lowerWhisker")
+        .attr("x1", d => x(d.x) + xTicOffset(d.i) - xGroupingWidthPer / 2)
+        .attr("x2", d => x(d.x) + xTicOffset(d.i) + xGroupingWidthPer / 2)
+        .attr("y1", d => ysafe(d.lowerWhisker))
+        .attr("y2", d => ysafe(d.lowerWhisker))
+        .style("stroke", "lightgrey");
+
+      box
+        .append("line")
+        .attr("class", plotName + "_whiskerDash")
+        .attr("x1", d => x(d.x) + xTicOffset(d.i))
+        .attr("x2", d => x(d.x) + xTicOffset(d.i))
+        .attr("y1", d => ysafe(d.lowerWhisker))
+        .attr("y2", d => ysafe(d.upperWhisker))
+        .style("stroke", "lightgrey");
+
+      box
+        .append("rect")
+        .attr("class", plotName + "_boxRect")
+        .attr("stroke", "lightgrey")
+        .attr("fill", d => color(d.id))
+        .attr("x", d => x(d.x) + xTicOffset(d.i) - xGroupingWidthPer / 2)
+        .attr("y", d => ysafe(d.thirdQuartile))
+        .attr("width", xGroupingWidthPer)
+        .attr("height", d => ysafe(d.firstQuartile) - ysafe(d.thirdQuartile));
+
+      box
+        .append("line")
+        .attr("class", plotName + "_median")
+        .attr("x1", d => x(d.x) + xTicOffset(d.i) - xGroupingWidthPer / 2)
+        .attr("x2", d => x(d.x) + xTicOffset(d.i) + xGroupingWidthPer / 2)
+        .attr("y1", d => ysafe(d.median))
+        .attr("y2", d => ysafe(d.median))
+        .style("stroke", "#838383");
+
+      // Object.keys(data).map((id, index) => {
+      //   /*  index/tissueNum \in [0, 1]
+      //       index/tissueNum - 0.5 \in [-0.5, 0.5]
+      //       scaled to xGroupingWidth to compute the xTicOffset
+      //   */
+      //   let xGroupingWidth = x(xTicks[0]) * xGroupingWidthRatio;
+      //   let xTicOffset = numPerTick == 1
+      //     ? 0
+      //     : xGroupingWidth * (index / (numPerTick - 1) - 0.5);
+
+      //   svg
+      //     .selectAll("." + plotName + index)
+      //     .data(data[id])
+      //     .enter()
+      //     .append("circle")
+      //     .classed("dot", true)
+      //     .classed(plotName + index, true)
+      //     .attr("r", 2)
+      //     .attr("transform", d => {
+      //       /* handles situation where counts = 0, log scale -> Infinity */
+      //       let ytrans = d[1] == 0 ? y(0.01) : y(d[1]);
+      //       // console.log(x(d[0]), xTicOffset);
+      //       return "translate(" + (x(d[0]) + xTicOffset) + "," + ytrans + ")";
+      //     })
+      //     .style("fill", d => color(id));
+      // });
     }
   };
 };

@@ -11,102 +11,12 @@ import {
 } from "../reducers/Actions";
 import GeneBoxPlot from "../components/GeneBoxPlot";
 import { isNonEmptyArray } from "../utils/Utils";
+import {
+  formatGeneBoxPlotData,
+  formatGeneScatterPlotData
+} from "../utils/Plot";
 import { getGeneEntityByIdList } from "../store/Query";
 import { geneEntity, stateInterface } from "../Interfaces";
-
-/* 
-    Formats gene expression data for scatter plotting
-    Returns data: {
-        <tissueSite>: [ ...[exonNum, [ ... readCounts ]]  ],
-        ...
-    }
-*/
-const formatScatterPlotData = geneEntities => {
-  let data = {};
-
-  geneEntities.forEach(geneEntity => {
-    data[geneEntity.ensemblId] = [];
-
-    Object.keys(geneEntity.geneExpr).map(tissue => {
-      geneEntity.geneExpr[tissue].map(rpkm => {
-        data[geneEntity.ensemblId].push([tissue, rpkm]);
-      });
-    });
-  });
-
-  return data;
-};
-
-/* 
-  Computs summary statistics for box plotting 
-  Return data: [
-    ...,
-    {
-      x,              // x value
-      i,              // index to number of selected gene/tissue
-      firstQuartile,  // first quartile y-value 
-      median,         // median y-value
-      thirdQuartile,  // third quartile y-value
-      iqr,            // inter-quartile range
-      upperWhisker,   
-      lowerWhisker,
-      outliers,       // data points lying outside of upper/lower whiskers
-    }
-  ]
-  */
-const formatBoxPlotData = geneEntities => {
-  let data = [];
-
-  geneEntities.forEach((geneEntity, i) => {
-    Object.keys(geneEntity.geneExpr).map(tissue => {
-      let sorted = geneEntity.geneExpr[tissue].sort(d3.ascending);
-
-      let min = sorted[0];
-      let firstQuartile = d3.quantile(sorted, 0.25);
-      let median = d3.quantile(sorted, 0.5);
-      let thirdQuartile = d3.quantile(sorted, 0.75);
-      let max = sorted[sorted.length - 1];
-      let iqr = thirdQuartile - firstQuartile;
-      let upperWhisker = d3.min([max, thirdQuartile + iqr]);
-      let lowerWhisker = d3.max([min, firstQuartile - iqr]);
-
-      let outliers = [];
-
-      let index = 0;
-      while (index++ < sorted.length) {
-        if (sorted[index] >= firstQuartile - 1.5 * iqr) {
-          upperWhisker = sorted[index];
-          break;
-        } else {
-          outliers.push(sorted[index]);
-        }
-      }
-      index = sorted.length - 1;
-      while (index-- >= 0) {
-        if (sorted[index] <= thirdQuartile + 1.5 * iqr) {
-          upperWhisker = sorted[index];
-          break;
-        } else {
-          outliers.push(sorted[index]);
-        }
-      }
-      data.push({
-        x: tissue,
-        ensemblId: geneEntity.ensemblId,
-        i,
-        firstQuartile,
-        median,
-        thirdQuartile,
-        iqr,
-        upperWhisker,
-        lowerWhisker,
-        outliers
-      });
-    });
-  });
-
-  return data;
-};
 
 const mapStateToProps = (state: stateInterface) => {
   let {
@@ -152,16 +62,16 @@ const mapStateToProps = (state: stateInterface) => {
         -- select.genePanel
     */
   if (selectedGenePanel !== "" && isNonEmptyArray(geneEntities)) {
-    data = formatBoxPlotData(geneEntities);
+    data = formatGeneBoxPlotData(geneEntities);
 
     xTicks = Object.keys(geneEntities[0].geneExpr);
     xTickCount = xTicks.length;
 
     x.domain(xTicks);
-    y.domain([0.01, 10000]); // later change the upper y limit to reflect data
+    y.domain([1, 10000]); // later change the upper y limit to reflect data
 
     xAxis.tickValues(xTicks);
-    yAxis.tickValues([0.01, 0.1, 1, 10, 100, 1000, 10000]);
+    yAxis.tickValues([1, 10, 100, 1000, 10000]);
   }
 
   /*
@@ -177,24 +87,6 @@ const mapStateToProps = (state: stateInterface) => {
 
     let rescaledY = d3.event.transform.rescaleY(y);
     svg.select(".y.axis").call(yAxis.scale(rescaledY));
-
-    Object.keys(data).map((id, index) => {
-      let xGroupingWidth = x(xTicks[0]) * xGroupingWidthRatio;
-      let xTicOffset = numPerTick == 1
-        ? 0
-        : xGroupingWidth * (index / (numPerTick - 1) - 0.5);
-
-      svg.selectAll("." + plotName + index).attr("transform", d => {
-        let ytrans = d[1] == 0 ? rescaledY(0.01) : rescaledY(d[1]);
-        return (
-          "translate(" +
-          (x(d[0]) + xTicOffset + x.bandwidth()) +
-          "," +
-          ytrans +
-          ")"
-        );
-      });
-    });
   };
 
   return {
@@ -236,10 +128,10 @@ const mapStateToProps = (state: stateInterface) => {
         -- datapoints of read counts by tissueSite
     */
     plot: () => {
-      d3
-        .select("#" + plotName)
-        .select("svg")
-        .call(d3.zoom().scaleExtent([0, 100]).on("zoom", zoomHandler));
+      // d3
+      //   .select("#" + plotName)
+      //   .select("svg")
+      //   .call(d3.zoom().scaleExtent([0, 100]).on("zoom", zoomHandler));
 
       svg
         .append("g")
@@ -291,7 +183,7 @@ const mapStateToProps = (state: stateInterface) => {
           : xGroupingWidth * (index / (numPerTick - 1) - 0.5);
 
       let ysafe = val => {
-        return val < 0.01 ? y(0.01) : y(val);
+        return val < 1 ? y(1) : y(val);
       };
 
       box
@@ -325,7 +217,7 @@ const mapStateToProps = (state: stateInterface) => {
         .append("rect")
         .attr("class", plotName + "_boxRect")
         .attr("stroke", "lightgrey")
-        .attr("fill", d => color(d.ensemblId))
+        .attr("fill", d => color(d.id))
         .attr("x", d => x(d.x) + xTicOffset(d.i) - xGroupingWidthPer / 2)
         .attr("y", d => ysafe(d.thirdQuartile))
         .attr("width", xGroupingWidthPer)

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as d3 from "d3";
 
 import { PanelGroup, Panel } from "react-bootstrap";
-import { isEmptyObject } from "../utils/Utils";
+import { isNonEmptyArray } from "../utils/Utils";
 
 class ExonBoxPlot extends React.Component<any, any> {
   componentDidMount() {
@@ -19,7 +19,8 @@ class ExonBoxPlot extends React.Component<any, any> {
   }
   componentDidUpdate() {
     let { data, plot } = this.props;
-    if (typeof data !== "undefined" && !isEmptyObject(data)) {
+    if (typeof data !== "undefined" && isNonEmptyArray(data)) {
+      console.log("ExonBoxPlot: plot()", data);
       plot();
     }
   }

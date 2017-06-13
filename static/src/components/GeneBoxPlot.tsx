@@ -20,7 +20,7 @@ class GeneBoxPlot extends React.Component<any, any> {
   componentDidUpdate() {
     let { data, plot } = this.props;
     if (typeof data !== "undefined" && isNonEmptyArray(data)) {
-      console.log("plotting here genebar", data);
+      console.log("GeneBoxPlot: plot()", data);
       plot();
     }
   }

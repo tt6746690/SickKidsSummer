@@ -30,8 +30,8 @@ let defaultState: stateInterface = {
     plot: {
       color: d3.scaleOrdinal(d3.schemeCategory20),
       width: 945,
-      height: 600,
-      offset: 60
+      height: 700,
+      offset: 40
     }
   }
 };
