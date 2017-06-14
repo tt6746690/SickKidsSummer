@@ -30,7 +30,7 @@ let defaultState: stateInterface = {
     viewType: VIEW_TYPE.TISSUESITE_RANKING,
     plot: {
       color: d3.scaleOrdinal(d3.schemeCategory20),
-      width: 945,
+      width: 750,
       height: 700,
       offset: 40
     }
