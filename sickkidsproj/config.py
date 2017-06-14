@@ -29,6 +29,7 @@ class BaseConfig(object):
 
     # gene panels
     GENE_PANEL_DIR = path.join(DATA_RESOURCES_DIR, "gene_panels")
+    GENE_PANEL_RANKING_DIR = path.join(GENE_PANEL_DIR, "ranking")
     GENE_PANEL_LIST = path.join(GENE_PANEL_DIR, "gene_panel_list")
 
 

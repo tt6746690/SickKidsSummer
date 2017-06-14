@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 
 import {
-  toggleTissueSite,
+  selectRefTissueSite,
   setPlotDisplay,
   PLOT_DISPLAY_TYPE
 } from "../reducers/Actions";
@@ -11,13 +11,10 @@ import TissueSiteListing from "../components/TissueSiteListing";
 const mapStateToProps = (state: stateInterface) => {
   let {
     entities: { tissueSite },
-    ui: { select: { tissueSite: selectedTissueSite } }
+    ui: { select: { refTissueSite: selectedRefTissueSite } }
   } = state;
 
-  return {
-    tissueSite,
-    selectedTissueSite
-  };
+  return { tissueSite, selectedRefTissueSite };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -25,8 +22,8 @@ const mapDispatchToProps = dispatch => {
     /*
             Selecting a tissue toggles the currently selected tissueSite in the dropdown list
         */
-    onTissueSiteListSelect: (tissueSite: string) => {
-      dispatch(toggleTissueSite(tissueSite));
+    onTissueSiteListSelect: (refTissueSite: string) => {
+      dispatch(selectRefTissueSite(refTissueSite));
       dispatch(setPlotDisplay(PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT));
     }
   };

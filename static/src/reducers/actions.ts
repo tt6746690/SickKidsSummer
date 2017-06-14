@@ -14,6 +14,7 @@ export const ADD_TISSUE_SITE = "ADD_TISSUE_SITE";
 
 // ui
 export const SELECT_GENE_PANEL = "SELECT_GENE_PANEL";
+export const SELECT_REF_TISSUE_SITE = "SELECT_REF_TISSUE_SITE";
 
 export const TOGGLE_GENE = "TOGGLE_GENE";
 export const TOGGLE_TISSUE_SITE = "TOGGLE_TISSUE_SITE";
@@ -52,13 +53,10 @@ export function addGene({
 
 export function addGenePanel({
   genePanelId,
-  panelGenes = []
+  panelGenes = [],
+  tissueRanking = {}
 }: genePanelEntity) {
-  return {
-    type: ADD_GENE_PANEL,
-    genePanelId,
-    panelGenes
-  };
+  return { type: ADD_GENE_PANEL, genePanelId, panelGenes, tissueRanking };
 }
 
 export function addTissueSite({ tissueSiteId }: tissueSiteEntity) {
@@ -73,6 +71,10 @@ export function selectGenePanel(genePanelId: string) {
     type: SELECT_GENE_PANEL,
     genePanelId
   };
+}
+
+export function selectRefTissueSite(tissueSiteId: string) {
+  return { type: SELECT_REF_TISSUE_SITE, tissueSiteId };
 }
 
 export function toggleGene(ensemblId: string) {

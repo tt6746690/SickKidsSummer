@@ -19,6 +19,7 @@ class GenePanelListing extends React.Component<any, any> {
         title="Gene Panels"
         id="bg-nested-dropdown"
         onSelect={onGenePanelListSelect}
+        className="genePanelListing"
       >
         {panelListing}
       </DropdownButton>

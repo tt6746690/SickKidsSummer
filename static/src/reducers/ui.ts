@@ -2,7 +2,8 @@ import {
   SELECT_GENE_PANEL,
   TOGGLE_GENE,
   TOGGLE_TISSUE_SITE,
-  SET_PLOT_DISPLAY
+  SET_PLOT_DISPLAY,
+  SELECT_REF_TISSUE_SITE
 } from "./Actions";
 
 import {
@@ -39,6 +40,11 @@ function select(state, action) {
         ...state,
         genePanel: action.genePanelId
       };
+    case SELECT_REF_TISSUE_SITE:
+      return {
+        ...state,
+        refTissueSite: action.tissueSiteId
+      };
     case TOGGLE_GENE:
       return {
         ...state,
@@ -57,17 +63,12 @@ function select(state, action) {
 export default function ui(state, action) {
   switch (action.type) {
     case SET_PLOT_DISPLAY:
-      return {
-        ...state,
-        plotDisplayType: action.plotDisplayType
-      };
+      return { ...state, plotDisplayType: action.plotDisplayType };
     case SELECT_GENE_PANEL:
+    case SELECT_REF_TISSUE_SITE:
     case TOGGLE_GENE:
     case TOGGLE_TISSUE_SITE:
-      return {
-        ...state,
-        select: select(state.select, action)
-      };
+      return { ...state, select: select(state.select, action) };
     default:
       return state;
   }

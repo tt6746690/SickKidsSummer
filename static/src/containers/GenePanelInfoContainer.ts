@@ -43,7 +43,7 @@ const mapDispatchToProps = dispatch => {
           dispatch(
             addGene({
               ensemblId,
-              exonExpr: exonExpr.exon_expression
+              exonExpr: exonExpr.exonExpression
             })
           );
         })

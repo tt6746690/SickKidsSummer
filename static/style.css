@@ -2,33 +2,29 @@
 @import url('https://fonts.googleapis.com/css?family=Inconsolata|Lato');
 
 body {
-    font-family: 'Lato', sans-serif;
-    /*font-family: 'Inconsolata', monospace;*/
+  font-family: 'Lato', sans-serif;
+  /*font-family: 'Inconsolata', monospace;*/
 }
-.x.axis,
-.y.axis{
-    font-family: 'Lato', sans-serif;
+.x.axis, .y.axis {
+  font-family: 'Lato', sans-serif;
 }
-
 
 /* change default bootstrap styles  */
 .jumbotron {
-    padding-top: 10px
+  padding-top: 10px;
 }
 
 ul.nav-stacked {
-    float: left;
+  float: left;
 }
-
 
 /* restrict dropdown size */
-.tissueSiteListing + ul {
-    max-height: 400px;
-    overflow-y: auto;
+.tissueSiteListing + ul, .tissueSiteRanking {
+  max-height: 400px;
+  overflow-y: auto;
 }
-
 
 /* adds padding to panel Gene buttno */
 .panelGeneButton {
-    margin: 1px;
+  margin: 1px;
 }

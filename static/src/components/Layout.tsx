@@ -15,7 +15,7 @@ import {
 import GenePanelListingContainer from "../containers/GenePanelListingContainer";
 import GenePanelInfoContainer from "../containers/GenePanelInfoContainer";
 import TissueSiteListingContainer from "../containers/TissueSiteListingContainer";
-import TissueSiteInfoContainer from "../containers/TissueSiteInfoContainer";
+import TissueSiteRankingContainer from "../containers/TissueSiteRankingContainer";
 import ExonBoxPlotContainer from "../containers/ExonBoxPlotContainer";
 import GeneBoxPlotContainer from "../containers/GeneBoxPlotContainer";
 
@@ -35,6 +35,7 @@ class Layout extends React.Component<any, any> {
         <Row id="gene-panel">
           <Panel>
             <Col xs={1}>
+              <TissueSiteListingContainer />
               <GenePanelListingContainer />
             </Col>
             <Col xs={10} xsOffset={1}>
@@ -45,11 +46,8 @@ class Layout extends React.Component<any, any> {
 
         <Row id="tissue">
           <Panel>
-            <Col xs={1}>
-              <TissueSiteListingContainer />
-            </Col>
-            <Col xs={9} xsOffset={1}>
-              <TissueSiteInfoContainer />
+            <Col xs={8} xsOffset={2}>
+              <TissueSiteRankingContainer />
             </Col>
           </Panel>
         </Row>

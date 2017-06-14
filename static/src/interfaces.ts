@@ -9,6 +9,7 @@ export interface geneEntity {
 export interface genePanelEntity {
   genePanelId: string;
   panelGenes?: string[];
+  tissueRanking?: Object;
 }
 
 export interface tissueSiteEntity {
@@ -24,6 +25,7 @@ export interface stateInterface {
   ui: {
     select: {
       genePanel: string;
+      refTissueSite: string;
       gene: string[];
       tissueSite: string[];
     };

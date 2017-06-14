@@ -52,7 +52,8 @@ function pushGenePanel(state: genePanelEntity[] = [], action) {
       ...state,
       {
         genePanelId: action.genePanelId,
-        panelGenes: [...action.panelGenes]
+        panelGenes: [...action.panelGenes],
+        tissueRanking: { ...action.tissueRanking }
       }
     ];
   } else {
@@ -60,7 +61,12 @@ function pushGenePanel(state: genePanelEntity[] = [], action) {
       if (genePanel.genePanelId == action.genePanelId) {
         return {
           genePanelId: action.genePanelId,
-          panelGenes: [...action.panelGenes]
+          panelGenes: genePanel.panelGenes.length === 0
+            ? [...action.panelGenes]
+            : [...genePanel.panelGenes],
+          tissueRanking: isEmptyObject(genePanel.tissueRanking)
+            ? { ...action.tissueRanking }
+            : { ...genePanel.tissueRanking }
         };
       } else {
         return { ...genePanel };

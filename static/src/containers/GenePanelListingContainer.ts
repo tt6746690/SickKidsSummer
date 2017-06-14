@@ -24,6 +24,7 @@ const mapDispatchToProps = dispatch => {
             -- fetch gene panel data as a side effect and when on success
             ---- gene panel is added to entities.genePanel if not exist already
             ---- each gene in the gene panel is pushed to entities.gene
+            -- fetch tissueSite ranking for this particular panel
         */
     onGenePanelListSelect: (genePanelId: string) => {
       dispatch(selectGenePanel(genePanelId));
@@ -48,6 +49,25 @@ const mapDispatchToProps = dispatch => {
               })
             );
           });
+        })
+        .catch(err => console.log("fetch: ", err));
+
+      fetch(
+        "http://127.0.0.1:5000/api/gene_panels/ranking/" +
+          genePanelId +
+          ".ranking",
+        {
+          mode: "cors"
+        }
+      )
+        .then(response => response.json())
+        .then(tissueRanking => {
+          dispatch(
+            addGenePanel({
+              genePanelId,
+              tissueRanking
+            })
+          );
         })
         .catch(err => console.log("fetch: ", err));
     }

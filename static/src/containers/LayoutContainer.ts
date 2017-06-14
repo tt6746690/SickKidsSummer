@@ -50,7 +50,7 @@ const mapDispatchToProps = dispatch => {
               dispatch(addGenePanel({ genePanelId: genePanel }));
             });
 
-            dispatch(selectGenePanel(panelList[0]));
+            // dispatch(selectGenePanel(panelList[0]));
           }
         })
         .catch(err => console.log("fetch: ", err));

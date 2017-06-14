@@ -143,13 +143,29 @@ export const formatExonBoxPlotData = (exonExpr: Object, tissues: string[]) => {
 
   tissues.forEach((tissue: string, i) => {
     Object.keys(exonExpr).forEach((exonNum: string) => {
-      let reads = exonExpr[exonNum][tissue];
+      let {
+        reads,
+        mean,
+        overByTtest,
+        overByMedian,
+        overByMean,
+        ttest_1samp,
+        median
+      } = exonExpr[exonNum][tissue];
+
+      let [t_statistic, p_value] = ttest_1samp;
       let summaryStatistics = computeBoxPlotStatistics(reads);
 
       data.push({
         i,
         x: exonNum,
         id: tissue,
+        mean,
+        overByTtest,
+        overByMedian,
+        overByMean,
+        t_statistic,
+        p_value,
         ...summaryStatistics
       });
     });

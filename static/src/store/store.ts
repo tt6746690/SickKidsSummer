@@ -23,6 +23,7 @@ let defaultState: stateInterface = {
   ui: {
     select: {
       genePanel: "",
+      refTissueSite: "",
       gene: [],
       tissueSite: []
     },

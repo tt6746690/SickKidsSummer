@@ -1,9 +1,4 @@
 
-
-
-
-
-
 # Problem 
 
 + Given 
@@ -32,6 +27,7 @@
             + Assume perfect score for `T` and just find the best `T'`.
                 + ignore cases where `T(e_j)` is false, so 
                 + Define `total(T, g_i) = {e_j \in g_i: T(e_j) == true}` 
+                    + gene = [...{exonNum, overthreshold}]
                 + Define `sub(T, T', g_i) = {e_j \in g_i: T'(e_j) == true && T(e_j) == true}`
                 + different ways of representing the ranking 
                     + _by counts_: Maximize `score(g_i, T) = |sub|`. This may be problematic since genes have different number of exons; there may be cases where a `g_1` with 100 exons 50 of them over threashold and the other `g_2` 10 exon all of them overthreshold. If rank by counts, then `g_2` would be ranked lower than `g_1`
