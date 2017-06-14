@@ -1,10 +1,6 @@
 import { connect } from "react-redux";
 
-import {
-  toggleTissueSite,
-  setPlotDisplay,
-  PLOT_DISPLAY_TYPE
-} from "../reducers/Actions";
+import { toggleTissueSite, setViewType, VIEW_TYPE } from "../reducers/Actions";
 import { stateInterface } from "../Interfaces";
 import TissueSiteRanking from "../components/TissueSiteRanking";
 import { getTissueRanking } from "../store/Query";
@@ -40,12 +36,13 @@ const mapStateToProps = (state: stateInterface) => {
 const mapDispatchToProps = dispatch => {
   return {
     /* 
-            Clicking a tissueSite button updates ui.select.tissueSite
-        */
+        Clicking a tissueSite button 
+        -- updates ui.select.tissueSite
+        -- view switch to exon boxplot, if activating tissueSite only
+    */
     onTissueSiteClick: evt => {
       let tissueSite = evt.target.value;
       dispatch(toggleTissueSite(tissueSite));
-      dispatch(setPlotDisplay(PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT));
     }
   };
 };

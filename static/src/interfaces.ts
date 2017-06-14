@@ -29,7 +29,7 @@ export interface stateInterface {
       gene: string[];
       tissueSite: string[];
     };
-    plotDisplayType: string;
+    viewType: string;
     plot: {
       color: any;
       width: number;

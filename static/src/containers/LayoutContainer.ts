@@ -4,18 +4,18 @@ import {
   addGenePanel,
   addTissueSite,
   selectGenePanel,
-  setPlotDisplay,
-  PLOT_DISPLAY_TYPE
+  setViewType,
+  VIEW_TYPE
 } from "../reducers/Actions";
 import { isNonEmptyArray } from "../utils/Utils";
 import { stateInterface } from "../Interfaces";
 import Layout from "../components/Layout";
 
 const mapStateToProps = (state: stateInterface) => {
-  let { ui: { plotDisplayType } } = state;
+  let { ui: { viewType } } = state;
 
   return {
-    plotDisplayType
+    viewType
   };
 };
 
@@ -49,20 +49,18 @@ const mapDispatchToProps = dispatch => {
             panelList.map(genePanel => {
               dispatch(addGenePanel({ genePanelId: genePanel }));
             });
-
-            // dispatch(selectGenePanel(panelList[0]));
           }
         })
         .catch(err => console.log("fetch: ", err));
     },
-
     /*
-            select plot to display 
-            -- gene 
-            -- exon 
-        */
-    onPlotTabSelect: tabType => {
-      dispatch(setPlotDisplay(tabType));
+        select plot to display 
+        -- tissue ranking table
+        -- gene boxplot
+        -- exon boxplot
+    */
+    onTabSelect: tabType => {
+      dispatch(setViewType(tabType));
     }
   };
 };

@@ -5,7 +5,7 @@ import { createStore } from "redux";
 import { stateInterface } from "../Interfaces";
 import rootReducer from "../reducers/Root";
 
-import { PLOT_DISPLAY_TYPE } from "../reducers/Actions";
+import { VIEW_TYPE } from "../reducers/Actions";
 
 /* 
     Testing reducer with 
@@ -27,7 +27,7 @@ let defaultState: stateInterface = {
       gene: [],
       tissueSite: []
     },
-    plotDisplayType: PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT,
+    viewType: VIEW_TYPE.TISSUESITE_RANKING,
     plot: {
       color: d3.scaleOrdinal(d3.schemeCategory20),
       width: 945,

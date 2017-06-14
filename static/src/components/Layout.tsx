@@ -6,10 +6,11 @@ import {
   Col,
   Button,
   ButtonGroup,
-  Tab,
   Nav,
   NavItem,
-  Panel
+  Panel,
+  Tabs,
+  Tab
 } from "react-bootstrap";
 
 import GenePanelListingContainer from "../containers/GenePanelListingContainer";
@@ -19,7 +20,7 @@ import TissueSiteRankingContainer from "../containers/TissueSiteRankingContainer
 import ExonBoxPlotContainer from "../containers/ExonBoxPlotContainer";
 import GeneBoxPlotContainer from "../containers/GeneBoxPlotContainer";
 
-import { PLOT_DISPLAY_TYPE } from "../reducers/Actions";
+import { VIEW_TYPE } from "../reducers/Actions";
 
 class Layout extends React.Component<any, any> {
   componentWillMount() {
@@ -28,7 +29,7 @@ class Layout extends React.Component<any, any> {
   }
 
   render() {
-    let { plotDisplayType, onPlotTabSelect } = this.props;
+    let { viewType, onTabSelect } = this.props;
 
     return (
       <Grid>
@@ -44,42 +45,22 @@ class Layout extends React.Component<any, any> {
           </Panel>
         </Row>
 
-        <Row id="tissue">
-          <Panel>
-            <Col xs={8} xsOffset={2}>
-              <TissueSiteRankingContainer />
-            </Col>
-          </Panel>
-        </Row>
-
-        <Tab.Container
-          id="main-display"
-          activeKey={plotDisplayType}
-          onSelect={onPlotTabSelect}
+        <Tabs
+          activeKey={viewType}
+          onSelect={onTabSelect}
+          animation={true}
+          id="noanim-tab-example"
         >
-          <Row>
-            <Col sm={2}>
-              <Nav bsStyle="pills" stacked>
-                <NavItem eventKey={PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT}>
-                  Gene Expression
-                </NavItem>
-                <NavItem eventKey={PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT}>
-                  Exon Expression
-                </NavItem>
-              </Nav>
-            </Col>
-            <Col sm={10}>
-              <Tab.Content animation>
-                <Tab.Pane eventKey={PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT}>
-                  <GeneBoxPlotContainer />
-                </Tab.Pane>
-                <Tab.Pane eventKey={PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT}>
-                  <ExonBoxPlotContainer />
-                </Tab.Pane>
-              </Tab.Content>
-            </Col>
-          </Row>
-        </Tab.Container>
+          <Tab eventKey={VIEW_TYPE.TISSUESITE_RANKING} title="Ranking">
+            <TissueSiteRankingContainer />
+          </Tab>
+          <Tab eventKey={VIEW_TYPE.EXON_EXPR_PLOT} title="Exon Plot">
+            <ExonBoxPlotContainer />
+          </Tab>
+          <Tab eventKey={VIEW_TYPE.GENE_EXPR_PLOT} title="Gene Plot">
+            <GeneBoxPlotContainer />
+          </Tab>
+        </Tabs>
 
       </Grid>
     );

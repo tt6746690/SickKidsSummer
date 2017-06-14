@@ -24,6 +24,11 @@ ul.nav-stacked {
   overflow-y: auto;
 }
 
+.tissueRankingPanel {
+  height: 700p;
+  overflow-y: auto;
+}
+
 /* adds padding to panel Gene buttno */
 .panelGeneButton {
   margin: 1px;

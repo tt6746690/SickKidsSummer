@@ -20,19 +20,15 @@ export const TOGGLE_GENE = "TOGGLE_GENE";
 export const TOGGLE_TISSUE_SITE = "TOGGLE_TISSUE_SITE";
 
 // display plots
-export const SET_PLOT_DISPLAY = "SET_PLOT_DISPLAY";
-export const PLOT_DISPLAY_TYPE = {
+export const SELECT_VIEW = "SELECT_VIEW";
+export const VIEW_TYPE = {
   GENE_EXPR_PLOT: "GENE_EXPR_PLOT",
-  EXON_EXPR_PLOT: "EXON_EXPR_PLOT"
+  EXON_EXPR_PLOT: "EXON_EXPR_PLOT",
+  TISSUESITE_RANKING: "TISSUESITE_RANKING"
 };
 
-export function setPlotDisplay(
-  plotDisplayType = PLOT_DISPLAY_TYPE.GENE_EXPR_PLOT
-) {
-  return {
-    type: SET_PLOT_DISPLAY,
-    plotDisplayType
-  };
+export function setViewType(viewType = VIEW_TYPE.TISSUESITE_RANKING) {
+  return { type: SELECT_VIEW, viewType };
 }
 
 // actionCreators

@@ -2,8 +2,9 @@ import { connect } from "react-redux";
 
 import {
   selectRefTissueSite,
-  setPlotDisplay,
-  PLOT_DISPLAY_TYPE
+  toggleTissueSite,
+  setViewType,
+  VIEW_TYPE
 } from "../reducers/Actions";
 import { stateInterface } from "../Interfaces";
 import TissueSiteListing from "../components/TissueSiteListing";
@@ -20,11 +21,15 @@ const mapStateToProps = (state: stateInterface) => {
 const mapDispatchToProps = dispatch => {
   return {
     /*
-            Selecting a tissue toggles the currently selected tissueSite in the dropdown list
-        */
+        Selecting a tissueSite in dropdown
+        -- makes selected tisseSite the reference tissueSite
+        -- toggles the currently selected tissueSite 
+        -- switch view to the ranking table
+    */
     onTissueSiteListSelect: (refTissueSite: string) => {
       dispatch(selectRefTissueSite(refTissueSite));
-      dispatch(setPlotDisplay(PLOT_DISPLAY_TYPE.EXON_EXPR_PLOT));
+      dispatch(toggleTissueSite(refTissueSite));
+      dispatch(setViewType(VIEW_TYPE.TISSUESITE_RANKING));
     }
   };
 };

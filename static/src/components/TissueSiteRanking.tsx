@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Table, ListGroup, ListGroupItem, Button } from "react-bootstrap";
+import { Table, Button, Panel } from "react-bootstrap";
 
 import { tissueSiteEntity } from "../Interfaces";
 
@@ -91,7 +91,11 @@ class TissueSiteRanking extends React.Component<any, any> {
       );
     }
 
-    return tissueRankTable;
+    return (
+      <Panel className={"tissueRankingPanel"}>
+        {tissueRankTable}
+      </Panel>
+    );
   }
 }
 
