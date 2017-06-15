@@ -1,16 +1,9 @@
 
+import os
 import mygene 
 mg = mygene.MyGeneInfo()
 
-
-CONGENITAL_MYOPATHY = "./Congenital Myopathies.txt"
-CONGENITAL_MYOPATHY_OUT = "./congenital_myopathy"
-
-CONGENITAL_MUSCULAR_DYSTROPHY = "./Congential Muscular Dystrophies.txt"
-CONGENITAL_MUSCULAR_DYSTROPHY_OUT = "./congenital_myopathy_dystrophy"
-
-CONGENITAL_MYASTHENIC_MYOPATHY = "./Congenital Myasthenic Myopathies.txt"
-CONGENITAL_MYASTHENIC_MYOPATHY_OUT = "./congenital_myasthenic_myopathies"
+PANELS = ["channelopathies.txt", "congenital_myasthenic_syndromes.txt", "distal_myopathies.txt", "muscular_dystrophies.txt", "vacuolar_and_others.txt", "limb_girdle_dystrophies.txt", "congenital_myopathy.txt", "congenital_muscular_dystrophies.txt"]
 
 
 def sym_to_ensembl(sym_fp, out_fp):
@@ -22,6 +15,7 @@ def sym_to_ensembl(sym_fp, out_fp):
     @param str out_fp: output file path
     @Rtype [str]: a list of genes not found
     """
+    print("processing {}".format(sym_fp))
 
     not_found = []
     with open(sym_fp, "r") as inf:
@@ -49,15 +43,10 @@ def sym_to_ensembl(sym_fp, out_fp):
     return not_found
 
 
-
-
 if __name__ == '__main__':
-    nf = sym_to_ensembl(CONGENITAL_MYOPATHY, CONGENITAL_MYOPATHY_OUT)
-    print("Genes for {} unfound -> {}".format(CONGENITAL_MYOPATHY, ', '.join(nf)))
+    for p in PANELS:
+        outfp = os.path.splitext(p)[0]
+        sym_to_ensembl(p, outfp)
 
-    nf = sym_to_ensembl(CONGENITAL_MUSCULAR_DYSTROPHY, CONGENITAL_MUSCULAR_DYSTROPHY_OUT)
-    print("Genes for {} unfound -> {}".format(CONGENITAL_MUSCULAR_DYSTROPHY, ', '.join(nf)))
-            
-    nf = sym_to_ensembl(CONGENITAL_MYASTHENIC_MYOPATHY, CONGENITAL_MYASTHENIC_MYOPATHY_OUT)
-    print("Genes for {} unfound -> {}".format(CONGENITAL_MYASTHENIC_MYOPATHY, ', '.join(nf)))
+        
 
