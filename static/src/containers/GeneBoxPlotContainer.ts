@@ -31,10 +31,6 @@ const mapStateToProps = (state: stateInterface) => {
     }
   } = state;
 
-  // override defaults
-  width = 1100;
-  height = 800;
-
   // plot config
   let plotName = "GeneBarPlot";
   let xLabel = "Tissue Types";
