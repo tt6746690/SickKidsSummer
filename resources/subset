@@ -1,8 +1,13 @@
 
 gene_panels="
+channelopathies
+congenital_myasthenic_syndromes
+distal_myopathies
+limb_girdle_dystrophies
+congenital_muscular_dystrophies
 congenital_myopathy
-congenital_myasthenic_myopathies
-congenital_myopathy_dystrophy
+muscular_dystrophies
+vacuolar_and_others
 "
 
 for gp in $gene_panels;
@@ -12,7 +17,7 @@ do
     for g in $l;
     do 
         # ep=`grep $g exon_expr.mapping | head -n 1 | cut -c 17-`
-        gp=`grep $g gene_expr.mapping | head -n 1 | cut -c 17-` 
+        # gp=`grep $g gene_expr.mapping | head -n 1 | cut -c 17-` 
         echo adding $gp...
         git add $gp
     done
