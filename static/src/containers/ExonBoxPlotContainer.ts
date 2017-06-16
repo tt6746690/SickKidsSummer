@@ -95,6 +95,15 @@ const mapStateToProps = (state: stateInterface) => {
     let rescaledY = d3.event.transform.rescaleY(y);
     svg.select(".y.axis").call(yAxis.scale(rescaledY));
 
+    let xGroupingWidth = x(xTicks[0]) * xGroupingWidthRatio;
+    let xGroupingWidthPer = xGroupingWidth / numPerTick;
+    let xTicOffset = index =>
+      numPerTick === 1 ? 0 : xGroupingWidth * (index / (numPerTick - 1) - 0.5);
+
+    let ysafe = val => {
+      return val < 1 ? rescaledY(1) : rescaledY(val);
+    };
+
     svg
       .select(".ExpressionCutOffLine")
       .attr("x1", x(0))
@@ -102,17 +111,65 @@ const mapStateToProps = (state: stateInterface) => {
       .attr("x2", x(xTickCount + 1))
       .attr("y2", rescaledY(20));
 
-    Object.keys(data).map((id, index) => {
-      let xGroupingWidth = x(1) * xGroupingWidthRatio;
-      let xTicOffset = numPerTick == 1
-        ? 0
-        : xGroupingWidth * (index / (numPerTick - 1) - 0.5);
+    d3
+      .selectAll("." + plotName + "_upperWhisker")
+      .attr(
+        "x1",
+        d => x((d as any).x) + xTicOffset((d as any).i) - xGroupingWidthPer / 2
+      )
+      .attr(
+        "x2",
+        d => x((d as any).x) + xTicOffset((d as any).i) + xGroupingWidthPer / 2
+      )
+      .attr("y1", d => ysafe((d as any).upperWhisker))
+      .attr("y2", d => ysafe((d as any).upperWhisker));
 
-      svg.selectAll("." + plotName + index).attr("transform", d => {
-        let ytrans = d[1] == 0 ? rescaledY(0.01) : rescaledY(d[1]);
-        return "translate(" + (x(d[0]) + xTicOffset) + "," + ytrans + ")";
-      });
-    });
+    d3
+      .selectAll("." + plotName + "_lowerWhisker")
+      .attr(
+        "x1",
+        d => x((d as any).x) + xTicOffset((d as any).i) - xGroupingWidthPer / 2
+      )
+      .attr(
+        "x2",
+        d => x((d as any).x) + xTicOffset((d as any).i) + xGroupingWidthPer / 2
+      )
+      .attr("y1", d => ysafe((d as any).lowerWhisker))
+      .attr("y2", d => ysafe((d as any).lowerWhisker))
+      .style("stroke", "lightgrey");
+
+    d3
+      .selectAll("." + plotName + "_whiskerDash")
+      .attr("x1", d => x((d as any).x) + xTicOffset((d as any).i))
+      .attr("x2", d => x((d as any).x) + xTicOffset((d as any).i))
+      .attr("y1", d => ysafe((d as any).lowerWhisker))
+      .attr("y2", d => ysafe((d as any).upperWhisker));
+
+    d3
+      .selectAll("." + plotName + "_boxRect")
+      .attr(
+        "x",
+        d => x((d as any).x) + xTicOffset((d as any).i) - xGroupingWidthPer / 2
+      )
+      .attr("y", d => ysafe((d as any).thirdQuartile))
+      .attr("width", xGroupingWidthPer)
+      .attr(
+        "height",
+        d => ysafe((d as any).firstQuartile) - ysafe((d as any).thirdQuartile)
+      );
+
+    d3
+      .selectAll("." + plotName + "_median")
+      .attr(
+        "x1",
+        d => x((d as any).x) + xTicOffset((d as any).i) - xGroupingWidthPer / 2
+      )
+      .attr(
+        "x2",
+        d => x((d as any).x) + xTicOffset((d as any).i) + xGroupingWidthPer / 2
+      )
+      .attr("y1", d => ysafe((d as any).median))
+      .attr("y2", d => ysafe((d as any).median));
   };
 
   return {
@@ -202,7 +259,61 @@ const mapStateToProps = (state: stateInterface) => {
         .data(data)
         .enter()
         .append("g")
-        .classed(plotName + "_box", true);
+        .classed(plotName + "_box", true)
+        .on("mouseover", d => {
+          console.log("rect::mouseover");
+
+          let xpos = x(d.x) + xTicOffset(d.i) + xGroupingWidthPer / 2 + "px";
+
+          d3
+            .select("." + plotName + "_tooltip_median")
+            .transition()
+            .duration(50)
+            .style("opacity", 0.9)
+            .text(d.median.toPrecision(3))
+            .style("text-anchor", "begin")
+            .attr("x", xpos)
+            .attr("y", ysafe(d.median) + "px");
+
+          d3
+            .select("." + plotName + "_tooltip_firstQuartile")
+            .transition()
+            .duration(50)
+            .style("opacity", 0.9)
+            .text(d.firstQuartile.toPrecision(3))
+            .style("text-anchor", "begin")
+            .attr("x", xpos)
+            .attr("y", ysafe(d.firstQuartile) + "px");
+
+          d3
+            .select("." + plotName + "_tooltip_thirdQuartile")
+            .transition()
+            .duration(50)
+            .style("opacity", 0.9)
+            .text(d.thirdQuartile.toPrecision(3))
+            .style("text-anchor", "begin")
+            .attr("x", xpos)
+            .attr("y", ysafe(d.thirdQuartile) + "px");
+        })
+        .on("mouseout", function(d) {
+          d3
+            .select("." + plotName + "_tooltip_median")
+            .transition()
+            .duration(50)
+            .style("opacity", 0);
+
+          d3
+            .select("." + plotName + "_tooltip_firstQuartile")
+            .transition()
+            .duration(50)
+            .style("opacity", 0);
+
+          d3
+            .select("." + plotName + "_tooltip_thirdQuartile")
+            .transition()
+            .duration(50)
+            .style("opacity", 0);
+        });
 
       let xGroupingWidth = x(xTicks[0]) * xGroupingWidthRatio;
       let xGroupingWidthPer = xGroupingWidth / numPerTick;
@@ -261,32 +372,18 @@ const mapStateToProps = (state: stateInterface) => {
         .attr("y2", d => ysafe(d.median))
         .style("stroke", "#838383");
 
-      // Object.keys(data).map((id, index) => {
-      //   /*  index/tissueNum \in [0, 1]
-      //       index/tissueNum - 0.5 \in [-0.5, 0.5]
-      //       scaled to xGroupingWidth to compute the xTicOffset
-      //   */
-      //   let xGroupingWidth = x(xTicks[0]) * xGroupingWidthRatio;
-      //   let xTicOffset = numPerTick == 1
-      //     ? 0
-      //     : xGroupingWidth * (index / (numPerTick - 1) - 0.5);
-
-      //   svg
-      //     .selectAll("." + plotName + index)
-      //     .data(data[id])
-      //     .enter()
-      //     .append("circle")
-      //     .classed("dot", true)
-      //     .classed(plotName + index, true)
-      //     .attr("r", 2)
-      //     .attr("transform", d => {
-      //       /* handles situation where counts = 0, log scale -> Infinity */
-      //       let ytrans = d[1] == 0 ? y(0.01) : y(d[1]);
-      //       // console.log(x(d[0]), xTicOffset);
-      //       return "translate(" + (x(d[0]) + xTicOffset) + "," + ytrans + ")";
-      //     })
-      //     .style("fill", d => color(id));
-      // });
+      svg
+        .append("text")
+        .attr("class", plotName + "_tooltip_median")
+        .style("opacity", 0);
+      svg
+        .append("text")
+        .attr("class", plotName + "_tooltip_thirdQuartile")
+        .style("opacity", 0);
+      svg
+        .append("text")
+        .attr("class", plotName + "_tooltip_firstQuartile")
+        .style("opacity", 0);
     }
   };
 };
