@@ -22,7 +22,7 @@ class BaseConfig(object):
 
     # exon_expr dir
     EXON_EXPR_DIR= path.join(DATA_RESOURCES_DIR, "exon_expr")
-    TISSUE_SITE_LIST = path.join(EXON_EXPR_DIR, "tissue_site_list")
+    TISSUE_SITE_LIST = path.join(DATA_RESOURCES_DIR, "tissue_site_list")
 
     # gene_expr dir 
     GENE_EXPR_DIR= path.join(DATA_RESOURCES_DIR, "gene_expr")
