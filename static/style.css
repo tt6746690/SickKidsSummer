@@ -19,7 +19,7 @@ ul.nav-stacked {
 }
 
 /* restrict dropdown size */
-.tissueSiteListing + ul, .tissueSiteRanking {
+.tissueSiteListing + button + ul, .tissueSiteRanking {
   max-height: 400px;
   overflow-y: auto;
 }

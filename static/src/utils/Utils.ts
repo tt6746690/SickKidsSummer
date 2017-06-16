@@ -9,3 +9,19 @@ export function isNonEmptyArray(arr: any[]): boolean {
 export function log({ ...args }) {
   console.log(args);
 }
+
+export function pad(
+  s: string,
+  c: string,
+  len: number,
+  right: boolean = true
+): string {
+  while (s.length < len) {
+    if (right) {
+      s = c + s;
+    } else {
+      s = s + c;
+    }
+  }
+  return s;
+}

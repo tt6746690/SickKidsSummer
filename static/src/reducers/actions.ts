@@ -19,6 +19,9 @@ export const SELECT_REF_TISSUE_SITE = "SELECT_REF_TISSUE_SITE";
 export const TOGGLE_GENE = "TOGGLE_GENE";
 export const TOGGLE_TISSUE_SITE = "TOGGLE_TISSUE_SITE";
 
+export const CLEAR_GENE_SELECTION = "CLEAR_GENE_PANEL_SELECTION";
+export const CLEAR_TISSUE_SITE_SELECTION = "CLEAR_TISSUE_SITE_SELECTION";
+
 // display plots
 export const SELECT_VIEW = "SELECT_VIEW";
 export const VIEW_TYPE = {
@@ -85,4 +88,12 @@ export function toggleTissueSite(tissueSite: string) {
     type: TOGGLE_TISSUE_SITE,
     tissueSite
   };
+}
+
+export function clearGeneSelection() {
+  return { type: CLEAR_GENE_SELECTION };
+}
+
+export function clearTissueSiteSelection() {
+  return { type: CLEAR_TISSUE_SITE_SELECTION };
 }

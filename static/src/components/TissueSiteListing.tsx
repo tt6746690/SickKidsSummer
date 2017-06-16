@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { DropdownButton, MenuItem } from "react-bootstrap";
+import { SplitButton, MenuItem } from "react-bootstrap";
 
 class TissueSiteListing extends React.Component<any, any> {
   render() {
@@ -18,20 +18,26 @@ class TissueSiteListing extends React.Component<any, any> {
           key={index.toString()}
           active={selectedRefTissueSite === tissueId}
         >
-          {tissueId}
+          {tissueId.replace(/ *\([^)]*\) */g, "")}
         </MenuItem>
       );
     });
 
     return (
-      <DropdownButton
-        title="Tissue Types"
+      <SplitButton
+        bsSize="large"
+        pullRight
+        title={
+          selectedRefTissueSite === ""
+            ? "Tissue Types"
+            : selectedRefTissueSite.replace(/ *\([^)]*\) */g, "")
+        }
         id="bg-nested-dropdown"
         onSelect={onTissueSiteListSelect}
         className="tissueSiteListing"
       >
         {tissueSiteList}
-      </DropdownButton>
+      </SplitButton>
     );
   }
 }

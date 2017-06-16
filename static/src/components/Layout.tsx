@@ -31,17 +31,17 @@ class Layout extends React.Component<any, any> {
   }
 
   render() {
-    let { viewType, onTabSelect } = this.props;
+    let { viewType, selectedGenePanel, onTabSelect } = this.props;
 
     return (
       <Grid>
         <Row id="gene-panel">
           <Panel>
-            <Col xs={1}>
-              <TissueSiteListingContainer />
+            <Col xs={4}>
               <GenePanelListingContainer />
+              {selectedGenePanel !== "" && <TissueSiteListingContainer />}
             </Col>
-            <Col xs={10} xsOffset={1}>
+            <Col xs={8}>
               <GenePanelInfoContainer />
             </Col>
           </Panel>
@@ -57,8 +57,8 @@ class Layout extends React.Component<any, any> {
             <TissueSiteRankingContainer />
           </Tab>
           <Tab eventKey={VIEW_TYPE.EXON_EXPR_PLOT} title="Exon Plot">
-            <ExonBoxPlotLegendContainer />
             <ExonBoxPlotContainer />
+            <ExonBoxPlotLegendContainer />
           </Tab>
           <Tab eventKey={VIEW_TYPE.GENE_EXPR_PLOT} title="Gene Plot">
             <GeneBoxPlotContainer />

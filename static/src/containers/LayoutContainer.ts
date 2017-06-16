@@ -12,11 +12,9 @@ import { stateInterface } from "../Interfaces";
 import Layout from "../components/Layout";
 
 const mapStateToProps = (state: stateInterface) => {
-  let { ui: { viewType } } = state;
+  let { ui: { viewType, select: { genePanel: selectedGenePanel } } } = state;
 
-  return {
-    viewType
-  };
+  return { viewType, selectedGenePanel };
 };
 
 const mapDispatchToProps = dispatch => {

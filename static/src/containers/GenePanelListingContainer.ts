@@ -1,6 +1,13 @@
 import { connect } from "react-redux";
 
-import { addGene, addGenePanel, selectGenePanel } from "../reducers/Actions";
+import {
+  addGene,
+  addGenePanel,
+  selectGenePanel,
+  selectRefTissueSite,
+  clearGeneSelection,
+  clearTissueSiteSelection
+} from "../reducers/Actions";
 import GenePanelListing from "../components/GenePanelListing";
 import { stateInterface } from "../Interfaces";
 
@@ -22,12 +29,16 @@ const mapDispatchToProps = dispatch => {
             Selecting a gene panel triggers 3 types of actions
             -- updates currently selected gene panel in ui.select.genePanel, and 
             -- fetch gene panel data as a side effect and when on success
+            ---- clears selected.gene and selected.tissueSite and selected.refTissueSite
             ---- gene panel is added to entities.genePanel if not exist already
             ---- each gene in the gene panel is pushed to entities.gene
-            -- fetch tissueSite ranking for this particular panel
+            ---- fetch tissueSite ranking for this particular panel
         */
     onGenePanelListSelect: (genePanelId: string) => {
       dispatch(selectGenePanel(genePanelId));
+      dispatch(selectRefTissueSite(""));
+      dispatch(clearGeneSelection());
+      dispatch(clearTissueSiteSelection());
 
       fetch("http://127.0.0.1:5000/api/gene_panels/" + genePanelId, {
         mode: "cors"
