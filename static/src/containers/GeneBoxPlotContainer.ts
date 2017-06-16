@@ -67,10 +67,7 @@ const mapStateToProps = (state: stateInterface) => {
     xTicks = Object.keys(geneEntities[0].geneExpr);
     xTickCount = xTicks.length;
 
-    x.domain(xTicks);
     y.domain([1, 10000]); // later change the upper y limit to reflect data
-
-    xAxis.tickValues(xTicks);
     yAxis.tickValues([1, 10, 100, 1000, 10000]);
   }
 
@@ -113,6 +110,15 @@ const mapStateToProps = (state: stateInterface) => {
         -- datapoints of read counts by tissueSite
     */
     plot: () => {
+      /* 
+        sort data by median 
+      */
+      data.sort((a, b) => {
+        return b.median - a.median;
+      });
+      x.domain(data.map(d => d.x));
+      xAxis.tickValues(data.map(d => d.x));
+
       svg
         .append("g")
         .classed("x axis", true)
@@ -153,7 +159,66 @@ const mapStateToProps = (state: stateInterface) => {
         .enter()
         .append("g")
         .classed(plotName + "_box", true)
-        .attr("transform", "translate(" + x.bandwidth() / 2 + ",0)"); //.. not aligned properly so have to hard code a fix
+        .attr("transform", "translate(" + x.bandwidth() / 2 + ",0)") //.. not aligned properly so have to hard code a fix
+        .on("mouseover", d => {
+          console.log("rect::mouseover");
+
+          let xpos =
+            x.bandwidth() / 2 +
+            x(d.x) +
+            xTicOffset(d.i) +
+            xGroupingWidthPer / 2 +
+            "px";
+
+          d3
+            .select("." + plotName + "_tooltip_median")
+            .transition()
+            .duration(50)
+            .style("opacity", 0.9)
+            .text(d.median.toPrecision(3))
+            .style("text-anchor", "begin")
+            .attr("x", xpos)
+            .attr("y", ysafe(d.median) + "px");
+
+          d3
+            .select("." + plotName + "_tooltip_firstQuartile")
+            .transition()
+            .duration(50)
+            .style("opacity", 0.9)
+            .text(d.firstQuartile.toPrecision(3))
+            .style("text-anchor", "begin")
+            .attr("x", xpos)
+            .attr("y", ysafe(d.firstQuartile) + "px");
+
+          d3
+            .select("." + plotName + "_tooltip_thirdQuartile")
+            .transition()
+            .duration(50)
+            .style("opacity", 0.9)
+            .text(d.thirdQuartile.toPrecision(3))
+            .style("text-anchor", "begin")
+            .attr("x", xpos)
+            .attr("y", ysafe(d.thirdQuartile) + "px");
+        })
+        .on("mouseout", function(d) {
+          d3
+            .select("." + plotName + "_tooltip_median")
+            .transition()
+            .duration(50)
+            .style("opacity", 0);
+
+          d3
+            .select("." + plotName + "_tooltip_firstQuartile")
+            .transition()
+            .duration(50)
+            .style("opacity", 0);
+
+          d3
+            .select("." + plotName + "_tooltip_thirdQuartile")
+            .transition()
+            .duration(50)
+            .style("opacity", 0);
+        });
 
       let xGroupingWidth = x.bandwidth() * xGroupingWidthRatio;
       let xGroupingWidthPer = xGroupingWidth / numPerTick;
@@ -211,6 +276,19 @@ const mapStateToProps = (state: stateInterface) => {
         .attr("y1", d => ysafe(d.median))
         .attr("y2", d => ysafe(d.median))
         .style("stroke", "#838383");
+
+      svg
+        .append("text")
+        .attr("class", plotName + "_tooltip_median")
+        .style("opacity", 0);
+      svg
+        .append("text")
+        .attr("class", plotName + "_tooltip_thirdQuartile")
+        .style("opacity", 0);
+      svg
+        .append("text")
+        .attr("class", plotName + "_tooltip_firstQuartile")
+        .style("opacity", 0);
     }
   };
 };
