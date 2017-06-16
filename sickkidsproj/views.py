@@ -76,7 +76,7 @@ def gene_exonreads(ensembl_id=None):
         .filter_by(ensembl_id = ensembl_id) \
         .first()
 
-    fp = os.path.realpath(os.path.join(app.config['DATA_RESOURCES_DIR'], mapping.store_path))
+    fp = os.path.realpath(os.path.join(app.config['DATA_RESOURCES_DIR'], mapping.store_path + ".p"))
     with open(fp, 'r') as f:
         return json.dumps(json.loads(f.read()))
     
