@@ -31,7 +31,7 @@ class Layout extends React.Component<any, any> {
   }
 
   render() {
-    let { viewType, onTabSelect } = this.props;
+    let { viewType, selectedGenePanel, onTabSelect } = this.props;
 
     return (
       <Grid>
@@ -39,7 +39,7 @@ class Layout extends React.Component<any, any> {
           <Panel>
             <Col xs={4}>
               <GenePanelListingContainer />
-              <TissueSiteListingContainer />
+              {selectedGenePanel !== "" && <TissueSiteListingContainer />}
             </Col>
             <Col xs={8}>
               <GenePanelInfoContainer />

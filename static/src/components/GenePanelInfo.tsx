@@ -42,7 +42,7 @@ class GenePanelInfo extends React.Component<any, any> {
           if (selectedGene[selectedGene.length - 1] === gene.ensemblId) {
             style["border"] = "2px dashed black";
             style["marginTop"] = "-1px";
-            style["marginBottom"] = "-1px";
+            // style["marginBottom"] = "-1px";
           }
 
           return {

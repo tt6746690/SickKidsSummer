@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { SplitButton, MenuItem } from "react-bootstrap";
+import { pad } from "../utils/Utils";
 
 class GenePanelListing extends React.Component<any, any> {
   render() {
@@ -18,16 +19,20 @@ class GenePanelListing extends React.Component<any, any> {
           .join(" ")}
       </MenuItem>
     );
+
+    let formatSelectedGenePanel = selectedGenePanel
+      .split("_")
+      .map(d => d.replace(/\b\w/g, f => f.toUpperCase()))
+      .join(" ");
+
     return (
       <SplitButton
+        bsSize="large"
         pullRight
         title={
           selectedGenePanel === ""
             ? "Gene Panels"
-            : selectedGenePanel
-                .split("_")
-                .map(d => d.replace(/\b\w/g, f => f.toUpperCase()))
-                .join(" ")
+            : pad(formatSelectedGenePanel, " ", 30, false)
         }
         id="bg-nested-dropdown"
         onSelect={onGenePanelListSelect}

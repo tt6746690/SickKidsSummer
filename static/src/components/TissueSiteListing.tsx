@@ -18,16 +18,19 @@ class TissueSiteListing extends React.Component<any, any> {
           key={index.toString()}
           active={selectedRefTissueSite === tissueId}
         >
-          {tissueId}
+          {tissueId.replace(/ *\([^)]*\) */g, "")}
         </MenuItem>
       );
     });
 
     return (
       <SplitButton
+        bsSize="large"
         pullRight
         title={
-          selectedRefTissueSite === "" ? "Tissue Types" : selectedRefTissueSite
+          selectedRefTissueSite === ""
+            ? "Tissue Types"
+            : selectedRefTissueSite.replace(/ *\([^)]*\) */g, "")
         }
         id="bg-nested-dropdown"
         onSelect={onTissueSiteListSelect}
