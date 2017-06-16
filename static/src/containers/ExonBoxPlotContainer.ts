@@ -81,97 +81,6 @@ const mapStateToProps = (state: stateInterface) => {
     yAxis.tickValues([1, 10, 100, 1000, 10000]);
   }
 
-  /*
-        zoomHandler 
-        -- updates x, y scale 
-        -- updated x, y scale reflected in 
-        ---- expression cutoff line 
-        ---- x, y axis 
-        ---- position of data points 
-    */
-  const zoomHandler = () => {
-    console.log("zoomHanlder");
-
-    let rescaledY = d3.event.transform.rescaleY(y);
-    svg.select(".y.axis").call(yAxis.scale(rescaledY));
-
-    let xGroupingWidth = x(xTicks[0]) * xGroupingWidthRatio;
-    let xGroupingWidthPer = xGroupingWidth / numPerTick;
-    let xTicOffset = index =>
-      numPerTick === 1 ? 0 : xGroupingWidth * (index / (numPerTick - 1) - 0.5);
-
-    let ysafe = val => {
-      return val < 1 ? rescaledY(1) : rescaledY(val);
-    };
-
-    svg
-      .select(".ExpressionCutOffLine")
-      .attr("x1", x(0))
-      .attr("y1", rescaledY(20))
-      .attr("x2", x(xTickCount + 1))
-      .attr("y2", rescaledY(20));
-
-    d3
-      .selectAll("." + plotName + "_upperWhisker")
-      .attr(
-        "x1",
-        d => x((d as any).x) + xTicOffset((d as any).i) - xGroupingWidthPer / 2
-      )
-      .attr(
-        "x2",
-        d => x((d as any).x) + xTicOffset((d as any).i) + xGroupingWidthPer / 2
-      )
-      .attr("y1", d => ysafe((d as any).upperWhisker))
-      .attr("y2", d => ysafe((d as any).upperWhisker));
-
-    d3
-      .selectAll("." + plotName + "_lowerWhisker")
-      .attr(
-        "x1",
-        d => x((d as any).x) + xTicOffset((d as any).i) - xGroupingWidthPer / 2
-      )
-      .attr(
-        "x2",
-        d => x((d as any).x) + xTicOffset((d as any).i) + xGroupingWidthPer / 2
-      )
-      .attr("y1", d => ysafe((d as any).lowerWhisker))
-      .attr("y2", d => ysafe((d as any).lowerWhisker))
-      .style("stroke", "lightgrey");
-
-    d3
-      .selectAll("." + plotName + "_whiskerDash")
-      .attr("x1", d => x((d as any).x) + xTicOffset((d as any).i))
-      .attr("x2", d => x((d as any).x) + xTicOffset((d as any).i))
-      .attr("y1", d => ysafe((d as any).lowerWhisker))
-      .attr("y2", d => ysafe((d as any).upperWhisker));
-
-    d3
-      .selectAll("." + plotName + "_boxRect")
-      .attr(
-        "x",
-        d => x((d as any).x) + xTicOffset((d as any).i) - xGroupingWidthPer / 2
-      )
-      .attr("y", d => ysafe((d as any).thirdQuartile))
-      .attr("width", xGroupingWidthPer)
-      .attr(
-        "height",
-        d => ysafe((d as any).firstQuartile) - ysafe((d as any).thirdQuartile)
-      );
-
-    d3
-      .selectAll("." + plotName + "_median")
-      .attr(
-        "x1",
-        d => x((d as any).x) + xTicOffset((d as any).i) - xGroupingWidthPer / 2
-      )
-      .attr(
-        "x2",
-        d => x((d as any).x) + xTicOffset((d as any).i) + xGroupingWidthPer / 2
-      )
-      .attr("y1", d => ysafe((d as any).median))
-      .attr("y2", d => ysafe((d as any).median));
-  };
-
   return {
     svg,
     data,
@@ -211,11 +120,6 @@ const mapStateToProps = (state: stateInterface) => {
         -- datapoints of read counts by tissueSite
     */
     plot: () => {
-      d3
-        .select("#" + plotName)
-        .select("svg")
-        .call(d3.zoom().scaleExtent([0, 100]).on("zoom", zoomHandler));
-
       svg
         .append("g")
         .classed("x axis", true)

@@ -74,21 +74,6 @@ const mapStateToProps = (state: stateInterface) => {
     yAxis.tickValues([1, 10, 100, 1000, 10000]);
   }
 
-  /*
-        zoomHandler 
-        -- updates x, y scale 
-        -- updated x, y scale reflected in 
-        ---- expression cutoff line 
-        ---- x, y axis 
-        ---- position of data points 
-    */
-  const zoomHandler = () => {
-    console.log("zoomHanlder");
-
-    let rescaledY = d3.event.transform.rescaleY(y);
-    svg.select(".y.axis").call(yAxis.scale(rescaledY));
-  };
-
   return {
     svg,
     data,
@@ -128,11 +113,6 @@ const mapStateToProps = (state: stateInterface) => {
         -- datapoints of read counts by tissueSite
     */
     plot: () => {
-      // d3
-      //   .select("#" + plotName)
-      //   .select("svg")
-      //   .call(d3.zoom().scaleExtent([0, 100]).on("zoom", zoomHandler));
-
       svg
         .append("g")
         .classed("x axis", true)

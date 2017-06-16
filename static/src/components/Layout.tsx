@@ -37,11 +37,11 @@ class Layout extends React.Component<any, any> {
       <Grid>
         <Row id="gene-panel">
           <Panel>
-            <Col xs={1}>
-              <TissueSiteListingContainer />
+            <Col xs={4}>
               <GenePanelListingContainer />
+              <TissueSiteListingContainer />
             </Col>
-            <Col xs={10} xsOffset={1}>
+            <Col xs={8}>
               <GenePanelInfoContainer />
             </Col>
           </Panel>

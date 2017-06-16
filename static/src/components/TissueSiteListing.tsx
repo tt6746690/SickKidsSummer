@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { DropdownButton, MenuItem } from "react-bootstrap";
+import { SplitButton, MenuItem } from "react-bootstrap";
 
 class TissueSiteListing extends React.Component<any, any> {
   render() {
@@ -24,14 +24,17 @@ class TissueSiteListing extends React.Component<any, any> {
     });
 
     return (
-      <DropdownButton
-        title="Tissue Types"
+      <SplitButton
+        pullRight
+        title={
+          selectedRefTissueSite === "" ? "Tissue Types" : selectedRefTissueSite
+        }
         id="bg-nested-dropdown"
         onSelect={onTissueSiteListSelect}
         className="tissueSiteListing"
       >
         {tissueSiteList}
-      </DropdownButton>
+      </SplitButton>
     );
   }
 }
