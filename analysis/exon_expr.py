@@ -17,7 +17,7 @@ EXON_REF = WD + "data/gencode.v19.genes.patched_contigs_exons.txt"
 PHENOTYPE_ANNOTATION = WD + "data/annotation/GTEx_Data_V6_Annotations_SubjectPhenotypesDS.txt"
 
 DEST_STORE = WD + "resources/exon_expr/"
-STORAGE_MAPPING = WD + "resources/mapping"
+STORAGE_MAPPING = WD + "resources/exon_expr.mapping"
 
 # GENE_SYMBOL = "TNMD"
 # TISSUES = ["Muscle -  ", "Cells - Transformed fibroblasts"]
@@ -56,10 +56,6 @@ def processOne(exon, line_num):
 
     # dataframe transposed
     df_t = exon.transpose()
-    
-    # save gene specific metadata to dataframe._metadata
-    genedata = {}
-    genedata["ensembl_id"] = exon["ensemblGeneId"].iloc[0]
 
     # Drop irrelevant rows
     df_t.columns = df_t.loc["exon"]
@@ -81,14 +77,11 @@ def processOne(exon, line_num):
     # populate list by tissue type
     # all_tissue_expr = { exon_num: {tissueType: [ expr...], ...} }
     all_tissue_expr = {}
-    for col in df_tissue.columns:
-        cur_tissue_expr = df_tissue.groupby(df_tissue.index)[
+    for col in df_m.columns:
+        cur_tissue_expr = df_m.groupby(df_m.index)[
             col].apply(lambda x: list(x)).to_dict()
         all_tissue_expr[col] = cur_tissue_expr
 
-    genedata["exon_expression"] = all_tissue_expr
-
-    
     # separate into 200 bins 
 
     dir_path = os.path.join(DEST_STORE, str(line_num % 200))
@@ -98,15 +91,14 @@ def processOne(exon, line_num):
         os.makedirs(dir_path)
 
     with open(full_path, "w") as fp:
-        json.dump(genedata, fp)
+        json.dump(all_tissue_expr, fp)
     with open(STORAGE_MAPPING, "a") as fp:
         fp.write(gid + '\t' + full_path + '\n')
     
     del exon
     del df_t
-    del df_tissue
+    del df_m
     del all_tissue_expr
-    del genedata
 
 
 
