@@ -271,6 +271,23 @@ const mapStateToProps = (state: stateInterface) => {
         .attr("width", xGroupingWidthPer)
         .attr("height", d => ysafe(d.firstQuartile) - ysafe(d.thirdQuartile));
 
+      box.each((d, i) => {
+        if (isNonEmptyArray(d.outliers)) {
+          svg
+            .selectAll("." + plotName + "_outliers_" + i)
+            .data(d.outliers)
+            .enter()
+            .append("circle")
+            .attr("class", plotName + "_outliers_" + i)
+            .attr("r", 2)
+            .attr("cx", e => {
+              return x(d.x) + xTicOffset(d.i);
+            })
+            .attr("cy", e => ysafe(e))
+            .attr("fill", "lightgrey");
+        }
+      });
+
       box
         .append("line")
         .attr("class", plotName + "_median")

@@ -24,7 +24,7 @@ import GeneBoxPlotContainer from "../containers/GeneBoxPlotContainer";
 
 import { VIEW_TYPE } from "../reducers/Actions";
 
-class Layout extends React.Component<any, any> {
+class Layout extends React.Component<any, object> {
   componentWillMount() {
     let { onComponentWillMount } = this.props;
     onComponentWillMount();

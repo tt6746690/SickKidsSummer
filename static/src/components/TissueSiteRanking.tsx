@@ -3,7 +3,7 @@ import { Table, Button, Panel } from "react-bootstrap";
 
 import { tissueSiteEntity } from "../Interfaces";
 
-class TissueSiteRanking extends React.Component<any, any> {
+class TissueSiteRanking extends React.Component<any, object> {
   render() {
     let {
       ranking,

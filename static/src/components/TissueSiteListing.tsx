@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { SplitButton, MenuItem } from "react-bootstrap";
 
-class TissueSiteListing extends React.Component<any, any> {
+class TissueSiteListing extends React.Component<any, object> {
   render() {
     let {
       tissueSite,

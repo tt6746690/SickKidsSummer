@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ButtonGroup, Button, Panel } from "react-bootstrap";
 
-class ExonBoxPlotLegend extends React.Component<any, any> {
+class ExonBoxPlotLegend extends React.Component<any, object> {
   render() {
     let { selectedTissueSite, onTissueSiteClick, color } = this.props;
 

@@ -5,7 +5,7 @@ import { isEmptyObject, isNonEmptyArray } from "../utils/Utils";
 import { getGenePanelEntityById, getGeneEntityByIdList } from "../store/Query";
 import { geneEntity } from "../Interfaces";
 
-class GenePanelInfo extends React.Component<any, any> {
+class GenePanelInfo extends React.Component<any, object> {
   render() {
     let {
       gene,

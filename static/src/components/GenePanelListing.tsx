@@ -3,7 +3,7 @@ import * as React from "react";
 import { SplitButton, MenuItem } from "react-bootstrap";
 import { pad } from "../utils/Utils";
 
-class GenePanelListing extends React.Component<any, any> {
+class GenePanelListing extends React.Component<any, object> {
   render() {
     let { genePanel, selectedGenePanel, onGenePanelListSelect } = this.props;
 

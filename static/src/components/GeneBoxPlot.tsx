@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import { PanelGroup, Panel } from "react-bootstrap";
 import { isNonEmptyArray } from "../utils/Utils";
 
-class GeneBoxPlot extends React.Component<any, any> {
+class GeneBoxPlot extends React.Component<any, object> {
   componentDidMount() {
     let { setup } = this.props;
     setup();
