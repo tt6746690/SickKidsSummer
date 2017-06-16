@@ -13,7 +13,8 @@ class GenePanelInfo extends React.Component<any, any> {
       selectedGene,
       selectedGenePanel,
       color,
-      onPanelGeneClick
+      onPanelGeneClick,
+      onPanelGeneClear
     } = this.props;
     /*
             Displays gene symbol associated with currently selected genePanel
@@ -42,7 +43,6 @@ class GenePanelInfo extends React.Component<any, any> {
           if (selectedGene[selectedGene.length - 1] === gene.ensemblId) {
             style["border"] = "2px dashed black";
             style["marginTop"] = "-1px";
-            // style["marginBottom"] = "-1px";
           }
 
           return {
@@ -67,6 +67,10 @@ class GenePanelInfo extends React.Component<any, any> {
     return (
       <ButtonGroup>
         {panelGeneButtons}
+        {panelGeneButtons &&
+          <Button bsStyle={"warning"} onClick={onPanelGeneClear}>
+            {"Clear"}
+          </Button>}
       </ButtonGroup>
     );
   }

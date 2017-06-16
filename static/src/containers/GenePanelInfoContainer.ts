@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { addGene, toggleGene } from "../reducers/Actions";
+import { addGene, toggleGene, clearGeneSelection } from "../reducers/Actions";
 import { isNonEmptyArray } from "../utils/Utils";
 import { stateInterface } from "../Interfaces";
 import GenePanelInfo from "../components/GenePanelInfo";
@@ -66,6 +66,10 @@ const mapDispatchToProps = dispatch => {
           );
         })
         .catch(err => console.log("fetch: ", err));
+    },
+
+    onPanelGeneClear: () => {
+      dispatch(clearGeneSelection());
     }
   };
 };
