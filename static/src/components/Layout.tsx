@@ -57,8 +57,8 @@ class Layout extends React.Component<any, any> {
             <TissueSiteRankingContainer />
           </Tab>
           <Tab eventKey={VIEW_TYPE.EXON_EXPR_PLOT} title="Exon Plot">
-            <ExonBoxPlotLegendContainer />
             <ExonBoxPlotContainer />
+            <ExonBoxPlotLegendContainer />
           </Tab>
           <Tab eventKey={VIEW_TYPE.GENE_EXPR_PLOT} title="Gene Plot">
             <GeneBoxPlotContainer />

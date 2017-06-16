@@ -1,9 +1,11 @@
 import {
   SELECT_GENE_PANEL,
+  SELECT_REF_TISSUE_SITE,
   TOGGLE_GENE,
   TOGGLE_TISSUE_SITE,
   SELECT_VIEW,
-  SELECT_REF_TISSUE_SITE
+  CLEAR_GENE_SELECTION,
+  CLEAR_TISSUE_SITE_SELECTION
 } from "./Actions";
 
 import {
@@ -55,6 +57,16 @@ function select(state, action) {
         ...state,
         tissueSite: toggleTissueSiteReducer(state.tissueSite, action)
       };
+    case CLEAR_GENE_SELECTION:
+      return {
+        ...state,
+        gene: []
+      };
+    case CLEAR_TISSUE_SITE_SELECTION:
+      return {
+        ...state,
+        tissueSite: []
+      };
     default:
       return state;
   }
@@ -68,6 +80,8 @@ export default function ui(state, action) {
     case SELECT_REF_TISSUE_SITE:
     case TOGGLE_GENE:
     case TOGGLE_TISSUE_SITE:
+    case CLEAR_GENE_SELECTION:
+    case CLEAR_TISSUE_SITE_SELECTION:
       return { ...state, select: select(state.select, action) };
     default:
       return state;

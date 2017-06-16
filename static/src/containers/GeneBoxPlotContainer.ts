@@ -32,7 +32,7 @@ const mapStateToProps = (state: stateInterface) => {
   } = state;
 
   // plot config
-  let plotName = "GeneBarPlot";
+  let plotName = "GeneBoxPlot";
   let xLabel = "Tissue Types";
   let yLabel = "Reads (rpkm)";
 
@@ -74,13 +74,19 @@ const mapStateToProps = (state: stateInterface) => {
   return {
     svg,
     data,
-    /* 
+    geneEntities,
+    /*
+      Returns true of data is valid for plotting 
+    */
+    preconditionSatisfied() {
+      return typeof data !== "undefined" && isNonEmptyArray(data);
+    } /* 
         Set up 
         -- toplevel svg, g 
         -- perform appropriate transformation 
         -- global event handler 
         ---- zoom
-        */
+        */,
     setup: () => {
       svg = d3
         .select("#" + plotName)
@@ -90,25 +96,22 @@ const mapStateToProps = (state: stateInterface) => {
         .append("g")
         .attr("transform", "translate(" + offset + "," + offset + ")")
         .classed(plotName + "Group", true);
-    },
-    /*
+    } /*
         Removes all dom element under 
         -- .ExonBarPlotGroup everytime before update 
         -- svg everytime component unmounted
-    */
+    */,
     tearDown: () => {
       d3.select("." + plotName + "Group").selectAll("*").remove();
       d3.select("#" + plotName).select("svg").on(".zoom", null);
     },
     cleanUp: () => {
       d3.select("#" + plotName).selectAll("*").remove();
-    },
-
-    /* 
+    } /* 
         Plotting 
         -- x and y axis
         -- datapoints of read counts by tissueSite
-    */
+    */,
     plot: () => {
       /* 
         sort data by median 

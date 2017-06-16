@@ -32,7 +32,7 @@ const mapStateToProps = (state: stateInterface) => {
   } = state;
 
   // plot config
-  let plotName = "ExonBarPlot";
+  let plotName = "ExonBoxPlot";
   let xLabel = "Exon Number";
   let yLabel = "Raw Read Counts (log scaled)";
 
@@ -55,6 +55,7 @@ const mapStateToProps = (state: stateInterface) => {
 
   let data = [];
   let geneEntities = getGeneEntityByIdList(gene, selectedGene); // defaults to []
+  let lastGeneEntity: geneEntity = {} as geneEntity;
 
   /* 
         Precondition for computing data for exon expression plot 
@@ -67,11 +68,11 @@ const mapStateToProps = (state: stateInterface) => {
     isNonEmptyArray(selectedGene) &&
     isNonEmptyArray(selectedTissueSite)
   ) {
-    let lastGeneClicked = geneEntities[geneEntities.length - 1];
+    lastGeneEntity = geneEntities[geneEntities.length - 1];
 
-    data = formatExonBoxPlotData(lastGeneClicked.exonExpr, selectedTissueSite);
+    data = formatExonBoxPlotData(lastGeneEntity.exonExpr, selectedTissueSite);
 
-    xTicks = Object.keys(lastGeneClicked.exonExpr).map(x => parseInt(x));
+    xTicks = Object.keys(lastGeneEntity.exonExpr).map(x => parseInt(x));
     xTickCount = xTicks.length;
 
     x.domain([0, xTickCount + 1]);
@@ -84,6 +85,13 @@ const mapStateToProps = (state: stateInterface) => {
   return {
     svg,
     data,
+    lastGeneEntity,
+    /*
+      Returns true of data is valid for plotting 
+    */
+    preconditionSatisfied() {
+      return typeof data !== "undefined" && isNonEmptyArray(data);
+    },
     /* 
         Set up 
         -- toplevel svg, g 

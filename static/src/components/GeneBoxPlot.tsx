@@ -18,14 +18,26 @@ class GeneBoxPlot extends React.Component<any, any> {
     tearDown();
   }
   componentDidUpdate() {
-    let { data, plot } = this.props;
-    if (typeof data !== "undefined" && isNonEmptyArray(data)) {
+    let { data, plot, preconditionSatisfied } = this.props;
+    if (preconditionSatisfied()) {
       console.log("GeneBoxPlot: plot()", data);
       plot();
     }
   }
   render() {
-    return <div id="GeneBarPlot" />;
+    let { preconditionSatisfied, geneEntities } = this.props;
+    return (
+      <Panel
+        bsStyle={preconditionSatisfied() ? "success" : "default"}
+        header={
+          isNonEmptyArray(geneEntities)
+            ? geneEntities.map(d => d.geneSymbol).join("  ")
+            : undefined
+        }
+      >
+        <div id="GeneBoxPlot" />
+      </Panel>
+    );
   }
 }
 
