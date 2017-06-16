@@ -16,9 +16,11 @@ do
     l=`cat ./gene_panels/$gp | awk '{ print $2  }'`
     for g in $l;
     do 
-        # ep=`grep $g exon_expr.mapping | head -n 1 | cut -c 17-`
-        # gp=`grep $g gene_expr.mapping | head -n 1 | cut -c 17-` 
+        ep=`grep $g exon_expr.mapping | head -n 1 | cut -c 17-`
+        gp=`grep $g gene_expr.mapping | head -n 1 | cut -c 17-` 
         echo adding $gp...
         git add $gp
+        echo adding $ep...
+        git add $ep
     done
 done
