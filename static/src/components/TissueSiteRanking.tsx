@@ -13,13 +13,17 @@ class TissueSiteRanking extends React.Component<any, object> {
       ranking,
       selectedGenePanel,
       selectedTissueSite,
-      selectedRefTissueSite /* ExonPlot props */,
+      selectedRefTissueSite,
+
+      /* ExonPlot props */
       color,
+      getPlotId,
       plotName,
       setup,
       cleanUp,
       tearDown,
       plot,
+      preconditionSatisfied,
       getRanking,
       onTissueSiteClick
     } = this.props;
@@ -85,6 +89,8 @@ class TissueSiteRanking extends React.Component<any, object> {
             </tr>
           );
 
+          console.log("TissueSiteRanking:: render()");
+
           return [
             tableRow,
 
@@ -100,10 +106,15 @@ class TissueSiteRanking extends React.Component<any, object> {
                         geneSymbol={g.geneSymbol}
                         data={formatExonPlotData(g, selectedTissueSiteLast)}
                         plotName={plotName}
+                        getPlotId={getPlotId}
                         setup={setup}
                         cleanUp={cleanUp}
                         tearDown={tearDown}
                         plot={plot}
+                        preconditionSatisfied={preconditionSatisfied}
+                        selectedTissueSiteLast={
+                          selectedTissueSiteLast
+                        } /* passed to prop to trigger re-render */
                       />
                     );
                   })}

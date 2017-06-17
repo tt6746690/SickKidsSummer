@@ -11,26 +11,28 @@ class ExonPlot extends React.Component<any, object> {
     let { clean, geneSymbol } = this.props;
     clean(geneSymbol);
   }
-  componentWillUpdate() {
-    let { tearDown, geneSymbol } = this.props;
-    tearDown(geneSymbol);
-  }
-  componentDidUpdate() {
-    let { data, plot } = this.props;
-    console.log("ExonPlot: plot()", data);
-    plot(data);
-  }
 
   render() {
-    let { geneSymbol, data, plotName } = this.props;
+    let {
+      data,
+      plot,
+      tearDown,
+      preconditionSatisfied,
+      geneSymbol,
+      getPlotId
+    } = this.props;
 
-    console.log({ geneSymbol, data, plotName });
+    if (preconditionSatisfied(data)) {
+      tearDown(geneSymbol);
+      console.log("ExonPlot: plot()", data);
+      plot(data);
+    }
 
     return (
       <Row>
         <Col xs={2}>{geneSymbol}</Col>
         <Col xs={10}>
-          <div id={geneSymbol + "_" + plotName} />
+          <div id={getPlotId(geneSymbol)} />
         </Col>
       </Row>
     );
