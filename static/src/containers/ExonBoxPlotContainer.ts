@@ -99,7 +99,7 @@ const mapStateToProps = (state: stateInterface) => {
         -- global event handler 
         ---- zoom
         */
-    setup: () => {
+    setUp: () => {
       svg = d3
         .select("#" + plotName)
         .append("svg")

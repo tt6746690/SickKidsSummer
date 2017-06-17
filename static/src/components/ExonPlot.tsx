@@ -1,40 +1,54 @@
 import * as React from "react";
 
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Panel } from "react-bootstrap";
+import { formatExonPlotData } from "../utils/Plot";
 
 class ExonPlot extends React.Component<any, object> {
   componentDidMount() {
-    let { setup, geneSymbol } = this.props;
-    setup(geneSymbol);
+    console.log("ExonPlot: setUp() + plot()");
+    let {
+      gene,
+      selectedTissueSiteLast,
+      preconditionSatisfied,
+      setUp,
+      plot
+    } = this.props;
+    gene.forEach(g => {
+      setUp(g.geneSymbol);
+      let data = formatExonPlotData(g, selectedTissueSiteLast);
+      if (preconditionSatisfied(data)) {
+        console.log("ExonPlot: plot()", data);
+        plot(data);
+      }
+    });
   }
-  componengDidUnmount() {
-    let { clean, geneSymbol } = this.props;
-    clean(geneSymbol);
+  componentWillUnmount() {
+    console.log("ExonPlot: cleanUp()");
+
+    let { gene, cleanUp } = this.props;
+    gene.forEach(g => cleanUp(g.geneSymbol));
   }
 
   render() {
-    let {
-      data,
-      plot,
-      tearDown,
-      preconditionSatisfied,
-      geneSymbol,
-      getPlotId
-    } = this.props;
+    let { gene, getPlotId } = this.props;
+    console.log("ExonPlot::render()");
 
-    if (preconditionSatisfied(data)) {
-      tearDown(geneSymbol);
-      console.log("ExonPlot: plot()", data);
-      plot(data);
-    }
+    let ExonPlotList = gene.map((g, i) => {
+      let geneSymbol = g.geneSymbol;
+      return (
+        <Row key={i.toString()}>
+          <Col xs={2}>{geneSymbol}</Col>
+          <Col xs={10}>
+            <div id={getPlotId(geneSymbol)} />
+          </Col>
+        </Row>
+      );
+    });
 
     return (
-      <Row>
-        <Col xs={2}>{geneSymbol}</Col>
-        <Col xs={10}>
-          <div id={getPlotId(geneSymbol)} />
-        </Col>
-      </Row>
+      <Panel>
+        {ExonPlotList}
+      </Panel>
     );
   }
 }

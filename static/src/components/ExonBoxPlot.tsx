@@ -6,12 +6,12 @@ import { isEmptyObject } from "../utils/Utils";
 
 class ExonBoxPlot extends React.Component<any, object> {
   componentDidMount() {
-    let { setup } = this.props;
-    setup();
+    let { setUp } = this.props;
+    setUp();
   }
-  componengDidUnmount() {
-    let { clean } = this.props;
-    clean();
+  componentWillUnmount() {
+    let { cleanUp } = this.props;
+    cleanUp();
   }
   componentWillUpdate() {
     let { tearDown } = this.props;

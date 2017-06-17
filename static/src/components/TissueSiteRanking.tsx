@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Table, Button, Panel } from "react-bootstrap";
 
-import ExonPlot from "./ExonPlot";
+import ExonPlotContainer from "../containers/ExonPlotContainer";
 import { tissueSiteEntity } from "../Interfaces";
 import { isNonEmptyArray } from "../utils/Utils";
 import { formatExonPlotData } from "../utils/Plot";
@@ -9,21 +9,11 @@ import { formatExonPlotData } from "../utils/Plot";
 class TissueSiteRanking extends React.Component<any, object> {
   render() {
     let {
-      gene,
-      ranking,
       selectedGenePanel,
       selectedTissueSite,
       selectedRefTissueSite,
-
-      /* ExonPlot props */
+      selectedTissueSiteLast,
       color,
-      getPlotId,
-      plotName,
-      setup,
-      cleanUp,
-      tearDown,
-      plot,
-      preconditionSatisfied,
       getRanking,
       onTissueSiteClick
     } = this.props;
@@ -62,9 +52,6 @@ class TissueSiteRanking extends React.Component<any, object> {
         }
       });
 
-      let selectedTissueSiteLast =
-        selectedTissueSite[selectedTissueSite.length - 1];
-
       const selectedTissueListGroupItem = ranking.map(
         ([tissueSiteId, totalExonCount, fraction], index) => {
           let style = {
@@ -89,8 +76,6 @@ class TissueSiteRanking extends React.Component<any, object> {
             </tr>
           );
 
-          console.log("TissueSiteRanking:: render()");
-
           return [
             tableRow,
 
@@ -98,27 +83,7 @@ class TissueSiteRanking extends React.Component<any, object> {
               selectedGenePanel !== "" &&
               selectedRefTissueSite !== "" &&
               isNonEmptyArray(selectedTissueSite)
-              ? <Panel>
-                  {gene.map((g, i) => {
-                    return (
-                      <ExonPlot
-                        key={i.toString()}
-                        geneSymbol={g.geneSymbol}
-                        data={formatExonPlotData(g, selectedTissueSiteLast)}
-                        plotName={plotName}
-                        getPlotId={getPlotId}
-                        setup={setup}
-                        cleanUp={cleanUp}
-                        tearDown={tearDown}
-                        plot={plot}
-                        preconditionSatisfied={preconditionSatisfied}
-                        selectedTissueSiteLast={
-                          selectedTissueSiteLast
-                        } /* passed to prop to trigger re-render */
-                      />
-                    );
-                  })}
-                </Panel>
+              ? <ExonPlotContainer />
               : undefined
           ];
         }
