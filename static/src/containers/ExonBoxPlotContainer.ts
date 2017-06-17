@@ -283,7 +283,7 @@ const mapStateToProps = (state: stateInterface) => {
             .enter()
             .append("circle")
             .attr("class", plotName + "_outliers_" + i)
-            .attr("r", x(1) / 25)
+            .attr("r", x(1) / 50 >= 1 ? x(1) / 50 : 1)
             .attr("cx", e => {
               return x(d.x) + xTicOffset(d.i);
             })

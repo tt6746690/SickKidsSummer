@@ -11,11 +11,11 @@ import TissueSiteListing from "../components/TissueSiteListing";
 
 const mapStateToProps = (state: stateInterface) => {
   let {
-    entities: { tissueSite },
+    entities: { gene, tissueSite },
     ui: { select: { refTissueSite: selectedRefTissueSite } }
   } = state;
 
-  return { tissueSite, selectedRefTissueSite };
+  return { gene, tissueSite, selectedRefTissueSite };
 };
 
 const mapDispatchToProps = dispatch => {

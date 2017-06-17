@@ -7,7 +7,8 @@ class TissueSiteListing extends React.Component<any, object> {
     let {
       tissueSite,
       selectedRefTissueSite,
-      onTissueSiteListSelect
+      onTissueSiteListSelect,
+      fetchPanelGene
     } = this.props;
 
     const tissueSiteList = tissueSite.map((tissue, index) => {
@@ -26,7 +27,6 @@ class TissueSiteListing extends React.Component<any, object> {
     return (
       <SplitButton
         bsSize="large"
-        pullRight
         title={
           selectedRefTissueSite === ""
             ? "Tissue Types"

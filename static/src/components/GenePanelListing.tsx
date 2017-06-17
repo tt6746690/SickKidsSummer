@@ -2,10 +2,17 @@ import * as React from "react";
 
 import { SplitButton, MenuItem } from "react-bootstrap";
 import { pad } from "../utils/Utils";
+import { getIncompleteGeneEntity } from "../store/Query";
 
 class GenePanelListing extends React.Component<any, object> {
   render() {
-    let { genePanel, selectedGenePanel, onGenePanelListSelect } = this.props;
+    let {
+      gene,
+      genePanel,
+      selectedGenePanel,
+      onGenePanelListSelect,
+      fetchPanelGene
+    } = this.props;
 
     const panelListing = genePanel.map((panel, index) =>
       <MenuItem

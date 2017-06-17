@@ -1,6 +1,15 @@
-import { geneEntity, genePanelEntity, stateInterface } from "../Interfaces";
+import {
+  geneEntity,
+  genePanelEntity,
+  tissueSiteEntity,
+  stateInterface
+} from "../Interfaces";
 import { isEmptyObject } from "../utils/Utils";
 
+/*
+  Queries entities.gene and 
+  returns an array of geneEntity given a single ensemblId 
+*/
 export function getGeneEntityById(
   genes: geneEntity[],
   ensemblId: string
@@ -9,6 +18,10 @@ export function getGeneEntityById(
   return result.length == 1 ? result[0] : {} as geneEntity;
 }
 
+/*
+  Queries entities.gene and 
+  returns an array of geneEntity given an array of ensemblId
+*/
 export function getGeneEntityByIdList(
   genes: geneEntity[],
   ensemblIds: string[]
@@ -19,6 +32,10 @@ export function getGeneEntityByIdList(
   return filtered || ([] as geneEntity[]);
 }
 
+/*
+  Queries entities.genePanel and 
+  returns an array of genePanelEntity given a single panel Id
+*/
 export function getGenePanelEntityById(
   genePanel: genePanelEntity[],
   genePanelIds: string
@@ -27,6 +44,10 @@ export function getGenePanelEntityById(
   return result.length == 1 ? result[0] : {} as genePanelEntity;
 }
 
+/*
+  Queries entities.genePanel and 
+  returns an array of genePanelEntity given an array of panel Id 
+*/
 export function getGenePanelEntityByIdList(
   genePanel: genePanelEntity[],
   genePanelIds: string[]
@@ -58,4 +79,16 @@ export function getTissueRanking(
   } else {
     return [];
   }
+}
+
+/*
+  Queries gene and returns a subset such that either
+  -- exonExpr
+  -- geneExpr
+  is not populated from server
+*/
+export function getIncompleteGeneEntity(gene: geneEntity[]): geneEntity[] {
+  return gene.filter(g => {
+    return isEmptyObject(g.exonExpr) || isEmptyObject(g.geneExpr);
+  });
 }

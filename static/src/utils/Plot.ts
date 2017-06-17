@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { geneEntity, tissueSiteEntity } from "../Interfaces";
 /* 
     Formats gene expression data for scatter plotting
     Returns data: {
@@ -6,7 +7,9 @@ import * as d3 from "d3";
         ...
     }
 */
-export const formatGeneScatterPlotData = geneEntities => {
+export const formatGeneScatterPlotData = (
+  geneEntities: geneEntity[]
+): Object => {
   let data = {};
 
   geneEntities.forEach(geneEntity => {
@@ -87,7 +90,7 @@ const computeBoxPlotStatistics = (l: number[]) => {
     }
   ]
   */
-export const formatGeneBoxPlotData = geneEntities => {
+export const formatGeneBoxPlotData = (geneEntities: geneEntity[]): Object[] => {
   let data = [];
 
   geneEntities.forEach((geneEntity, i) => {
@@ -118,7 +121,7 @@ export const formatGeneBoxPlotData = geneEntities => {
 export const formatExonScatterPlotData = (
   exonExpr: Object,
   tissues: string[]
-) => {
+): Object => {
   let flattened = {};
   let tissue;
 
@@ -138,10 +141,13 @@ export const formatExonScatterPlotData = (
 /* 
   Computs summary statistics for box plotting 
   */
-export const formatExonBoxPlotData = (exonExpr: Object, tissues: string[]) => {
+export const formatExonBoxPlotData = (
+  exonExpr: Object,
+  tissueSite: string[]
+): Object[] => {
   let data = [];
 
-  tissues.forEach((tissue: string, i) => {
+  tissueSite.forEach((tissue: string, i) => {
     Object.keys(exonExpr).forEach((exonNum: string) => {
       let {
         reads,
@@ -171,5 +177,27 @@ export const formatExonBoxPlotData = (exonExpr: Object, tissues: string[]) => {
     });
   });
 
+  return data;
+};
+
+/* 
+  subset geneEntity.exonExpr for sushi plot
+*/
+export const formatExonPlotData = (
+  gene: geneEntity,
+  tissueSite: string
+): Object[] => {
+  let data = [];
+  let exonExpr = gene.exonExpr;
+
+  Object.keys(exonExpr).forEach((exonNum: string) => {
+    let { median, overByMedian } = exonExpr[exonNum][tissueSite];
+    data.push({
+      x: exonNum,
+      id: gene.geneSymbol,
+      median,
+      overByMedian
+    });
+  });
   return data;
 };

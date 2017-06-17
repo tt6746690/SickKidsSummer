@@ -1,16 +1,25 @@
 import * as React from "react";
 import { Table, Button, Panel } from "react-bootstrap";
 
+import ExonPlot from "./ExonPlot";
 import { tissueSiteEntity } from "../Interfaces";
+import { isNonEmptyArray } from "../utils/Utils";
+import { formatExonPlotData } from "../utils/Plot";
 
 class TissueSiteRanking extends React.Component<any, object> {
   render() {
     let {
+      gene,
       ranking,
       selectedGenePanel,
       selectedTissueSite,
-      selectedRefTissueSite,
+      selectedRefTissueSite /* ExonPlot props */,
       color,
+      plotName,
+      setup,
+      cleanUp,
+      tearDown,
+      plot,
       getRanking,
       onTissueSiteClick
     } = this.props;
@@ -49,6 +58,9 @@ class TissueSiteRanking extends React.Component<any, object> {
         }
       });
 
+      let selectedTissueSiteLast =
+        selectedTissueSite[selectedTissueSite.length - 1];
+
       const selectedTissueListGroupItem = ranking.map(
         ([tissueSiteId, totalExonCount, fraction], index) => {
           let style = {
@@ -57,7 +69,7 @@ class TissueSiteRanking extends React.Component<any, object> {
             }
           };
 
-          return (
+          let tableRow = (
             <tr key={index.toString()}>
               <td>
                 <Button
@@ -72,6 +84,32 @@ class TissueSiteRanking extends React.Component<any, object> {
               <td>{fraction.toPrecision(2)}</td>
             </tr>
           );
+
+          return [
+            tableRow,
+
+            selectedTissueSiteLast === tissueSiteId &&
+              selectedGenePanel !== "" &&
+              selectedRefTissueSite !== "" &&
+              isNonEmptyArray(selectedTissueSite)
+              ? <Panel>
+                  {gene.map((g, i) => {
+                    return (
+                      <ExonPlot
+                        key={i.toString()}
+                        geneSymbol={g.geneSymbol}
+                        data={formatExonPlotData(g, selectedTissueSiteLast)}
+                        plotName={plotName}
+                        setup={setup}
+                        cleanUp={cleanUp}
+                        tearDown={tearDown}
+                        plot={plot}
+                      />
+                    );
+                  })}
+                </Panel>
+              : undefined
+          ];
         }
       );
 
@@ -98,5 +136,4 @@ class TissueSiteRanking extends React.Component<any, object> {
     );
   }
 }
-
 export default TissueSiteRanking;
