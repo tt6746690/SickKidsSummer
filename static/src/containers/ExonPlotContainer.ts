@@ -6,12 +6,14 @@ import ExonPlot from "../components/ExonPlot";
 import { getTissueRanking } from "../store/Query";
 
 import { isNonEmptyArray } from "../utils/Utils";
+import { toggleGene } from "../reducers/Actions";
 
 const mapStateToProps = (state: stateInterface) => {
   let {
     entities: { gene, tissueSite, genePanel },
     ui: {
       select: {
+        gene: selectedGene,
         genePanel: selectedGenePanel,
         refTissueSite: selectedRefTissueSite,
         tissueSite: selectedTissueSite
@@ -44,8 +46,10 @@ const mapStateToProps = (state: stateInterface) => {
 
   return {
     gene,
+    selectedGene,
     selectedTissueSiteLast,
     getPlotId,
+    color,
     preconditionSatisfied(data) {
       return isNonEmptyArray(data);
     },
@@ -88,12 +92,36 @@ const mapStateToProps = (state: stateInterface) => {
         .attr("y", 0)
         .attr("width", x(1) * xGroupingWidthRatio)
         .attr("height", height - offset);
+
+      exonBox
+        .append("text")
+        .attr("class", `${getPlotId(geneSymbol)}_exonBoxText`)
+        .attr("x", d => x((d as any).x))
+        .attr("y", height - offset / 2)
+        .style("text-anchor", "middle")
+        .attr("fill", "lightgrey")
+        .style(
+          "font-size",
+          100 / xTickCount < 8
+            ? "8px"
+            : 100 / xTickCount > 20 ? "20px" : 100 / xTickCount
+        )
+        .text(d => d.x);
     }
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    /*
+        Selecting a gene
+        -- sets toggles genes in ui.select.gene 
+    */
+    onPanelGeneClick: evt => {
+      let ensemblId = evt.target.value;
+      dispatch(toggleGene(ensemblId));
+    }
+  };
 };
 
 const ExonPlotContainer = connect(mapStateToProps, mapDispatchToProps)(

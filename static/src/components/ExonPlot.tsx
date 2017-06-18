@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Row, Col, Panel } from "react-bootstrap";
+import { Row, Col, Panel, Button } from "react-bootstrap";
 import { formatExonPlotData } from "../utils/Plot";
 
 class ExonPlot extends React.Component<any, object> {
@@ -30,14 +30,27 @@ class ExonPlot extends React.Component<any, object> {
   }
 
   render() {
-    let { gene, getPlotId } = this.props;
+    let { color, gene, selectedGene, getPlotId, onPanelGeneClick } = this.props;
     console.log("ExonPlot::render()");
 
     let ExonPlotList = gene.map((g, i) => {
       let geneSymbol = g.geneSymbol;
       return (
         <Row key={i.toString()}>
-          <Col xs={2}>{geneSymbol}</Col>
+          <Col xs={2}>
+            <Button
+              className={"panelGeneButton"}
+              value={g.ensemblId}
+              onClick={onPanelGeneClick}
+              style={
+                selectedGene.includes(g.ensemblId)
+                  ? { backgroundColor: color(g.ensemblId) }
+                  : undefined
+              }
+            >
+              {g.geneSymbol.toUpperCase()}
+            </Button>
+          </Col>
           <Col xs={10}>
             <div id={getPlotId(geneSymbol)} />
           </Col>

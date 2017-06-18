@@ -33,6 +33,7 @@ class TissueSiteRanking extends React.Component<any, object> {
       /* sort ranking by 
         -- 1. fraction 
         -- 2. totalExonCount
+        -- 3. Id, to break tie against 1. and 2.
         in descending order
       */
       ranking.sort((a, b) => {
@@ -46,8 +47,14 @@ class TissueSiteRanking extends React.Component<any, object> {
         } else {
           if (aCount < bCount) {
             return 1;
-          } else {
+          } else if (aCount > bCount) {
             return -1;
+          } else {
+            if (aId > bId) {
+              return 1;
+            } else {
+              return -1;
+            }
           }
         }
       });
