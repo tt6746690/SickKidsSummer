@@ -87,7 +87,7 @@ const mapStateToProps = (state: stateInterface) => {
         .append("rect")
         .attr("class", `${getPlotId(geneSymbol)}_exonBoxRect`)
         .attr("stroke", "lightgrey")
-        .attr("fill", d => ((d as any).overByMedian ? "lightgrey" : "white"))
+        .attr("fill", d => ((d as any).over ? "lightgrey" : "white"))
         .attr("x", d => x((d as any).x))
         .attr("y", 0)
         .attr("width", x(1) * xGroupingWidthRatio)

@@ -149,29 +149,14 @@ export const formatExonBoxPlotData = (
 
   tissueSite.forEach((tissue: string, i) => {
     Object.keys(exonExpr).forEach((exonNum: string) => {
-      let {
-        reads,
-        mean,
-        overByTtest,
-        overByMedian,
-        overByMean,
-        ttest_1samp,
-        median
-      } = exonExpr[exonNum][tissue];
-
-      let [t_statistic, p_value] = ttest_1samp;
+      let { reads, median, over } = exonExpr[exonNum][tissue];
       let summaryStatistics = computeBoxPlotStatistics(reads);
 
       data.push({
         i,
         x: exonNum,
         id: tissue,
-        mean,
-        overByTtest,
-        overByMedian,
-        overByMean,
-        t_statistic,
-        p_value,
+        over,
         ...summaryStatistics
       });
     });
@@ -191,12 +176,12 @@ export const formatExonPlotData = (
   let exonExpr = gene.exonExpr;
 
   Object.keys(exonExpr).forEach((exonNum: string) => {
-    let { median, overByMedian } = exonExpr[exonNum][tissueSite];
+    let { median, over } = exonExpr[exonNum][tissueSite];
     data.push({
       x: exonNum,
       id: gene.geneSymbol,
       median,
-      overByMedian
+      over
     });
   });
   return data;

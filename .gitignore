@@ -11,8 +11,8 @@ data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_gene_reads.gct
 data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_gene_rpkm.gct
 data/biobank_collection_20170601_014834.txt
 
-resources/exon_expr
-resources/gene_expr
+/* resources/exon_expr */
+/* resources/gene_expr */
 
 __pycache__/
 .idea/*

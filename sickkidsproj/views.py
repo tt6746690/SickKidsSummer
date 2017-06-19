@@ -8,6 +8,8 @@ from sickkidsproj import app, db
 from sickkidsproj.models import ExonReadsMapping, GeneReadsMapping
 from sickkidsproj.cors import crossdomain
 
+from sickkidsproj.analysis.ranking import computeRanking
+
 
 @app.route('/')
 def index():
@@ -76,7 +78,7 @@ def gene_exonreads(ensembl_id=None):
         .filter_by(ensembl_id = ensembl_id) \
         .first()
 
-    fp = os.path.realpath(os.path.join(app.config['DATA_RESOURCES_DIR'], mapping.store_path + ".p"))
+    fp = os.path.realpath(os.path.join(app.config['DATA_RESOURCES_DIR'], mapping.store_path + ".20"))
     with open(fp, 'r') as f:
         return json.dumps(json.loads(f.read()))
     
@@ -105,4 +107,5 @@ def send_dist(path):
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return "Resource not found page.."
+    return str(computeRanking())
+    #  return "Resource not found page.."

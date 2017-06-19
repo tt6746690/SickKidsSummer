@@ -1,6 +1,6 @@
 
-with open('mapping', 'r') as inf:
-    with open('mapping.rel', 'w+') as outf:
+with open('exon_expr.mapping', 'r') as inf:
+    with open('exon_expr.mapping.rel', 'w+') as outf:
         for line in inf:
             l = line.strip().split('\t')
 
