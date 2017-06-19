@@ -18,9 +18,9 @@ do
     do 
         ep=`grep $g exon_expr.mapping | head -n 1 | cut -c 17-`
         gp=`grep $g gene_expr.mapping | head -n 1 | cut -c 17-` 
-        echo adding $gp...
-        git add $gp
+        # echo adding $gp...
+        # git add -f $gp
         echo adding $ep...
-        git add $ep
+        git add -f $ep
     done
 done
