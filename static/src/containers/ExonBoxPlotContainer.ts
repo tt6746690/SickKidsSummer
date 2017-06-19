@@ -76,10 +76,10 @@ const mapStateToProps = (state: stateInterface) => {
     xTickCount = xTicks.length;
 
     x.domain([0, xTickCount + 1]);
-    y.domain([1, 10000]);
+    y.domain([1, 1000]);
 
     xAxis.tickValues(xTicks);
-    yAxis.tickValues([1, 10, 100, 1000, 10000]);
+    yAxis.tickValues([1, 10, 100, 1000]);
   }
 
   return {

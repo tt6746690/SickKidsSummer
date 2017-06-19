@@ -67,8 +67,8 @@ const mapStateToProps = (state: stateInterface) => {
     xTicks = Object.keys(geneEntities[0].geneExpr);
     xTickCount = xTicks.length;
 
-    y.domain([1, 10000]); // later change the upper y limit to reflect data
-    yAxis.tickValues([1, 10, 100, 1000, 10000]);
+    y.domain([1, 1000]); // later change the upper y limit to reflect data
+    yAxis.tickValues([1, 10, 100, 1000]);
   }
 
   return {
@@ -119,6 +119,7 @@ const mapStateToProps = (state: stateInterface) => {
       data.sort((a, b) => {
         return b.median - a.median;
       });
+
       x.domain(data.map(d => d.x));
       xAxis.tickValues(data.map(d => d.x));
 
