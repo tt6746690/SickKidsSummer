@@ -75,7 +75,7 @@ export function getTissueRanking(
   let panel = getGenePanelEntityById(genePanel, genePanelId);
 
   if ("tissueRanking" in panel && tissueSite in panel.tissueRanking) {
-    return panel.tissueRanking[tissueSite]["ranking"];
+    return panel.tissueRanking[tissueSite];
   } else {
     return [];
   }

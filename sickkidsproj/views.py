@@ -11,7 +11,6 @@ from sickkidsproj.analysis.ranking import computeGeneLevelRanking, computePanelL
 from sickkidsproj.cache.g import GENE_PANELS, ONE_EXONEXPR, TISSUE_SITES, PANEL_REF
 from sickkidsproj.utils.cors import crossdomain 
 
-
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
@@ -45,7 +44,7 @@ def get_gene_panel(gene_panel):
 def get_gene_panel_ranking(gene_panel):
     """ Get ranking associated with gene_panel
     """
-    fp = os.path.join(app.config["GENE_PANEL_RANKING_DIR"], gene_panel)
+    fp = os.path.join(app.config["GENE_PANEL_RANKING_DIR"], gene_panel + '.ranking.new')
     with open(fp, 'r') as f:
         return json.dumps(json.loads(f.read()))
 
@@ -88,14 +87,13 @@ def send_dist(path):
 @app.route('/admin/ranking/gene/all', methods=['GET']) 
 @crossdomain(origin='*')
 def compute_ranking_all_gene():
-    return str(computeGeneLevelRanking())
+    return computeGeneLevelRanking()
 
 
 @app.route('/admin/ranking/panel/all', methods=['GET']) 
 @crossdomain(origin='*')
 def compute_ranking_all_panel():
     return str(computePanelLevelRanking())
-
 
 
 @app.errorhandler(404)

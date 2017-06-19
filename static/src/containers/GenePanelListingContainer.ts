@@ -111,14 +111,9 @@ const mapDispatchToProps = dispatch => {
         })
         .catch(err => console.log("fetch: ", err));
 
-      fetch(
-        "http://127.0.0.1:5000/api/gene_panels/ranking/" +
-          genePanelId +
-          ".ranking",
-        {
-          mode: "cors"
-        }
-      )
+      fetch("http://127.0.0.1:5000/api/gene_panels/ranking/" + genePanelId, {
+        mode: "cors"
+      })
         .then(response => response.json())
         .then(tissueRanking => {
           dispatch(addGenePanel({ genePanelId, tissueRanking }));

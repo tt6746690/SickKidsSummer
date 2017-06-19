@@ -20,6 +20,8 @@ db = SQLAlchemy(app)
 
 # importing but notusing views, prevents circular imports
 from sickkidsproj import views, cli
+from sickkidsproj.utils import cors
+from sickkidsproj.database import models, query
 
 
 

@@ -37,17 +37,17 @@ class TissueSiteRanking extends React.Component<any, object> {
         in descending order
       */
       ranking.sort((a, b) => {
-        let [aId, aCount, aFrac] = a;
-        let [bId, bCount, bFrac] = b;
+        let [aId, aExonNumLen, aMeanFrac] = a;
+        let [bId, bExonNumLen, bMeanFrac] = b;
 
-        if (aFrac < bFrac) {
+        if (aMeanFrac < bMeanFrac) {
           return 1;
-        } else if (aFrac > bFrac) {
+        } else if (aMeanFrac > bMeanFrac) {
           return -1;
         } else {
-          if (aCount < bCount) {
+          if (aExonNumLen < bExonNumLen) {
             return 1;
-          } else if (aCount > bCount) {
+          } else if (aExonNumLen > bExonNumLen) {
             return -1;
           } else {
             if (aId > bId) {
@@ -100,9 +100,9 @@ class TissueSiteRanking extends React.Component<any, object> {
         <Table striped bordered condensed hover>
           <thead>
             <tr>
-              <th>tissue Site</th>
-              <th>total Exon Counts</th>
-              <th>Median Fraction</th>
+              <th>Tissue Site</th>
+              <th>Total Exon Counts</th>
+              <th>Mean Fraction</th>
             </tr>
           </thead>
           <tbody>

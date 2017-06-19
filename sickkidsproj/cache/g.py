@@ -21,7 +21,12 @@ ONE_EXONEXPR = os.path.join(app.config["EXON_EXPR_DIR"], "47/ENSG00000182533")
 def get_panel_gene(panel):
     """ Gets list of gene associated with a gene panel
         @param str gene_panel
-        @rType [ ...,ensemblId ]
+        @rType dict: 
+        [ ..., {
+                "ensembl_id": "ENSG00000138435",
+                "symbol": "CHRNA1"
+            },
+        ] 
     """
     genes = []
     with open(os.path.join(app.config["GENE_PANEL_DIR"], panel), 'r') as f:
