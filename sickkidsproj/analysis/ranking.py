@@ -6,7 +6,7 @@ import scipy.stats
 import numpy as np
 
 from sickkidsproj import app, db
-from sickkidsproj.cache.g import GENE_PANELS, ONE_EXONEXPR, TISSUE_SITES
+from sickkidsproj.cache.g import ONE_EXONEXPR, TISSUE_SITES, GENE_PANEL_PATHS, PANEL_REF
 
 def getSumStat(reads, threshold):
     """ sorts reads and computes summary statistics
@@ -103,7 +103,7 @@ def getTissueRanking(exonExpr):
 
     return tissueRanking
 
-def rankOne(gp, threshold):
+def rankOneGene(gp, threshold):
     """ Generate ranking statistics for exonExpr of one gene
         based on the given threshold
         The output file have ext of `.threshold` 
@@ -127,7 +127,7 @@ def rankOne(gp, threshold):
 
     return "Generating ranking for {}".format(gp)
 
-def computeRanking():
+def computeGeneLevelRanking():
 
     report = []
 
@@ -143,9 +143,26 @@ def computeRanking():
             # only the raw files are included
             if match('^ENSG[\d]{11}$', f):
                 gp = os.path.join(root, f)
-                report.append(rankOne(gp, 20))
+                report.append(rankOneGene(gp, 20))
 
     return report
+
+
+
+def rankOnePanel(pp):
+    """ Generate ranking for a gene panel 
+        precondition: each gene in the panel has tissueRanking generated
+
+        @param str pp: gene panel path 
+    """
+    return "rankOne"
+
+
+def computePanelLevelRanking():
+
+    for panel in GENE_PANELS:
+        return PANEL_REF[panel]
+
 
 
 

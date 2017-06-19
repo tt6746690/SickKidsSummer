@@ -1,5 +1,5 @@
 from sickkidsproj import app,  db
-from sickkidsproj.models import ExonReadsMapping, GeneReadsMapping
+from sickkidsproj.database.models import ExonReadsMapping, GeneReadsMapping
 
 def create_db():
     """initialize database"""
