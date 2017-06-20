@@ -11,23 +11,44 @@ class ExonPlot extends React.Component<any, object> {
       gene,
       selectedTissueSiteLast,
       preconditionSatisfied,
+      selectedRefTissueSite,
       setUp,
       plot
     } = this.props;
+
     gene.forEach(g => {
-      setUp(g.geneSymbol);
-      let data = formatExonPlotData(g, selectedTissueSiteLast);
-      if (preconditionSatisfied(data)) {
-        console.log("ExonPlot: plot()", data);
-        plot(data);
+      setUp(g.geneSymbol, selectedRefTissueSite);
+      setUp(g.geneSymbol, selectedTissueSiteLast);
+
+      let refData = formatExonPlotData(g, selectedRefTissueSite);
+      let rankedData = formatExonPlotData(g, selectedTissueSiteLast);
+
+      if (preconditionSatisfied(rankedData) && preconditionSatisfied(refData)) {
+        console.log("ExonPlot: plot()", rankedData, refData);
+
+        /* 
+          plot once only when rankedTissueSite === refTissueSIte 
+          since redundant to compare to itself
+        */
+        plot(refData);
+        plot(rankedData, { noXLabel: true });
       }
     });
   }
   componentWillUnmount() {
     console.log("ExonPlot: cleanUp()");
 
-    let { gene, cleanUp } = this.props;
-    gene.forEach(g => cleanUp(g.geneSymbol));
+    let {
+      gene,
+      cleanUp,
+      selectedTissueSiteLast,
+      selectedRefTissueSite
+    } = this.props;
+    gene.forEach(
+      g =>
+        cleanUp(g.geneSymbol, selectedTissueSiteLast) &&
+        cleanUp(g.geneSymbol, selectedRefTissueSite)
+    );
   }
 
   render() {
@@ -94,7 +115,8 @@ class ExonPlot extends React.Component<any, object> {
 
           </Col>
           <Col md={10}>
-            <div id={getPlotId(geneSymbol)} />
+            <div id={getPlotId(geneSymbol, selectedTissueSiteLast)} />
+            <div id={getPlotId(geneSymbol, selectedRefTissueSite)} />
           </Col>
         </Row>
       );

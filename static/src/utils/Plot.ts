@@ -179,7 +179,8 @@ export const formatExonPlotData = (
     let { median, over } = exonExpr[exonNum][tissueSite];
     data.push({
       x: exonNum,
-      id: gene.geneSymbol,
+      geneSymbol: gene.geneSymbol,
+      tissueSite: tissueSite,
       median,
       over
     });

@@ -22,8 +22,10 @@ const mapStateToProps = (state: stateInterface) => {
     }
   } = state;
 
-  const getPlotId = (geneSymbol: string) => {
-    return geneSymbol + "_" + plotName;
+  const getPlotId = (geneSymbol: string, tissueSite: string) => {
+    return `${tissueSite
+      .split(/\s|-|\(|\)/g)
+      .join("_")}_${geneSymbol}_${plotName}`;
   };
 
   // plot config
@@ -31,7 +33,7 @@ const mapStateToProps = (state: stateInterface) => {
   let svg = undefined;
 
   width = 900;
-  height = 100;
+  height = 50;
 
   let xAxisLength = width - offset * 2;
   let yAxisLength = height - offset * 2;
@@ -51,63 +53,89 @@ const mapStateToProps = (state: stateInterface) => {
     selectedRefTissueSite,
     getPlotId,
     color,
+    height,
     preconditionSatisfied(data) {
       return isNonEmptyArray(data);
     },
-    setUp(geneSymbol: string) {
+    setUp(geneSymbol: string, tissueSite: string) {
       svg = d3
-        .select(`#${getPlotId(geneSymbol)}`)
+        .select(`#${getPlotId(geneSymbol, tissueSite)}`)
         .append("svg")
         .attr("width", width)
         .attr("height", height)
         .append("g")
-        .classed(`${getPlotId(geneSymbol)}Group`, true);
+        .classed(`${getPlotId(geneSymbol, tissueSite)}Group`, true);
     },
-    tearDown: (geneSymbol: string) => {
-      d3.select(`.${getPlotId(geneSymbol)}Group`).selectAll("*").remove();
+    tearDown: (geneSymbol: string, tissueSite: string) => {
+      d3
+        .select(`.${getPlotId(geneSymbol, tissueSite)}Group`)
+        .selectAll("*")
+        .remove();
     },
-    cleanUp: (geneSymbol: string) => {
-      d3.select(`#${getPlotId(geneSymbol)}`).selectAll("*").remove();
+    cleanUp: (geneSymbol: string, tissueSite: string) => {
+      d3
+        .select(`#${getPlotId(geneSymbol, tissueSite)}`)
+        .selectAll("*")
+        .remove();
     },
-    plot(data) {
-      let { "0": { id: geneSymbol } } = data;
 
+    plot(data, { noXLabel } = { noXLabel: false }) {
+      let { "0": { geneSymbol, tissueSite } } = data;
+
+      /*  
+        Set a maximum width on each exon rect by 
+        adjusting the domain
+        -- if there is few exons in the gene, then allow 
+        ---- x.domain() to not reflect number of exons in the gene
+        -- otherwise, i.e. many exons 
+        ---- x.domain() reflects number of exons such that its possible to give 
+        ---- a coordinate to every d.x
+      */
       xTickCount = data.length;
-      x.domain([0, xTickCount + 1]);
+      if (xTickCount <= 20) {
+        x.domain([0, 20]);
+      } else {
+        x.domain([0, xTickCount + 1]);
+      }
 
-      svg = d3.select(`.${getPlotId(geneSymbol)}Group`);
+      svg = d3.select(`.${getPlotId(geneSymbol, tissueSite)}Group`);
 
       let exonBox = svg
-        .selectAll(`.${getPlotId(geneSymbol)}_exonBox`)
+        .selectAll(`.${getPlotId(geneSymbol, tissueSite)}_exonBox`)
         .data(data)
         .enter()
         .append("g")
-        .classed(`${getPlotId(geneSymbol)}_exonBox`, true);
+        .classed(`${getPlotId(geneSymbol, tissueSite)}_exonBox`, true);
 
       exonBox
         .append("rect")
-        .attr("class", `${getPlotId(geneSymbol)}_exonBoxRect`)
+        .attr("class", `${getPlotId(geneSymbol, tissueSite)}_exonBoxRect`)
         .attr("stroke", "lightgrey")
-        .attr("fill", d => ((d as any).over ? "lightgrey" : "white"))
+        .attr(
+          "fill",
+          d => ((d as any).over ? color((d as any).tissueSite) : "white")
+        )
         .attr("x", d => x((d as any).x))
         .attr("y", 0)
         .attr("width", x(1) * xGroupingWidthRatio)
-        .attr("height", height - offset);
+        .attr("height", noXLabel ? height : height - offset);
 
-      exonBox
-        .append("text")
-        .attr("class", `${getPlotId(geneSymbol)}_exonBoxText`)
-        .attr("x", d => x((d as any).x))
-        .attr("y", height - offset / 2)
-        .style("text-anchor", "middle")
-        .attr("fill", "lightgrey")
-        .style(
-          "font-size",
-          100 / xTickCount < 8
-            ? "8px"
-            : 100 / xTickCount > 20 ? "20px" : 100 / xTickCount
-        )
-        .text(d => d.x);
+      if (!noXLabel) {
+        exonBox
+          .append("text")
+          .attr("class", `${getPlotId(geneSymbol, tissueSite)}_exonBoxText`)
+          .attr("x", d => x((d as any).x))
+          .attr("y", height - offset / 2)
+          .style("text-anchor", "middle")
+          .attr("fill", "lightgrey")
+          .style(
+            "font-size",
+            100 / xTickCount < 8
+              ? "8px"
+              : 100 / xTickCount > 20 ? "20px" : 100 / xTickCount
+          )
+          .text(d => d.x);
+      }
     }
   };
 };
