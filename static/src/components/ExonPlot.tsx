@@ -17,8 +17,8 @@ class ExonPlot extends React.Component<any, object> {
     } = this.props;
 
     gene.forEach(g => {
-      setUp(g.geneSymbol, selectedRefTissueSite);
       setUp(g.geneSymbol, selectedTissueSiteLast);
+      setUp(g.geneSymbol, selectedRefTissueSite);
 
       let refData = formatExonPlotData(g, selectedRefTissueSite);
       let rankedData = formatExonPlotData(g, selectedTissueSiteLast);
@@ -26,12 +26,8 @@ class ExonPlot extends React.Component<any, object> {
       if (preconditionSatisfied(rankedData) && preconditionSatisfied(refData)) {
         console.log("ExonPlot: plot()", rankedData, refData);
 
-        /* 
-          plot once only when rankedTissueSite === refTissueSIte 
-          since redundant to compare to itself
-        */
-        plot(refData);
         plot(rankedData, { noXLabel: true });
+        plot(refData);
       }
     });
   }
@@ -64,29 +60,65 @@ class ExonPlot extends React.Component<any, object> {
 
     console.log("ExonPlot::render()");
 
-    let ExonPlotList = gene.map((g, i) => {
-      let geneSymbol = g.geneSymbol;
+    /* 
+      sort gene based on
+      -- 1. fraction, descending
+      -- 2. exonNumLen, descending
+      -- 3. geneSymbol, alphabetical
+    */
+    let geneSorted = gene
+      .map((g, i) => {
+        let geneSymbol = g.geneSymbol;
+        let {
+          exonNumLen: sub,
+          exons: rankedTissueSiteExons
+        } = queryTissueRankingByGeneId(
+          gene,
+          g.ensemblId,
+          selectedRefTissueSite,
+          selectedTissueSiteLast
+        );
+        let {
+          exonNumLen: total,
+          exons: refTissueSiteExons
+        } = queryTissueRankingByGeneId(
+          gene,
+          g.ensemblId,
+          selectedRefTissueSite,
+          selectedRefTissueSite
+        );
 
-      let {
-        exonNumLen: sub,
-        exons: rankedTissueSiteExons
-      } = queryTissueRankingByGeneId(
-        gene,
-        g.ensemblId,
-        selectedRefTissueSite,
-        selectedTissueSiteLast
-      );
+        let fraction = total === 0
+          ? Number(0).toPrecision(3)
+          : (sub / total).toPrecision(3);
 
-      let {
-        exonNumLen: total,
-        exons: refTissueSiteExons
-      } = queryTissueRankingByGeneId(
-        gene,
-        g.ensemblId,
-        selectedRefTissueSite,
-        selectedRefTissueSite
-      );
+        return {
+          g,
+          sub,
+          total,
+          fraction
+        };
+      })
+      .sort((a, b) => {
+        let { fraction: aFrac, sub: aSub, g: { geneSymbol: aGeneSymbol } } = a;
+        let { fraction: bFrac, sub: bSub, g: { geneSymbol: bGeneSymbol } } = b;
 
+        if (aFrac < bFrac) {
+          return 1;
+        } else if (aFrac > bFrac) {
+          return -1;
+        } else {
+          if (aSub < bSub) {
+            return 1;
+          } else if (aSub > bSub) {
+            return -1;
+          } else {
+            return aGeneSymbol - bGeneSymbol;
+          }
+        }
+      });
+
+    let ExonPlotList = geneSorted.map(({ g, sub, total, fraction }, i) => {
       return (
         <Row key={i.toString()}>
           <Col md={2}>
@@ -109,14 +141,14 @@ class ExonPlot extends React.Component<any, object> {
                 {sub + "/" + total}
               </Col>
               <Col xs={6}>
-                {total === 0 ? 0 : (sub / total).toPrecision(3)}
+                {fraction}
               </Col>
             </Row>
 
           </Col>
           <Col md={10}>
-            <div id={getPlotId(geneSymbol, selectedTissueSiteLast)} />
-            <div id={getPlotId(geneSymbol, selectedRefTissueSite)} />
+            <div id={getPlotId(g.geneSymbol, selectedTissueSiteLast)} />
+            <div id={getPlotId(g.geneSymbol, selectedRefTissueSite)} />
           </Col>
         </Row>
       );
