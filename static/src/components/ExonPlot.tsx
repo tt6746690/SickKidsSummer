@@ -37,7 +37,7 @@ class ExonPlot extends React.Component<any, object> {
       let geneSymbol = g.geneSymbol;
       return (
         <Row key={i.toString()}>
-          <Col xs={2}>
+          <Col md={2}>
             <Button
               className={"panelGeneButton"}
               value={g.ensemblId}
@@ -51,7 +51,7 @@ class ExonPlot extends React.Component<any, object> {
               {g.geneSymbol.toUpperCase()}
             </Button>
           </Col>
-          <Col xs={10}>
+          <Col md={10}>
             <div id={getPlotId(geneSymbol)} />
           </Col>
         </Row>

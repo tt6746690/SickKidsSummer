@@ -90,7 +90,6 @@ def getTissueRanking(exonExpr):
     for tissueSite in TISSUE_SITES:
         tissueRanking[tissueSite] = {}
 
-    # Populate total and sub first
     for exonNum, exon in exonExpr.copy().items():
         for tissueSite, sumStat in exon.copy().items():
 
@@ -208,17 +207,32 @@ def rankOnePanel(gps):
 
                 # Proceeds only if tissueRanking[tissueSite][tissueSite] exists
                 # which holds exons over threshold for tissueSite itself
+                # otherwise skip this tissueSite, as the exon_expr for refTissueSite not over threshold for this gene
                 if refK in refV:
 
                     # total cannot be 0, since refK is in refV implies 
                     # at least one exonNum added to list
+                    # -- 1. geneRanking[reftissueSite][rankedTissueSite][exonNumLen] > 0
+                    # -- 2. geneRanking[reftissueSite][rankedTissueSite][exons] not empty
                     total = refV[refK]["exonNumLen"]
                     assert total != 0   
 
+                    considered = []
                     for rankedK, rankedV in refV.items():
                         fraction = rankedV["exonNumLen"] / total
                         panelRanking[refK][rankedK]["exonNumLen"] += rankedV["exonNumLen"]
                         panelRanking[refK][rankedK]["fractions"].append(fraction)
+                        considered.append(rankedK)
+                    
+                    # Here 
+                    # -- refTissueSite has some exon expressed over threshold
+                    # -- there may be some tissueSite not ranked in geneRanking because none of exons
+                    # ---- in refTissueSite expresses are expressed over threshold in such tissueSite
+                    # -- should 
+                    # ---- 1. append fraction = 0 to list of fractions in this case
+                    for tissueSite in TISSUE_SITES:
+                        if tissueSite not in considered:
+                            panelRanking[refK][tissueSite]["fractions"].append(0)
 
     # convert rankedTissueSite from dict to list 
     panelRankingSorted = {}
@@ -227,7 +241,16 @@ def rankOnePanel(gps):
 
     for refK, refV in panelRanking.items():
         for rankedK, rankedV in refV.items():
-            panelRankingSorted[refK].append([rankedK, rankedV["exonNumLen"], np.mean(rankedV["fractions"]) if rankedV["fractions"] else 0])
+
+            meanFrac = 0
+            medianFrac = 0
+
+            if rankedV["fractions"]:
+                rankedV["fractions"].sort()
+                meanFrac = np.mean(rankedV["fractions"])
+                medianFrac = np.percentile(rankedV["fractions"], 50)
+
+            panelRankingSorted[refK].append([rankedK, rankedV["exonNumLen"], medianFrac, meanFrac])
 
     # sort panelRankingSorted
     for refK, refV in panelRankingSorted.items():

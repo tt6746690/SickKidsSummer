@@ -37,12 +37,12 @@ class TissueSiteRanking extends React.Component<any, object> {
         in descending order
       */
       ranking.sort((a, b) => {
-        let [aId, aExonNumLen, aMeanFrac] = a;
-        let [bId, bExonNumLen, bMeanFrac] = b;
+        let [aId, aExonNumLen, aMedianFrac] = a;
+        let [bId, bExonNumLen, bMedianFrac] = b;
 
-        if (aMeanFrac < bMeanFrac) {
+        if (aMedianFrac < bMedianFrac) {
           return 1;
-        } else if (aMeanFrac > bMeanFrac) {
+        } else if (aMedianFrac > bMedianFrac) {
           return -1;
         } else {
           if (aExonNumLen < bExonNumLen) {
@@ -60,7 +60,7 @@ class TissueSiteRanking extends React.Component<any, object> {
       });
 
       const selectedTissueListGroupItem = ranking.map(
-        ([tissueSiteId, totalExonCount, fraction], index) => {
+        ([tissueSiteId, totalExonCount, medianFrac, meanFrac], index) => {
           let style = {
             ...selectedTissueSite.includes(tissueSiteId) && {
               backgroundColor: color(tissueSiteId)
@@ -79,7 +79,8 @@ class TissueSiteRanking extends React.Component<any, object> {
                 </Button>
               </td>
               <td>{totalExonCount}</td>
-              <td>{fraction.toPrecision(2)}</td>
+              <td>{medianFrac.toPrecision(2)}</td>
+              <td>{meanFrac.toPrecision(2)}</td>
             </tr>
           );
 
@@ -102,6 +103,7 @@ class TissueSiteRanking extends React.Component<any, object> {
             <tr>
               <th>Tissue Site</th>
               <th>Total Exon Counts</th>
+              <th>Median Fraction</th>
               <th>Mean Fraction</th>
             </tr>
           </thead>
