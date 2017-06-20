@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Table, Button, Panel } from "react-bootstrap";
+import { Table, Button, Panel, Collapse } from "react-bootstrap";
 
 import ExonPlotContainer from "../containers/ExonPlotContainer";
 import { tissueSiteEntity } from "../Interfaces";
@@ -34,7 +34,8 @@ class TissueSiteRanking extends React.Component<any, object> {
         -- 1. fraction 
         -- 2. totalExonCount
         -- 3. Id, to break tie against 1. and 2.
-        in descending order
+        in descending order, and 
+        place selectedRefTissueSite to first in the list
       */
       ranking.sort((a, b) => {
         let [aId, aExonNumLen, aMedianFrac] = a;
@@ -50,7 +51,9 @@ class TissueSiteRanking extends React.Component<any, object> {
           } else if (aExonNumLen > bExonNumLen) {
             return -1;
           } else {
-            if (aId > bId) {
+            if (aId === selectedRefTissueSite) {
+              return -1;
+            } else if (aId > bId) {
               return 1;
             } else {
               return -1;
@@ -86,12 +89,17 @@ class TissueSiteRanking extends React.Component<any, object> {
 
           return [
             tableRow,
-
             selectedTissueSiteLast === tissueSiteId &&
               selectedGenePanel !== "" &&
               selectedRefTissueSite !== "" &&
               isNonEmptyArray(selectedTissueSite)
-              ? <ExonPlotContainer />
+              ? <Collapse in={true}>
+                  <tr>
+                    <td colSpan={4}>
+                      <ExonPlotContainer />
+                    </td>
+                  </tr>
+                </Collapse>
               : undefined
           ];
         }

@@ -92,3 +92,28 @@ export function getIncompleteGeneEntity(gene: geneEntity[]): geneEntity[] {
     return isEmptyObject(g.exonExpr) || isEmptyObject(g.geneExpr);
   });
 }
+
+/* Queries entities.gene.tissueRanking 
+  Return the corresponding exonNumLen and exons that are over threshold 
+  with given refTissueSite and rankedTissueSite
+*/
+export function queryTissueRankingByGeneId(
+  gene: geneEntity[],
+  ensemblId: string,
+  refTissueSite: string,
+  rankedTissueSite: string
+): { exonNumLen: number; exons: string[] } {
+  let tissueRanking = getGeneEntityById(gene, ensemblId)["tissueRanking"];
+
+  if (
+    tissueRanking.hasOwnProperty(refTissueSite) &&
+    tissueRanking[refTissueSite].hasOwnProperty(rankedTissueSite)
+  ) {
+    return tissueRanking[refTissueSite][rankedTissueSite];
+  } else {
+    return {
+      exonNumLen: 0,
+      exons: []
+    };
+  }
+}

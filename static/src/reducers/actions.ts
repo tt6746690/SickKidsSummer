@@ -39,14 +39,16 @@ export function addGene({
   ensemblId,
   geneSymbol = "",
   geneExpr = {},
-  exonExpr = {}
+  exonExpr = {},
+  tissueRanking = {}
 }: geneEntity) {
   return {
     type: ADD_GENE,
     ensemblId,
     geneSymbol,
     geneExpr,
-    exonExpr
+    exonExpr,
+    tissueRanking
   };
 }
 

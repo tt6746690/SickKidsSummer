@@ -30,7 +30,7 @@ const mapStateToProps = (state: stateInterface) => {
   let plotName = "ExonPlot";
   let svg = undefined;
 
-  width = 700;
+  width = 900;
   height = 100;
 
   let xAxisLength = width - offset * 2;
@@ -48,6 +48,7 @@ const mapStateToProps = (state: stateInterface) => {
     gene,
     selectedGene,
     selectedTissueSiteLast,
+    selectedRefTissueSite,
     getPlotId,
     color,
     preconditionSatisfied(data) {

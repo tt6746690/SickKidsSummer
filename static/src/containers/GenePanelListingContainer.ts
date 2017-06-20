@@ -41,7 +41,8 @@ const mapDispatchToProps = dispatch => {
         dispatch(
           addGene({
             ensemblId,
-            exonExpr: data.exonExpr
+            exonExpr: data.exonExpr,
+            tissueRanking: data.tissueRanking
           })
         );
       })

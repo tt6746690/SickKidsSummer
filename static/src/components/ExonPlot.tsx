@@ -1,7 +1,8 @@
 import * as React from "react";
 
-import { Row, Col, Panel, Button } from "react-bootstrap";
+import { Row, Col, Panel, Button, Well } from "react-bootstrap";
 import { formatExonPlotData } from "../utils/Plot";
+import { queryTissueRankingByGeneId } from "../store/Query";
 
 class ExonPlot extends React.Component<any, object> {
   componentDidMount() {
@@ -30,26 +31,67 @@ class ExonPlot extends React.Component<any, object> {
   }
 
   render() {
-    let { color, gene, selectedGene, getPlotId, onPanelGeneClick } = this.props;
+    let {
+      color,
+      gene,
+      selectedGene,
+      getPlotId,
+      selectedTissueSiteLast,
+      selectedRefTissueSite,
+      onPanelGeneClick
+    } = this.props;
+
     console.log("ExonPlot::render()");
 
     let ExonPlotList = gene.map((g, i) => {
       let geneSymbol = g.geneSymbol;
+
+      let {
+        exonNumLen: sub,
+        exons: rankedTissueSiteExons
+      } = queryTissueRankingByGeneId(
+        gene,
+        g.ensemblId,
+        selectedRefTissueSite,
+        selectedTissueSiteLast
+      );
+
+      let {
+        exonNumLen: total,
+        exons: refTissueSiteExons
+      } = queryTissueRankingByGeneId(
+        gene,
+        g.ensemblId,
+        selectedRefTissueSite,
+        selectedRefTissueSite
+      );
+
       return (
         <Row key={i.toString()}>
           <Col md={2}>
-            <Button
-              className={"panelGeneButton"}
-              value={g.ensemblId}
-              onClick={onPanelGeneClick}
-              style={
-                selectedGene.includes(g.ensemblId)
-                  ? { backgroundColor: color(g.ensemblId) }
-                  : undefined
-              }
-            >
-              {g.geneSymbol.toUpperCase()}
-            </Button>
+            <Row>
+              <Button
+                className={"panelGeneButton"}
+                value={g.ensemblId}
+                onClick={onPanelGeneClick}
+                style={
+                  selectedGene.includes(g.ensemblId)
+                    ? { backgroundColor: color(g.ensemblId) }
+                    : undefined
+                }
+              >
+                {g.geneSymbol.toUpperCase()}
+              </Button>
+            </Row>
+            <Row style={{ paddingTop: "7px" }}>
+              <Col xs={4}>
+                {sub + "/" + total}
+              </Col>
+              <Col xs={6}>
+                {total === 0 ? 0 : (sub / total).toPrecision(3)}
+              </Col>
+            </Row>
+
           </Col>
           <Col md={10}>
             <div id={getPlotId(geneSymbol)} />

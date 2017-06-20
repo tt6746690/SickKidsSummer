@@ -4,6 +4,8 @@
 body {
   font-family: 'Lato', sans-serif;
   /*font-family: 'Inconsolata', monospace;*/
+  height: 100%;
+  max-width: 100%;
 }
 .x.axis, .y.axis {
   font-family: 'Lato', sans-serif;

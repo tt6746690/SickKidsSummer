@@ -4,6 +4,7 @@ export interface geneEntity {
   geneSymbol?: string;
   geneExpr?: Object;
   exonExpr?: Object;
+  tissueRanking?: Object;
 }
 
 export interface genePanelEntity {

@@ -16,7 +16,8 @@ function pushGene(state: geneEntity[] = [], action) {
         ensemblId: action.ensemblId,
         geneSymbol: action.geneSymbol,
         geneExpr: action.geneExpr,
-        exonExpr: action.exonExpr
+        exonExpr: action.exonExpr,
+        tissueRanking: action.tissueRanking
       }
     ];
   } else {
@@ -33,7 +34,10 @@ function pushGene(state: geneEntity[] = [], action) {
             : gene.geneExpr,
           exonExpr: isEmptyObject(gene.exonExpr)
             ? action.exonExpr
-            : gene.exonExpr
+            : gene.exonExpr,
+          tissueRanking: isEmptyObject(gene.tissueRanking)
+            ? action.tissueRanking
+            : gene.tissueRanking
         };
       } else {
         return { ...gene };
