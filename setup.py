@@ -8,6 +8,8 @@ setup(
         install_requires=[
             'flask',
             'SQLAlchemy',
+            'scipy',
+            'numpy'
             ],
         )
 

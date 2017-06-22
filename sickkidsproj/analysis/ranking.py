@@ -2,12 +2,12 @@ import os
 import json
 from re import match
 
-import scipy.stats
 import numpy as np
 
 from sickkidsproj import app, db
 from sickkidsproj.cache.g import ONE_EXONEXPR, TISSUE_SITES, GENE_PANELS, PANEL_REF
 from sickkidsproj.database.query import get_exonexpr_storepath
+
 
 def getSumStat(reads, threshold):
     """ sorts reads and computes summary statistics
@@ -27,6 +27,7 @@ def getSumStat(reads, threshold):
     sumStat["over"] = True if (sumStat["median"] >= threshold) else False
 
     return sumStat
+
 
 def addSumStat(exonExpr, threshold):
     """ Augment input exonExpr with summary statistics 
@@ -68,7 +69,8 @@ def addSumStat(exonExpr, threshold):
 
             for otherTissueSite, otherSumStat in exon.copy().items():
                 if otherSumStat["over"] is True:
-                    exonExpr[exonNum][tissueSite]["other"].append(otherTissueSite)
+                    exonExpr[exonNum][tissueSite]["other"].append(
+                        otherTissueSite)
 
 
 def getTissueRanking(exonExpr):
@@ -98,10 +100,12 @@ def getTissueRanking(exonExpr):
                     tissueRanking[tissueSite][otherTissueSite] = {}
                     tissueRanking[tissueSite][otherTissueSite]["exons"] = []
                     tissueRanking[tissueSite][otherTissueSite]["exonNumLen"] = 0
-                tissueRanking[tissueSite][otherTissueSite]["exons"].append(exonNum)
+                tissueRanking[tissueSite][otherTissueSite]["exons"].append(
+                    exonNum)
                 tissueRanking[tissueSite][otherTissueSite]["exonNumLen"] += 1
 
     return tissueRanking
+
 
 def rankOneGene(gp, threshold):
     """ Generate ranking statistics for exonExpr of one gene
@@ -131,6 +135,7 @@ def rankOneGene(gp, threshold):
 
     return "Generating ranking for {}".format(gp)
 
+
 def computeGeneLevelRanking():
     """ Process files under exon_expr/
         and generate tissueRanking for each 
@@ -156,7 +161,6 @@ def computeGeneLevelRanking():
     return report
 
 
-
 def rankOnePanel(gps):
     """ Generate ranking for a gene panel 
         precondition: each gene in the panel has tissueRanking generated
@@ -177,7 +181,7 @@ def rankOnePanel(gps):
                 }
             }
         }
-        
+
         # Later sort panelRanking by 
         -- 1. mean of fractions, descending
         -- 2. exonNumLen, descending
@@ -197,7 +201,6 @@ def rankOnePanel(gps):
             panelRanking[tissueSite][tissueSiteInner]["exonNumLen"] = 0
             panelRanking[tissueSite][tissueSiteInner]["fractions"] = []
 
-    
     # process each gene at a time
     for gp in gps:
         with open(gp, 'r') as f:
@@ -207,34 +210,37 @@ def rankOnePanel(gps):
 
                 # Proceeds only if tissueRanking[tissueSite][tissueSite] exists
                 # which holds exons over threshold for tissueSite itself
-                # otherwise skip this tissueSite, as the exon_expr for refTissueSite not over threshold for this gene
+                # otherwise skip this tissueSite, as the exon_expr for
+                # refTissueSite not over threshold for this gene
                 if refK in refV:
 
-                    # total cannot be 0, since refK is in refV implies 
+                    # total cannot be 0, since refK is in refV implies
                     # at least one exonNum added to list
                     # -- 1. geneRanking[reftissueSite][rankedTissueSite][exonNumLen] > 0
                     # -- 2. geneRanking[reftissueSite][rankedTissueSite][exons] not empty
                     total = refV[refK]["exonNumLen"]
-                    assert total != 0   
+                    assert total != 0
 
                     considered = []
                     for rankedK, rankedV in refV.items():
                         fraction = rankedV["exonNumLen"] / total
                         panelRanking[refK][rankedK]["exonNumLen"] += rankedV["exonNumLen"]
-                        panelRanking[refK][rankedK]["fractions"].append(fraction)
+                        panelRanking[refK][rankedK]["fractions"].append(
+                            fraction)
                         considered.append(rankedK)
-                    
-                    # Here 
+
+                    # Here
                     # -- refTissueSite has some exon expressed over threshold
                     # -- there may be some tissueSite not ranked in geneRanking because none of exons
                     # ---- in refTissueSite expresses are expressed over threshold in such tissueSite
-                    # -- should 
+                    # -- should
                     # ---- 1. append fraction = 0 to list of fractions in this case
                     for tissueSite in TISSUE_SITES:
                         if tissueSite not in considered:
-                            panelRanking[refK][tissueSite]["fractions"].append(0)
+                            panelRanking[refK][tissueSite]["fractions"].append(
+                                0)
 
-    # convert rankedTissueSite from dict to list 
+    # convert rankedTissueSite from dict to list
     panelRankingSorted = {}
     for tissueSite in TISSUE_SITES:
         panelRankingSorted[tissueSite] = []
@@ -250,14 +256,14 @@ def rankOnePanel(gps):
                 meanFrac = np.mean(rankedV["fractions"])
                 medianFrac = np.percentile(rankedV["fractions"], 50)
 
-            panelRankingSorted[refK].append([rankedK, rankedV["exonNumLen"], medianFrac, meanFrac])
+            panelRankingSorted[refK].append(
+                [rankedK, rankedV["exonNumLen"], medianFrac, meanFrac])
 
     # sort panelRankingSorted
     for refK, refV in panelRankingSorted.items():
-        refV.sort(key=lambda x: (x[2], x[1], x[0]), reverse=True)  
+        refV.sort(key=lambda x: (x[2], x[1], x[0]), reverse=True)
 
     return panelRankingSorted
-
 
 
 def computePanelLevelRanking():
@@ -281,20 +287,11 @@ def computePanelLevelRanking():
             else:
                 report += "---- {} missing\n".format(gene["ensembl_id"])
 
-        ranking = rankOnePanel(gps) 
+        ranking = rankOnePanel(gps)
 
-        outp = os.path.join(app.config["GENE_PANEL_RANKING_DIR"], panel + ".ranking.new")
+        outp = os.path.join(
+            app.config["GENE_PANEL_RANKING_DIR"], panel + ".ranking.new")
         with open(outp, "w+") as outf:
             json.dump(ranking, outf)
 
-
     return report
-
-
-
-
-
-
-
-
-

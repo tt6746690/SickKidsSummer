@@ -1,5 +1,11 @@
+import os
+import mygene
+mg = mygene.MyGeneInfo()
+
 from sickkidsproj import app,  db
 from sickkidsproj.database.models import ExonReadsMapping, GeneReadsMapping
+from sickkidsproj.database.query import get_all_exonreadsmapping_keys
+from sickkidsproj.utils.utils import chunks
 
 def create_db():
     """initialize database"""
@@ -51,6 +57,31 @@ def clear_db():
 def show_db_stat():
     meta = db.metadata.sorted_tables if db.metadata else db.metadata
     print(meta)
+
+
+def convert_ensembl_to_symbol():
+    """Converts all ensembl_id to gene_symbol"""
+    ensembl_ids = get_all_exonreadsmapping_keys()
+
+    with open(os.path.join(app.config["DATA_RESOURCES_DIR"], "symbol.mapping"), 'w+') as f:
+    
+        chunk_size = 100
+        for chunk in chunks(ensembl_ids, chunk_size):
+            queries = mg.querymany(chunk, species="human", fields="ensembl.gene,symbol")
+            for q in queries:
+                ensembl_id = q["query"]
+                symbol = q["symbol"] if "symbol" in q else ""
+
+                f.write(ensembl_id + '\t' + symbol + '\n')
+                f.flush()
+
+                print(ensembl_id + '\t' + symbol)
+
+
+@app.cli.command('convert')
+def c_convert_ensembl_to_symbol():
+    app.logger.info("cli::convert_ensembl_to_symbol")
+    convert_ensembl_to_symbol()
 
 @app.cli.command('create')
 def c_create_db():

@@ -9,7 +9,9 @@ from sickkidsproj.database.models import ExonReadsMapping, GeneReadsMapping
 from sickkidsproj.database.query import get_exonexpr_storepath, get_geneexpr_storepath
 from sickkidsproj.analysis.ranking import computeGeneLevelRanking, computePanelLevelRanking
 from sickkidsproj.cache.g import GENE_PANELS, ONE_EXONEXPR, TISSUE_SITES, PANEL_REF
+from sickkidsproj.cache.search import SEARCH_INDEX
 from sickkidsproj.utils.cors import crossdomain 
+from sickkidsproj.utils.check import isEnsemblId
 
 @app.route('/')
 def index():
@@ -58,7 +60,7 @@ def get_tissue_sites():
 @crossdomain(origin='*')
 def gene_exonreads(ensembl_id=None):
 
-    if match('^ENSG[\d]{11}$', ensembl_id) is None:
+    if not isEnsemblId(ensembl_id):
         return abort(404)
 
     fp = get_exonexpr_storepath(ensembl_id)
@@ -69,12 +71,21 @@ def gene_exonreads(ensembl_id=None):
 @crossdomain(origin='*')
 def gene_rpkmreads(ensembl_id=None):
 
-    if match('^ENSG[\d]{11}$', ensembl_id) is None:
+    if not isEnsemblId(ensembl_id):
         return abort(404)
 
     fp = get_geneexpr_storepath(ensembl_id)
     with open(fp, 'r') as f:
         return json.dumps(json.loads(f.read()))
+
+
+@app.route('/api/search/index', methods=['GET'])
+@crossdomain(origin='*')
+def send_search_index(ensembl_id=None):
+    return jsonify(SEARCH_INDEX)
+
+
+
 
 @app.route('/static/<path:path>')
 def send_dist(path):

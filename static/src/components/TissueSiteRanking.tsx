@@ -27,7 +27,7 @@ class TissueSiteRanking extends React.Component<any, object> {
     Note entities.genePanel must be populated before a selection is possible
     so no need to check entities.genePanel nonempty
     */
-    if (selectedGenePanel != "" && selectedRefTissueSite != "") {
+    if (selectedGenePanel !== "" && selectedRefTissueSite !== "") {
       let ranking = getRanking();
 
       /* sort ranking by 
