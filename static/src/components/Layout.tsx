@@ -19,7 +19,7 @@ import TissueSiteListingContainer from "../containers/TissueSiteListingContainer
 import TissueSiteRankingContainer from "../containers/TissueSiteRankingContainer";
 import ExonBoxPlotContainer from "../containers/ExonBoxPlotContainer";
 import ExonBoxPlotLegendContainer from "../containers/ExonBoxPlotLegendContainer";
-
+import SearchBarContainer from "../containers/SearchBarContainer";
 import GeneBoxPlotContainer from "../containers/GeneBoxPlotContainer";
 
 import { VIEW_TYPE } from "../reducers/Actions";
@@ -35,6 +35,13 @@ class Layout extends React.Component<any, object> {
 
     return (
       <Grid>
+        <Row id="search-bar">
+          <Panel>
+            <Col md={12}>
+              <SearchBarContainer />
+            </Col>
+          </Panel>
+        </Row>
         <Row id="gene-panel">
           <Panel>
             <Col md={4} xs={8}>

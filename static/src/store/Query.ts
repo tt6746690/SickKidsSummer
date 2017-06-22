@@ -29,6 +29,7 @@ export function getGeneEntityByIdList(
   let filtered = genes.filter(gene => {
     return ensemblIds.includes(gene.ensemblId);
   });
+
   return filtered || ([] as geneEntity[]);
 }
 

@@ -16,9 +16,10 @@ class BaseConfig(object):
     # resources
     DATA_RESOURCES_DIR = path.realpath(path.join(basedir, "resources"))
 
-    # exon reads
+    # mapping
     EXON_READS_MAPPING = path.join(DATA_RESOURCES_DIR, "exon_expr.mapping")
     GENE_READS_MAPPING = path.join(DATA_RESOURCES_DIR, "gene_expr.mapping")
+    GENE_SYMBOL_MAPPING = path.join(DATA_RESOURCES_DIR, "symbol.mapping")
 
     # exon_expr dir
     EXON_EXPR_DIR= path.join(DATA_RESOURCES_DIR, "exon_expr")

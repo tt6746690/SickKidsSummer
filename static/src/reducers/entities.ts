@@ -1,4 +1,9 @@
-import { ADD_GENE, ADD_GENE_PANEL, ADD_TISSUE_SITE } from "./Actions";
+import {
+  ADD_GENE,
+  ADD_GENE_PANEL,
+  ADD_TISSUE_SITE,
+  LOAD_SEARCH_INDEX
+} from "./Actions";
 
 import {
   geneEntity,
@@ -8,7 +13,7 @@ import {
 } from "../interfaces";
 import { isEmptyObject } from "../utils/Utils";
 
-function pushGene(state: geneEntity[] = [], action) {
+const pushGene = (state: geneEntity[] = [], action) => {
   if (state.findIndex(e => e.ensemblId === action.ensemblId) == -1) {
     return [
       ...state,
@@ -44,13 +49,13 @@ function pushGene(state: geneEntity[] = [], action) {
       }
     });
   }
-}
+};
 
 // -- If genePanelId already exists in entities.genePanel,
 // ---- find the matching genePanelId to that specified by action.genePanelId
 // ---- then update other members
 // -- otherwise, return the previous state
-function pushGenePanel(state: genePanelEntity[] = [], action) {
+const pushGenePanel = (state: genePanelEntity[] = [], action) => {
   if (state.findIndex(e => e.genePanelId == action.genePanelId) == -1) {
     return [
       ...state,
@@ -77,16 +82,16 @@ function pushGenePanel(state: genePanelEntity[] = [], action) {
       }
     });
   }
-}
+};
 
-function pushTissueSite(state: tissueSiteEntity[] = [], action) {
+const pushTissueSite = (state: tissueSiteEntity[] = [], action) => {
   return [
     ...state,
     {
       tissueSiteId: action.tissueSiteId
     }
   ];
-}
+};
 
 export default function entities(state, action) {
   switch (action.type) {
@@ -104,6 +109,11 @@ export default function entities(state, action) {
       return {
         ...state,
         tissueSite: pushTissueSite(state.tissueSite, action)
+      };
+    case LOAD_SEARCH_INDEX:
+      return {
+        ...state,
+        searchIndex: action.searchIndex
       };
     default:
       return state;

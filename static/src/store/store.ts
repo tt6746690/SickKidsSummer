@@ -18,7 +18,8 @@ let defaultState: stateInterface = {
   entities: {
     genePanel: [],
     gene: [],
-    tissueSite: []
+    tissueSite: [],
+    searchIndex: []
   },
   ui: {
     select: {

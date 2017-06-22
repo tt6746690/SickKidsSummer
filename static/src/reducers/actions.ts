@@ -2,7 +2,8 @@ import {
   geneEntity,
   genePanelEntity,
   tissueSiteEntity,
-  stateInterface
+  stateInterface,
+  searchIndexEntity
 } from "../Interfaces";
 
 // actionTypes
@@ -11,6 +12,8 @@ import {
 export const ADD_GENE = "ADD_GENE";
 export const ADD_GENE_PANEL = "ADD_GENE_PANEL";
 export const ADD_TISSUE_SITE = "ADD_TISSUE_SITE";
+
+export const LOAD_SEARCH_INDEX = "LOAD_SEARCH_INDEX";
 
 // ui
 export const SELECT_GENE_PANEL = "SELECT_GENE_PANEL";
@@ -30,11 +33,16 @@ export const VIEW_TYPE = {
   TISSUESITE_RANKING: "TISSUESITE_RANKING"
 };
 
-export function setViewType(viewType = VIEW_TYPE.TISSUESITE_RANKING) {
-  return { type: SELECT_VIEW, viewType };
+export function loadSearchIndex(index = []) {
+  return {
+    type: LOAD_SEARCH_INDEX,
+    searchIndex: index.map(entry => {
+      let option: searchIndexEntity = { ensemblId: entry[0], name: entry[1] };
+      return option;
+    })
+  };
 }
 
-// actionCreators
 export function addGene({
   ensemblId,
   geneSymbol = "",
@@ -98,4 +106,8 @@ export function clearGeneSelection() {
 
 export function clearTissueSiteSelection() {
   return { type: CLEAR_TISSUE_SITE_SELECTION };
+}
+
+export function setViewType(viewType = VIEW_TYPE.TISSUESITE_RANKING) {
+  return { type: SELECT_VIEW, viewType };
 }

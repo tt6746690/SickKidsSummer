@@ -17,11 +17,23 @@ export interface tissueSiteEntity {
   tissueSiteId: string;
 }
 
+export interface searchIndexEntity {
+  /*
+    either
+    -- genePanelEntity.genePanelId if option is a gene
+    -- geneEntity.geneSymbol if option is a genePanel
+  */
+  name: string;
+  ensemblId?: string; // if option is a gene
+  panelGenes?: string[]; // if option is a genePanel
+}
+
 export interface stateInterface {
   entities: {
     genePanel: genePanelEntity[];
     gene: geneEntity[];
     tissueSite: tissueSiteEntity[];
+    searchIndex: searchIndexEntity[];
   };
   ui: {
     select: {
