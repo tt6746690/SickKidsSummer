@@ -11,63 +11,34 @@ class GenePanelInfo extends React.Component<any, object> {
       gene,
       genePanel,
       selectedGene,
-      selectedGenePanel,
       color,
       onPanelGeneClick,
       onPanelGeneClear
     } = this.props;
+
     /*
-        Displays gene symbol associated with currently selected genePanel
-        -- query entities.genePanel to get list of genes associatted with selectedGenePanel
-        -- query entities.gene to get geneSymbol info for each gene
-        -- map to a list of Buttons
+        Displays gene symbol associated with currently selected genePanel, may be 
+        -- part of a entities.genePanel.paneGenes
+        -- some other entities.genes
     */
-
-    let panelGeneButtons;
-    let genePanelEntity = getGenePanelEntityById(genePanel, selectedGenePanel);
-
-    if (
-      !isEmptyObject(genePanelEntity) &&
-      isNonEmptyArray(genePanelEntity.panelGenes)
-    ) {
-      let genes = getGeneEntityByIdList(gene, genePanelEntity.panelGenes);
-
-      panelGeneButtons = genes.map((gene: geneEntity, index) => {
-        let getStyle = () => {
-          let style = {};
-
-          if (selectedGene.includes(gene.ensemblId)) {
-            style["backgroundColor"] = color(gene.ensemblId);
-          }
-
-          if (selectedGene[selectedGene.length - 1] === gene.ensemblId) {
-            style["border"] = "2px dashed black";
-            style["marginTop"] = "-1px";
-          }
-
-          return {
-            ...style
-          };
-        };
-
-        return (
+    let geneEntityList = getGeneEntityByIdList(gene, selectedGene);
+    let selectedGeneButtons = isNonEmptyArray(geneEntityList)
+      ? geneEntityList.map((g: geneEntity, i: number) =>
           <Button
             className={"panelGeneButton"}
-            value={gene.ensemblId}
-            key={index.toString()}
+            value={g.ensemblId}
+            key={i.toString()}
             onClick={onPanelGeneClick}
-            style={getStyle()}
           >
-            {gene.geneSymbol.toUpperCase()}
+            {g.geneSymbol.toUpperCase()}
           </Button>
-        );
-      });
-    }
+        )
+      : undefined;
 
     return (
       <ButtonGroup>
-        {panelGeneButtons}
-        {panelGeneButtons &&
+        {selectedGeneButtons}
+        {selectedGeneButtons &&
           <Button bsStyle={"warning"} onClick={onPanelGeneClear}>
             {"Clear"}
           </Button>}

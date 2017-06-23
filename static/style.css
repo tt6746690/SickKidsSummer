@@ -32,7 +32,7 @@ ul.nav-stacked {
   padding: 20px;
 }
 
-/* adds padding to panel Gene buttno */
+/* adds padding to panel Gene button */
 .panelGeneButton {
   margin: 1px;
 }
@@ -52,4 +52,13 @@ ul.nav-stacked {
   margin: 0 3px 3px 0;
   padding: 4px 7px;
   position: relative;
+}
+
+.bootstrap-typeahead-clear-button {
+  outline: none;
+  margin-top: -12px;
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  z-index: 1;
 }

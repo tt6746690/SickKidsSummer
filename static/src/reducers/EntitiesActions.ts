@@ -22,6 +22,7 @@ export const SELECT_GENE_PANEL = "SELECT_GENE_PANEL";
 export const SELECT_REF_TISSUE_SITE = "SELECT_REF_TISSUE_SITE";
 
 export const TOGGLE_GENE = "TOGGLE_GENE";
+export const UPDATE_GENE = "UPDATE_GENE";
 export const TOGGLE_TISSUE_SITE = "TOGGLE_TISSUE_SITE";
 
 export const CLEAR_GENE_SELECTION = "CLEAR_GENE_PANEL_SELECTION";
@@ -108,6 +109,12 @@ export function toggleGene(ensemblId: string) {
   return {
     type: TOGGLE_GENE,
     ensemblId
+  };
+}
+export function updateGene(ensemblIds: string[]) {
+  return {
+    type: UPDATE_GENE,
+    ensemblIds
   };
 }
 

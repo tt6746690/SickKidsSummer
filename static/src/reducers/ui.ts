@@ -2,6 +2,7 @@ import {
   SELECT_GENE_PANEL,
   SELECT_REF_TISSUE_SITE,
   TOGGLE_GENE,
+  UPDATE_GENE,
   TOGGLE_TISSUE_SITE,
   SELECT_VIEW,
   CLEAR_GENE_SELECTION,
@@ -53,6 +54,12 @@ function select(state, action) {
         ...state,
         gene: toggleGeneReducer(state.gene, action)
       };
+    case UPDATE_GENE:
+      console.log({ where: "updateGeneReducer", action });
+      return {
+        ...state,
+        gene: [...action.ensemblIds]
+      };
     case TOGGLE_TISSUE_SITE:
       return {
         ...state,
@@ -87,6 +94,7 @@ export default function ui(state, action) {
     case SELECT_GENE_PANEL:
     case SELECT_REF_TISSUE_SITE:
     case TOGGLE_GENE:
+    case UPDATE_GENE:
     case TOGGLE_TISSUE_SITE:
     case CLEAR_GENE_SELECTION:
     case CLEAR_TISSUE_SITE_SELECTION:
