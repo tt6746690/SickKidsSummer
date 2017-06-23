@@ -2,7 +2,6 @@ import { connect } from "react-redux";
 
 import {
   selectRefTissueSite,
-  toggleTissueSite,
   setViewType,
   VIEW_TYPE
 } from "../reducers/EntitiesActions";

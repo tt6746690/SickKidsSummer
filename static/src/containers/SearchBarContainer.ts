@@ -1,7 +1,6 @@
 import { connect } from "react-redux";
 
 import {
-  loadSearchIndex,
   addGene,
   addGenePanel,
   selectGenePanel,
@@ -10,7 +9,7 @@ import {
   clearTissueSiteSelection,
   updateIncludeGene
 } from "../reducers/EntitiesActions";
-import GenePanelListing from "../components/GenePanelListing";
+import { fetchGene, fetchGenePanel } from "../reducers/FetchActions";
 import {
   stateInterface,
   geneEntity,
@@ -50,10 +49,17 @@ const mapStateToProps = (state: stateInterface) => {
     return panelOptions.concat(geneOptions) || [];
   };
 
+  const panelFormat = (panelName: string): string =>
+    panelName
+      .split("_")
+      .map(d => d.replace(/\b\w/g, f => f.toUpperCase()))
+      .join(" ");
+
   return {
     options: getOptions(),
     gene,
-    genePanel
+    genePanel,
+    panelFormat
   };
 };
 
@@ -65,14 +71,33 @@ const mapDispatchToProps = dispatch => {
     dispatch(selectGenePanel(genePanelId));
   };
 
-  const onOptionChange = options => {
+  /* 
+    Selecting/De-selecting an option triggers changes 
+    -- update ui.include.gene with options 
+    -- if option.type is GENE_TYPE
+    ---- fetch gene.{exonExpr, geneExpr} if not fetched already
+    -- if option.type is PANEL_TYPE
+    ---- fetch gene panel and populate entities.genePanel, and once this is finished
+    ---- fetch gene.{exonExpr, geneExpr} for all genes in the panel if not fetched already
+  */
+  const onSearchBarChange = options => {
+    console.log({ where: "onSearchBarChange", options });
+
     dispatch(updateIncludeGene(options));
+    options.forEach(option => {
+      switch (option.type) {
+        case OPTION_TYPE.GENE_TYPE:
+          dispatch(fetchGene(option.ensemblId));
+          break;
+        case OPTION_TYPE.PANEL_TYPE:
+          let genePanelId = option.name;
+          onGenePanelSelect(option.genePanelId);
+          dispatch(fetchGenePanel(option.name));
+      }
+    });
   };
 
-  return {
-    onGenePanelSelect,
-    onOptionChange
-  };
+  return { onSearchBarChange };
 };
 
 const SearchBarContainer = connect(mapStateToProps, mapDispatchToProps)(

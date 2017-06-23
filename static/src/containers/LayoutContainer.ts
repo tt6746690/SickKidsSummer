@@ -15,20 +15,9 @@ const mapStateToProps = (state: stateInterface) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    /*
-        Initial state hydration, fetch
-        -- tissueSites
-        -- genePanels
-    */
     onComponentWillMount: () => {
       dispatch(hydrateInitialState());
     },
-    /*
-        select plot to display 
-        -- tissue ranking table
-        -- gene boxplot 
-        -- exon boxplot
-    */
     onTabSelect: tabType => {
       dispatch(setViewType(tabType));
     }

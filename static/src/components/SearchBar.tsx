@@ -11,84 +11,35 @@ import { OPTION_TYPE } from "../Interfaces";
 import { genePropertyPopulated, getGenePanelEntityById } from "../store/Query";
 
 class SearchBar extends React.Component<any, object> {
-  componentWillMount() {
-    let { fetchSearchIndex } = this.props;
-    fetchSearchIndex();
-  }
-
   _renderMenuItemChildren = option => {
-    let { gene } = this.props;
-    return [
-      <div key={"name"} style={{ fontSize: "20px" }}>
-        {option.name}
-      </div>,
-      option.hasOwnProperty("ensemblId") &&
-        <div key={"ensemblId"}>
-          {option.ensemblId}
-        </div>,
-      option.hasOwnProperty("panelGenes") &&
-        /* 
-            not working for now, because panel not selected entities.gene is empty
-          */
-        <div key={"panelGenes"}>
-          {getGeneEntityByIdList(gene, option.panelGenes)
-            .map(g => g.geneSymbol)
-            .join("...")}
-        </div>
-    ];
-  };
+    let { gene, panelFormat } = this.props;
 
-  _loadGene = ensemblId => {
-    let { gene, fetchExonExpr, fetchGeneExpr } = this.props;
-
-    console.log({ where: "_loadGene", ensemblId });
-    !genePropertyPopulated(gene, ensemblId, "exonExpr") &&
-      fetchExonExpr(ensemblId);
-    !genePropertyPopulated(gene, ensemblId, "geneExpr") &&
-      fetchGeneExpr(ensemblId);
-  };
-
-  /* 
-    Selecting/De-selecting an option triggers changes 
-    -- update ui.include.gene with options 
-    -- if option.type is GENE_TYPE
-    ---- fetch gene.{exonExpr, geneExpr} if not fetched already
-    -- if option.type is PANEL_TYPE
-    ---- fetch gene panel and populate entities.genePanel, and once this is finished
-    ---- fetch gene.{exonExpr, geneExpr} for all genes in the panel if not fetched already
-  */
-  _onSearchBarChange = options => {
-    let {
-      genePanel,
-      fetchGenePanel,
-      onGenePanelSelect,
-      onOptionChange
-    } = this.props;
-
-    console.log({ where: "onSearchBarChange", options });
-
-    onOptionChange(options);
-
-    options.forEach(option => {
-      switch (option.type) {
-        case OPTION_TYPE.GENE_TYPE:
-          this._loadGene(option.ensemblId);
-          break;
-        case OPTION_TYPE.PANEL_TYPE:
-          let genePanelId = option.name;
-          onGenePanelSelect(genePanelId);
-          Promise.all([fetchGenePanel(genePanelId)]);
-
-          let panel = getGenePanelEntityById(genePanel, genePanelId);
-          panel.panelGenes.map(ensemblId => {
-            this._loadGene(ensemblId);
-          });
-      }
-    });
+    switch (option.type) {
+      case OPTION_TYPE.GENE_TYPE:
+        return [
+          <div key={"name"} style={{ fontSize: "20px" }}>
+            {option.name}
+          </div>,
+          <div key={"ensemblId"}>
+            {option.ensemblId}
+          </div>
+        ];
+      case OPTION_TYPE.PANEL_TYPE:
+        return [
+          <div key={"name"} style={{ fontSize: "20px" }}>
+            {panelFormat(option.name)}
+          </div>,
+          <div key={"panelGenes"}>
+            {getGeneEntityByIdList(gene, option.panelGenes)
+              .map(g => g.geneSymbol)
+              .join("...")}
+          </div>
+        ];
+    }
   };
 
   render() {
-    let { options } = this.props;
+    let { options, onSearchBarChange } = this.props;
 
     return (
       <Typeahead
@@ -103,7 +54,7 @@ class SearchBar extends React.Component<any, object> {
         maxResults={5}
         maxHeight={330}
         paginate={true}
-        onChange={this._onSearchBarChange}
+        onChange={onSearchBarChange}
         renderMenuItemChildren={this._renderMenuItemChildren}
         placeholder="Pick a gene or gene panel..."
       />

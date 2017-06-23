@@ -13,7 +13,6 @@ import {
   Tab
 } from "react-bootstrap";
 
-import GenePanelListingContainer from "../containers/GenePanelListingContainer";
 import GenePanelInfoContainer from "../containers/GenePanelInfoContainer";
 import TissueSiteListingContainer from "../containers/TissueSiteListingContainer";
 import TissueSiteRankingContainer from "../containers/TissueSiteRankingContainer";
@@ -47,10 +46,6 @@ class Layout extends React.Component<any, object> {
         </Row>
         <Row id="gene-panel">
           <Panel>
-            <Col md={4} xs={8}>
-              <GenePanelListingContainer />
-              {selectedGenePanel !== "" && <TissueSiteListingContainer />}
-            </Col>
             <Col md={8} xs={12}>
               <GenePanelInfoContainer />
             </Col>

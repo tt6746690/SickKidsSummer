@@ -186,6 +186,19 @@ export function fetchGeneExpr(ensemblId: string) {
 }
 
 /* 
+  fetch data related to a gene 
+  -- exonExpr + tissueRanking
+  -- geneExpr 
+*/
+export function fetchGene(ensemblId: string) {
+  return dispatch => {
+    let exonExprFetch = dispatch(fetchExonExpr(ensemblId));
+    let geneExprFetch = dispatch(fetchGeneExpr(ensemblId));
+    return Promise.all([exonExprFetch, geneExprFetch]);
+  };
+}
+
+/* 
     if not populated previously 
     -- fetch and populate entities.genePanel.{panelGenes, tissueRanking} 
     -- fetch and update entities.gene for all gene in the panel
@@ -215,8 +228,7 @@ export function fetchGenePanel(genePanelId: string) {
         panel.map(gene => {
           let { ensembl_id: ensemblId, symbol: geneSymbol } = gene;
           dispatch(addGene({ ensemblId, geneSymbol }));
-          dispatch(fetchExonExpr(ensemblId));
-          dispatch(fetchGeneExpr(ensemblId));
+          dispatch(fetchGene(ensemblId));
         });
       },
       err => {

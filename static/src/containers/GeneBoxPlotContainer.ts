@@ -1,14 +1,6 @@
 import { connect } from "react-redux";
 import * as d3 from "d3";
 
-import {
-  addGene,
-  addGenePanel,
-  addTissueSite,
-  selectGenePanel,
-  toggleGene,
-  toggleTissueSite
-} from "../reducers/EntitiesActions";
 import GeneBoxPlot from "../components/GeneBoxPlot";
 import { isNonEmptyArray } from "../utils/Utils";
 import {
