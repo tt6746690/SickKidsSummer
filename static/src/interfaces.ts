@@ -59,4 +59,8 @@ export interface stateInterface {
       offset: number;
     };
   };
+  networks: {
+    isFetching: boolean;
+    fetchStatus: string;
+  };
 }

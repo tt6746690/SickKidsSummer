@@ -6,7 +6,7 @@ import ExonPlot from "../components/ExonPlot";
 import { getTissueRanking } from "../store/Query";
 
 import { isNonEmptyArray } from "../utils/Utils";
-import { toggleGene } from "../reducers/Actions";
+import { toggleGene } from "../reducers/EntitiesActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let {

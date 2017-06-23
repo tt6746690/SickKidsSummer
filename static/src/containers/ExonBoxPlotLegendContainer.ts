@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { toggleTissueSite } from "../reducers/Actions";
+import { toggleTissueSite } from "../reducers/EntitiesActions";
 import { stateInterface } from "../Interfaces";
 import ExonBoxPlotLegend from "../components/ExonBoxPlotLegend";
 import { getTissueRanking } from "../store/Query";

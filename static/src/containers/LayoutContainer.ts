@@ -1,12 +1,7 @@
 import { connect } from "react-redux";
 
-import {
-  addGenePanel,
-  addTissueSite,
-  selectGenePanel,
-  setViewType,
-  VIEW_TYPE
-} from "../reducers/Actions";
+import { setViewType, VIEW_TYPE } from "../reducers/EntitiesActions";
+import { hydrateInitialState } from "../reducers/FetchActions";
 import { isNonEmptyArray } from "../utils/Utils";
 import { stateInterface } from "../Interfaces";
 import Layout from "../components/Layout";
@@ -21,37 +16,17 @@ const mapStateToProps = (state: stateInterface) => {
 const mapDispatchToProps = dispatch => {
   return {
     /*
-            Initial state hydration, fetch
-            -- tissueSites
-            -- genePanels
-        */
+        Initial state hydration, fetch
+        -- tissueSites
+        -- genePanels
+    */
     onComponentWillMount: () => {
-      fetch(TISSUE_SITE_LIST_URL, { mode: "cors" })
-        .then(response => response.json())
-        .then(tissueList => {
-          if (isNonEmptyArray(tissueList)) {
-            tissueList.map(tissueSite => {
-              dispatch(addTissueSite({ tissueSiteId: tissueSite }));
-            });
-          }
-        })
-        .catch(err => console.log("fetch: ", err));
-
-      fetch(GENE_PANEL_LIST_URL, { mode: "cors" })
-        .then(response => response.json())
-        .then(panelList => {
-          if (isNonEmptyArray(panelList)) {
-            panelList.map(genePanel => {
-              dispatch(addGenePanel({ genePanelId: genePanel }));
-            });
-          }
-        })
-        .catch(err => console.log("fetch: ", err));
+      dispatch(hydrateInitialState());
     },
     /*
         select plot to display 
         -- tissue ranking table
-        -- gene boxplot
+        -- gene boxplot 
         -- exon boxplot
     */
     onTabSelect: tabType => {

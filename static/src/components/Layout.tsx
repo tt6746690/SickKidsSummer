@@ -22,7 +22,7 @@ import ExonBoxPlotLegendContainer from "../containers/ExonBoxPlotLegendContainer
 import SearchBarContainer from "../containers/SearchBarContainer";
 import GeneBoxPlotContainer from "../containers/GeneBoxPlotContainer";
 
-import { VIEW_TYPE } from "../reducers/Actions";
+import { VIEW_TYPE } from "../reducers/EntitiesActions";
 
 class Layout extends React.Component<any, object> {
   componentWillMount() {
@@ -37,8 +37,11 @@ class Layout extends React.Component<any, object> {
       <Grid>
         <Row id="search-bar">
           <Panel>
-            <Col md={12}>
+            <Col md={8}>
               <SearchBarContainer />
+            </Col>
+            <Col md={4}>
+              <TissueSiteListingContainer />
             </Col>
           </Panel>
         </Row>

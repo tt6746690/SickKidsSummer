@@ -5,7 +5,7 @@ import {
   toggleTissueSite,
   setViewType,
   VIEW_TYPE
-} from "../reducers/Actions";
+} from "../reducers/EntitiesActions";
 import { stateInterface } from "../Interfaces";
 import TissueSiteListing from "../components/TissueSiteListing";
 

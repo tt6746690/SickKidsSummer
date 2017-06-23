@@ -8,7 +8,7 @@ import {
   selectGenePanel,
   toggleGene,
   toggleTissueSite
-} from "../reducers/Actions";
+} from "../reducers/EntitiesActions";
 import ExonBoxPlot from "../components/ExonBoxPlot";
 import { isNonEmptyArray } from "../utils/Utils";
 import {

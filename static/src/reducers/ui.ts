@@ -7,7 +7,7 @@ import {
   CLEAR_GENE_SELECTION,
   CLEAR_TISSUE_SITE_SELECTION,
   UPDATE_INCLUDE_GENE
-} from "./Actions";
+} from "./EntitiesActions";
 
 import {
   geneEntity,

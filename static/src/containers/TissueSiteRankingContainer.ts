@@ -1,7 +1,11 @@
 import { connect } from "react-redux";
 import * as d3 from "d3";
 
-import { toggleTissueSite, setViewType, VIEW_TYPE } from "../reducers/Actions";
+import {
+  toggleTissueSite,
+  setViewType,
+  VIEW_TYPE
+} from "../reducers/EntitiesActions";
 import { stateInterface } from "../Interfaces";
 import TissueSiteRanking from "../components/TissueSiteRanking";
 import { getTissueRanking } from "../store/Query";

@@ -8,6 +8,7 @@ import {
 } from "../Interfaces";
 
 // actionTypes
+export const HYDRATE_INITIAL_STATE = "HYDRATE_INITIAL_STATE";
 
 // entity
 export const ADD_GENE = "ADD_GENE";

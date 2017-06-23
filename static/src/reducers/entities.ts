@@ -3,7 +3,7 @@ import {
   ADD_GENE_PANEL,
   ADD_TISSUE_SITE,
   LOAD_SEARCH_INDEX
-} from "./Actions";
+} from "./EntitiesActions";
 
 import {
   geneEntity,

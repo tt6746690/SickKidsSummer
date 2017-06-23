@@ -9,7 +9,7 @@ import {
   clearGeneSelection,
   clearTissueSiteSelection,
   updateIncludeGene
-} from "../reducers/Actions";
+} from "../reducers/EntitiesActions";
 import GenePanelListing from "../components/GenePanelListing";
 import {
   stateInterface,

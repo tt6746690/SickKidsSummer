@@ -7,7 +7,7 @@ import {
   selectRefTissueSite,
   clearGeneSelection,
   clearTissueSiteSelection
-} from "../reducers/Actions";
+} from "../reducers/EntitiesActions";
 import GenePanelListing from "../components/GenePanelListing";
 import { stateInterface, geneEntity } from "../Interfaces";
 import {

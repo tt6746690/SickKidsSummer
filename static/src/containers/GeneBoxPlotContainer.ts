@@ -8,7 +8,7 @@ import {
   selectGenePanel,
   toggleGene,
   toggleTissueSite
-} from "../reducers/Actions";
+} from "../reducers/EntitiesActions";
 import GeneBoxPlot from "../components/GeneBoxPlot";
 import { isNonEmptyArray } from "../utils/Utils";
 import {

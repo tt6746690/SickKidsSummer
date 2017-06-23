@@ -9,7 +9,7 @@ def get_search_index():
         1. genes 
         -- [ ...,[ ensembl_id, gene_symbol ] ]
         2. gene_panels
-        -- [ ..., [panel_name, [ ..., [ symbol, ensembl_id  ]] ]
+        -- [ ..., [panel_name, [ ..., [ ensembl_id, gene_symbol  ]] ]
     """
 
     genes = []

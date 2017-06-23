@@ -1,11 +1,11 @@
 import "whatwg-fetch";
 import * as d3 from "d3";
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
+import ReduxThunk from "redux-thunk";
 
 import { stateInterface } from "../Interfaces";
+import { VIEW_TYPE } from "../reducers/EntitiesActions";
 import rootReducer from "../reducers/Root";
-
-import { VIEW_TYPE } from "../reducers/Actions";
 
 /* 
     Testing reducer with 
@@ -38,10 +38,15 @@ let defaultState: stateInterface = {
       height: 600,
       offset: 40
     }
+  },
+  networks: {
+    isFetching: false,
+    fetchStatus: ""
   }
 };
 
-let store = createStore(rootReducer, defaultState);
+let store = createStore(rootReducer, defaultState, applyMiddleware(ReduxThunk));
+
 let unsubscribe = store.subscribe(() => {
   let {
     entities: { gene, genePanel, tissueSite, searchIndex },
@@ -57,6 +62,7 @@ let unsubscribe = store.subscribe(() => {
   } = store.getState();
 
   console.log({
+    store: store.getState(),
     gene,
     genePanel,
     tissueSite,
