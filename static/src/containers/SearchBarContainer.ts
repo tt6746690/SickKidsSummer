@@ -19,6 +19,13 @@ import {
 } from "../Interfaces";
 import SearchBar from "../components/SearchBar";
 import { getGenePanelEntityById } from "../store/Query";
+import {
+  EXON_EXPR_URL,
+  GENE_EXPR_URL,
+  GENE_PANEL_URL,
+  GENE_PANEL_RANKING_URL,
+  SEARCH_INDEX_URL
+} from "../utils/Url";
 
 const mapStateToProps = (state: stateInterface) => {
   let { entities: { gene, genePanel, searchIndex } } = state;
@@ -55,9 +62,7 @@ const mapDispatchToProps = dispatch => {
       Load search index 
   */
   const fetchSearchIndex = () => {
-    return fetch("http://127.0.0.1:5000/api/search/index", {
-      mode: "cors"
-    })
+    return fetch(SEARCH_INDEX_URL, { mode: "cors" })
       .then(response => response.json())
       .then(data => {
         dispatch(loadSearchIndex(data));
@@ -69,7 +74,7 @@ const mapDispatchToProps = dispatch => {
       Fetch {exonExpr, geneExpr} given ensemblI
     */
   const fetchExonExpr = ensemblId => {
-    return fetch("http://127.0.0.1:5000/api/exon_expr/" + ensemblId, {
+    return fetch(EXON_EXPR_URL(ensemblId), {
       mode: "cors"
     })
       .then(response => response.text())
@@ -90,7 +95,7 @@ const mapDispatchToProps = dispatch => {
   };
 
   const fetchGeneExpr = ensemblId => {
-    return fetch("http://127.0.0.1:5000/api/gene_expr/" + ensemblId, {
+    return fetch(GENE_EXPR_URL(ensemblId), {
       mode: "cors"
     })
       .then(response => response.json())
@@ -113,7 +118,7 @@ const mapDispatchToProps = dispatch => {
   };
 
   const fetchGenePanel = (genePanelId: string) => {
-    return fetch("http://127.0.0.1:5000/api/gene_panels/" + genePanelId, {
+    return fetch(GENE_PANEL_URL(genePanelId), {
       mode: "cors"
     })
       .then(response => response.json())

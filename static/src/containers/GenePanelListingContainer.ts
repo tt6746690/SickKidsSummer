@@ -10,6 +10,12 @@ import {
 } from "../reducers/Actions";
 import GenePanelListing from "../components/GenePanelListing";
 import { stateInterface, geneEntity } from "../Interfaces";
+import {
+  EXON_EXPR_URL,
+  GENE_EXPR_URL,
+  GENE_PANEL_URL,
+  GENE_PANEL_RANKING_URL
+} from "../utils/Url";
 
 const mapStateToProps = (state: stateInterface) => {
   let {
@@ -29,7 +35,7 @@ const mapDispatchToProps = dispatch => {
       Fetch {exonExpr, geneExpr} given ensemblI
     */
   const fetchExonExpr = ensemblId => {
-    fetch("http://127.0.0.1:5000/api/exon_expr/" + ensemblId, {
+    fetch(EXON_EXPR_URL(ensemblId), {
       mode: "cors"
     })
       .then(response => response.text())
@@ -50,9 +56,7 @@ const mapDispatchToProps = dispatch => {
   };
 
   const fetchGeneExpr = ensemblId => {
-    fetch("http://127.0.0.1:5000/api/gene_expr/" + ensemblId, {
-      mode: "cors"
-    })
+    fetch(GENE_EXPR_URL(ensemblId), { mode: "cors" })
       .then(response => response.json())
       .then(geneExpr => {
         dispatch(addGene({ ensemblId, geneExpr: geneExpr }));
@@ -77,12 +81,9 @@ const mapDispatchToProps = dispatch => {
 
       dispatch(selectGenePanel(genePanelId));
 
-      let fetchGenePanel = fetch(
-        "http://127.0.0.1:5000/api/gene_panels/" + genePanelId,
-        {
-          mode: "cors"
-        }
-      )
+      let fetchGenePanel = fetch(GENE_PANEL_URL(genePanelId), {
+        mode: "cors"
+      })
         .then(response => response.json())
         .then(genePanel => {
           dispatch(
@@ -112,9 +113,7 @@ const mapDispatchToProps = dispatch => {
         })
         .catch(err => console.log("fetch: ", err));
 
-      fetch("http://127.0.0.1:5000/api/gene_panels/ranking/" + genePanelId, {
-        mode: "cors"
-      })
+      fetch(GENE_PANEL_RANKING_URL(genePanelId), { mode: "cors" })
         .then(response => response.json())
         .then(tissueRanking => {
           dispatch(addGenePanel({ genePanelId, tissueRanking }));

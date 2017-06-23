@@ -10,6 +10,7 @@ import {
 import { isNonEmptyArray } from "../utils/Utils";
 import { stateInterface } from "../Interfaces";
 import Layout from "../components/Layout";
+import { TISSUE_SITE_LIST_URL, GENE_PANEL_LIST_URL } from "../utils/Url";
 
 const mapStateToProps = (state: stateInterface) => {
   let { ui: { viewType, select: { genePanel: selectedGenePanel } } } = state;
@@ -25,9 +26,7 @@ const mapDispatchToProps = dispatch => {
             -- genePanels
         */
     onComponentWillMount: () => {
-      fetch("http://127.0.0.1:5000/api/exon_expr/tissue_site_list", {
-        mode: "cors"
-      })
+      fetch(TISSUE_SITE_LIST_URL, { mode: "cors" })
         .then(response => response.json())
         .then(tissueList => {
           if (isNonEmptyArray(tissueList)) {
@@ -38,9 +37,7 @@ const mapDispatchToProps = dispatch => {
         })
         .catch(err => console.log("fetch: ", err));
 
-      fetch("http://127.0.0.1:5000/api/gene_panels/gene_panel_list", {
-        mode: "cors"
-      })
+      fetch(GENE_PANEL_LIST_URL, { mode: "cors" })
         .then(response => response.json())
         .then(panelList => {
           if (isNonEmptyArray(panelList)) {

@@ -13,7 +13,6 @@ import { genePropertyPopulated, getGenePanelEntityById } from "../store/Query";
 class SearchBar extends React.Component<any, object> {
   componentWillMount() {
     let { fetchSearchIndex } = this.props;
-    console.log("componentWIllMount");
     fetchSearchIndex();
   }
 
