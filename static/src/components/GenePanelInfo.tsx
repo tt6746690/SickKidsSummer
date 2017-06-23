@@ -17,11 +17,11 @@ class GenePanelInfo extends React.Component<any, object> {
       onPanelGeneClear
     } = this.props;
     /*
-            Displays gene symbol associated with currently selected genePanel
-            -- query entities.genePanel to get list of genes associatted with selectedGenePanel
-            -- query entities.gene to get geneSymbol info for each gene
-            -- map to a list of Buttons
-        */
+        Displays gene symbol associated with currently selected genePanel
+        -- query entities.genePanel to get list of genes associatted with selectedGenePanel
+        -- query entities.gene to get geneSymbol info for each gene
+        -- map to a list of Buttons
+    */
 
     let panelGeneButtons;
     let genePanelEntity = getGenePanelEntityById(genePanel, selectedGenePanel);

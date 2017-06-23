@@ -48,30 +48,12 @@ let defaultState: stateInterface = {
 let store = createStore(rootReducer, defaultState, applyMiddleware(ReduxThunk));
 
 let unsubscribe = store.subscribe(() => {
-  let {
-    entities: { gene, genePanel, tissueSite, searchIndex },
-    ui: {
-      select: {
-        gene: selectedGene,
-        genePanel: selectedGenePanel,
-        tissueSite: selectedTissueSite,
-        refTissueSite: selectedRefTissueSite
-      },
-      include: { gene: includedGene }
-    }
-  } = store.getState();
+  let { entities, ui, networks } = store.getState();
 
   console.log({
-    store: store.getState(),
-    gene,
-    genePanel,
-    tissueSite,
-    searchIndex,
-    selectedGene,
-    selectedGenePanel,
-    selectedTissueSite,
-    selectedRefTissueSite,
-    includedGene
+    entities,
+    ui,
+    networks
   });
 });
 

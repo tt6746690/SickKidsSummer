@@ -87,11 +87,11 @@ export function genePanelPropertyPopulated(
   property: string
 ): boolean {
   let result = getGenePanelEntityById(genePanels, genePanelId);
+
   return (
     !isEmptyObject(result) &&
     result.hasOwnProperty(property) &&
-    !isEmptyObject(result[property]) &&
-    !isNonEmptyArray(result[property])
+    isNonEmptyArray(result[property])
   );
 }
 

@@ -20,6 +20,7 @@ import ExonBoxPlotContainer from "../containers/ExonBoxPlotContainer";
 import ExonBoxPlotLegendContainer from "../containers/ExonBoxPlotLegendContainer";
 import SearchBarContainer from "../containers/SearchBarContainer";
 import GeneBoxPlotContainer from "../containers/GeneBoxPlotContainer";
+import FetchStatusContainer from "../containers/FetchStatusContainer";
 
 import { VIEW_TYPE } from "../reducers/EntitiesActions";
 
@@ -39,7 +40,10 @@ class Layout extends React.Component<any, object> {
             <Col md={8}>
               <SearchBarContainer />
             </Col>
-            <Col md={4}>
+            <Col md={1}>
+              <FetchStatusContainer />
+            </Col>
+            <Col md={3}>
               <TissueSiteListingContainer />
             </Col>
           </Panel>

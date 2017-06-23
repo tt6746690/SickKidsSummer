@@ -32,7 +32,7 @@ class SearchBar extends React.Component<any, object> {
           <div key={"panelGenes"}>
             {getGeneEntityByIdList(gene, option.panelGenes)
               .map(g => g.geneSymbol)
-              .join("...")}
+              .join(", ")}
           </div>
         ];
     }

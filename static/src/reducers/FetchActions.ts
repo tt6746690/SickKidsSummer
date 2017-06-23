@@ -37,8 +37,8 @@ export const FETCH_STATUS = {
   FAILURE: "FALIURE"
 };
 
-export function startFetch() {
-  return { type: START_FETCH };
+export function startFetch(what: string = "") {
+  return { type: START_FETCH, what };
 }
 export function endFetchSuccess() {
   return { type: END_FETCH_SUCCESS, status: FETCH_STATUS.SUCCESS };
@@ -68,6 +68,7 @@ export function fetchTissueSiteList() {
       tissueList => {
         isNonEmptyArray(tissueList) &&
           tissueList.map(ts => dispatch(addTissueSite({ tissueSiteId: ts })));
+        dispatch(endFetchSuccess());
       },
       err => {
         console.log({ fetch: err });
@@ -90,6 +91,7 @@ export function fetchGenePanelList() {
           panelList.map(panel =>
             dispatch(addGenePanel({ genePanelId: panel }))
           );
+        dispatch(endFetchSuccess());
       },
       err => {
         console.log({ fetch: err });
@@ -106,7 +108,7 @@ export function fetchSearchIndex() {
   return dispatch => {
     return fetchJson(
       SEARCH_INDEX_URL,
-      data => dispatch(loadSearchIndex(data)),
+      data => dispatch(loadSearchIndex(data)) && dispatch(endFetchSuccess()),
       err => {
         console.log({ fetch: err });
         dispatch(endFetchFailure());
@@ -140,12 +142,13 @@ export function fetchExonExpr(ensemblId: string) {
       return Promise.resolve();
     }
 
-    dispatch(startFetch());
+    dispatch(startFetch(`${ensemblId}.exonExpr`));
     return fetchJson(
       EXON_EXPR_URL(ensemblId),
       data => {
         let { exonExpr, tissueRanking } = data;
         dispatch(addGene({ ensemblId, exonExpr, tissueRanking }));
+        dispatch(endFetchSuccess());
       },
       err => {
         console.log({ fetch: err });
@@ -167,16 +170,12 @@ export function fetchGeneExpr(ensemblId: string) {
       return Promise.resolve();
     }
 
-    dispatch(startFetch());
+    dispatch(startFetch(`${ensemblId}.geneExpr`));
     return fetchJson(
       GENE_EXPR_URL(ensemblId),
       geneExpr =>
-        dispatch(
-          addGene({
-            ensemblId,
-            geneExpr
-          })
-        ),
+        dispatch(addGene({ ensemblId, geneExpr })) &&
+        dispatch(endFetchSuccess()),
       err => {
         console.log({ fetch: err });
         dispatch(endFetchFailure());
@@ -192,9 +191,10 @@ export function fetchGeneExpr(ensemblId: string) {
 */
 export function fetchGene(ensemblId: string) {
   return dispatch => {
-    let exonExprFetch = dispatch(fetchExonExpr(ensemblId));
-    let geneExprFetch = dispatch(fetchGeneExpr(ensemblId));
-    return Promise.all([exonExprFetch, geneExprFetch]);
+    return Promise.all([
+      dispatch(fetchExonExpr(ensemblId)),
+      dispatch(fetchGeneExpr(ensemblId))
+    ]);
   };
 }
 
@@ -206,14 +206,12 @@ export function fetchGene(ensemblId: string) {
 export function fetchGenePanel(genePanelId: string) {
   return (dispatch, getState) => {
     let { entities: { genePanel } } = getState();
-    if (
-      genePanelPropertyPopulated(genePanel, genePanelId, "panelGenes") &&
-      genePanelPropertyPopulated(genePanel, genePanelId, "tissueRanking")
-    ) {
+    if (genePanelPropertyPopulated(genePanel, genePanelId, "panelGenes")) {
+      console.log("skipping");
       return Promise.resolve();
     }
 
-    dispatch(startFetch());
+    dispatch(startFetch(`${genePanelId}`));
 
     let fetchPanel = fetchJson(
       GENE_PANEL_URL(genePanelId),
@@ -230,6 +228,7 @@ export function fetchGenePanel(genePanelId: string) {
           dispatch(addGene({ ensemblId, geneSymbol }));
           dispatch(fetchGene(ensemblId));
         });
+        dispatch(endFetchSuccess());
       },
       err => {
         console.log({ fetch: err });
@@ -239,7 +238,9 @@ export function fetchGenePanel(genePanelId: string) {
 
     let fetchPanelRanking = fetchJson(
       GENE_PANEL_RANKING_URL(genePanelId),
-      tissueRanking => dispatch(addGenePanel({ genePanelId, tissueRanking })),
+      tissueRanking =>
+        dispatch(addGenePanel({ genePanelId, tissueRanking })) &&
+        dispatch(endFetchSuccess()),
       err => {
         console.log({ fetch: err });
         dispatch(endFetchFailure());

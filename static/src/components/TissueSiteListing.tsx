@@ -26,7 +26,6 @@ class TissueSiteListing extends React.Component<any, object> {
 
     return (
       <SplitButton
-        bsSize="large"
         title={
           selectedRefTissueSite === ""
             ? "Tissue Types"
