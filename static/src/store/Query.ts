@@ -4,7 +4,7 @@ import {
   tissueSiteEntity,
   stateInterface
 } from "../Interfaces";
-import { isEmptyObject } from "../utils/Utils";
+import { isEmptyObject, isNonEmptyArray } from "../utils/Utils";
 
 /*
   Queries entities.gene and 
@@ -75,6 +75,24 @@ export function getGenePanelEntityByIdList(
     return genePanelIds.includes(panel.genePanelId);
   });
   return filtered || ([] as genePanelEntity[]);
+}
+
+/* 
+  Return true if entities.genePanel.property is populated previously 
+  false otherwise 
+*/
+export function genePanelPropertyPopulated(
+  genePanels: genePanelEntity[],
+  genePanelId: string,
+  property: string
+): boolean {
+  let result = getGenePanelEntityById(genePanels, genePanelId);
+  return (
+    !isEmptyObject(result) &&
+    result.hasOwnProperty(property) &&
+    !isEmptyObject(result[property]) &&
+    !isNonEmptyArray(result[property])
+  );
 }
 
 /*
