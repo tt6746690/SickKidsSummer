@@ -17,6 +17,11 @@ export interface tissueSiteEntity {
   tissueSiteId: string;
 }
 
+export enum OPTION_TYPE {
+  GENE_TYPE,
+  PANEL_TYPE
+}
+
 export interface searchIndexEntity {
   /*
     either
@@ -24,6 +29,7 @@ export interface searchIndexEntity {
     -- geneEntity.geneSymbol if option is a genePanel
   */
   name: string;
+  type?: number; // of type enum OPTION_TYPE
   ensemblId?: string; // if option is a gene
   panelGenes?: string[]; // if option is a genePanel
 }
@@ -41,6 +47,9 @@ export interface stateInterface {
       refTissueSite: string;
       gene: string[];
       tissueSite: string[];
+    };
+    include: {
+      gene: searchIndexEntity[];
     };
     viewType: string;
     plot: {

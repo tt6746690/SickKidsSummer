@@ -33,6 +33,24 @@ export function getGeneEntityByIdList(
   return filtered || ([] as geneEntity[]);
 }
 
+/* 
+  Return true if entities.gene.property is populated previouslly 
+  false otherwise 
+*/
+export function genePropertyPopulated(
+  genes: geneEntity[],
+  ensemblId: string,
+  property: string
+): boolean {
+  let result = getGeneEntityById(genes, ensemblId);
+
+  return (
+    !isEmptyObject(result) &&
+    result.hasOwnProperty(property) &&
+    !isEmptyObject(result[property])
+  );
+}
+
 /*
   Queries entities.genePanel and 
   returns an array of genePanelEntity given a single panel Id

@@ -28,6 +28,9 @@ let defaultState: stateInterface = {
       gene: [],
       tissueSite: []
     },
+    include: {
+      gene: []
+    },
     viewType: VIEW_TYPE.TISSUESITE_RANKING,
     plot: {
       color: d3.scaleOrdinal(d3.schemeCategory20),
@@ -40,8 +43,30 @@ let defaultState: stateInterface = {
 
 let store = createStore(rootReducer, defaultState);
 let unsubscribe = store.subscribe(() => {
-  let s = store.getState();
-  console.log(s.entities, s.ui);
+  let {
+    entities: { gene, genePanel, tissueSite, searchIndex },
+    ui: {
+      select: {
+        gene: selectedGene,
+        genePanel: selectedGenePanel,
+        tissueSite: selectedTissueSite,
+        refTissueSite: selectedRefTissueSite
+      },
+      include: { gene: includedGene }
+    }
+  } = store.getState();
+
+  console.log({
+    gene,
+    genePanel,
+    tissueSite,
+    searchIndex,
+    selectedGene,
+    selectedGenePanel,
+    selectedTissueSite,
+    selectedRefTissueSite,
+    includedGene
+  });
 });
 
 export default store;

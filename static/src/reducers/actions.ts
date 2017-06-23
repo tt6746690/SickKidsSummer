@@ -3,7 +3,8 @@ import {
   genePanelEntity,
   tissueSiteEntity,
   stateInterface,
-  searchIndexEntity
+  searchIndexEntity,
+  OPTION_TYPE
 } from "../Interfaces";
 
 // actionTypes
@@ -15,7 +16,7 @@ export const ADD_TISSUE_SITE = "ADD_TISSUE_SITE";
 
 export const LOAD_SEARCH_INDEX = "LOAD_SEARCH_INDEX";
 
-// ui
+// ui.select
 export const SELECT_GENE_PANEL = "SELECT_GENE_PANEL";
 export const SELECT_REF_TISSUE_SITE = "SELECT_REF_TISSUE_SITE";
 
@@ -25,7 +26,10 @@ export const TOGGLE_TISSUE_SITE = "TOGGLE_TISSUE_SITE";
 export const CLEAR_GENE_SELECTION = "CLEAR_GENE_PANEL_SELECTION";
 export const CLEAR_TISSUE_SITE_SELECTION = "CLEAR_TISSUE_SITE_SELECTION";
 
-// display plots
+// ui.include
+export const UPDATE_INCLUDE_GENE = "UPDATE_INCLUDE_GENE";
+
+// ui.viewType
 export const SELECT_VIEW = "SELECT_VIEW";
 export const VIEW_TYPE = {
   GENE_EXPR_PLOT: "GENE_EXPR_PLOT",
@@ -33,13 +37,16 @@ export const VIEW_TYPE = {
   TISSUESITE_RANKING: "TISSUESITE_RANKING"
 };
 
-export function loadSearchIndex(index = []) {
+export function updateIncludeGene(options: searchIndexEntity[]) {
   return {
-    type: LOAD_SEARCH_INDEX,
-    searchIndex: index.map(entry => {
-      let option: searchIndexEntity = { ensemblId: entry[0], name: entry[1] };
-      return option;
-    })
+    type: UPDATE_INCLUDE_GENE,
+    gene: options.reduce((acc, cur) => {
+      if (cur.type === OPTION_TYPE.GENE_TYPE) {
+        return acc.concat(cur.ensemblId);
+      } else if (cur.type === OPTION_TYPE.PANEL_TYPE) {
+        return acc.concat(cur.panelGenes);
+      }
+    }, [])
   };
 }
 
@@ -72,6 +79,16 @@ export function addTissueSite({ tissueSiteId }: tissueSiteEntity) {
   return {
     type: ADD_TISSUE_SITE,
     tissueSiteId
+  };
+}
+
+export function loadSearchIndex(index = []) {
+  return {
+    type: LOAD_SEARCH_INDEX,
+    searchIndex: index.map(entry => {
+      let option: searchIndexEntity = { ensemblId: entry[0], name: entry[1] };
+      return option;
+    })
   };
 }
 

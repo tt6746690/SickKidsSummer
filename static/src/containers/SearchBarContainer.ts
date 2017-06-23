@@ -7,31 +7,34 @@ import {
   selectGenePanel,
   selectRefTissueSite,
   clearGeneSelection,
-  clearTissueSiteSelection
+  clearTissueSiteSelection,
+  updateIncludeGene
 } from "../reducers/Actions";
 import GenePanelListing from "../components/GenePanelListing";
-import { stateInterface, geneEntity, searchIndexEntity } from "../Interfaces";
+import {
+  stateInterface,
+  geneEntity,
+  searchIndexEntity,
+  OPTION_TYPE
+} from "../Interfaces";
 import SearchBar from "../components/SearchBar";
-
-const PANEL_OPTION = "PANEL_OPTION";
-const GENE_OPTION = "GENE_OPTION";
+import { getGenePanelEntityById } from "../store/Query";
 
 const mapStateToProps = (state: stateInterface) => {
-  let {
-    entities: { gene, genePanel, searchIndex },
-    ui: { select: { genePanel: selectedGenePanel } }
-  } = state;
+  let { entities: { gene, genePanel, searchIndex } } = state;
 
+  /* 
+    options consists of 
+    -- genePanels 
+    -- genes listed udner entities.searchIndex
+  */
   const getOptions = (): searchIndexEntity[] => {
     let geneOptions: searchIndexEntity[] = searchIndex.map(gene => {
-      return {
-        type: GENE_OPTION,
-        ...gene
-      };
+      return { type: OPTION_TYPE.GENE_TYPE, ...gene };
     });
     let panelOptions: searchIndexEntity[] = genePanel.map(panel => {
       return {
-        type: PANEL_OPTION,
+        type: OPTION_TYPE.PANEL_TYPE,
         name: panel.genePanelId,
         panelGenes: panel.panelGenes
       };
@@ -40,11 +43,10 @@ const mapStateToProps = (state: stateInterface) => {
     return panelOptions.concat(geneOptions) || [];
   };
 
-  let options = getOptions();
-
   return {
-    options,
-    gene
+    options: getOptions(),
+    gene,
+    genePanel
   };
 };
 
@@ -53,7 +55,7 @@ const mapDispatchToProps = dispatch => {
       Load search index 
   */
   const fetchSearchIndex = () => {
-    fetch("http://127.0.0.1:5000/api/search/index", {
+    return fetch("http://127.0.0.1:5000/api/search/index", {
       mode: "cors"
     })
       .then(response => response.json())
@@ -67,7 +69,7 @@ const mapDispatchToProps = dispatch => {
       Fetch {exonExpr, geneExpr} given ensemblI
     */
   const fetchExonExpr = ensemblId => {
-    fetch("http://127.0.0.1:5000/api/exon_expr/" + ensemblId, {
+    return fetch("http://127.0.0.1:5000/api/exon_expr/" + ensemblId, {
       mode: "cors"
     })
       .then(response => response.text())
@@ -88,7 +90,7 @@ const mapDispatchToProps = dispatch => {
   };
 
   const fetchGeneExpr = ensemblId => {
-    fetch("http://127.0.0.1:5000/api/gene_expr/" + ensemblId, {
+    return fetch("http://127.0.0.1:5000/api/gene_expr/" + ensemblId, {
       mode: "cors"
     })
       .then(response => response.json())
@@ -103,19 +105,17 @@ const mapDispatchToProps = dispatch => {
       .catch(err => console.log("fetch: ", err));
   };
 
-  const onGenePanelListSelect = (genePanelId: string) => {
+  const onGenePanelSelect = (genePanelId: string) => {
     dispatch(selectRefTissueSite(""));
     dispatch(clearGeneSelection());
     dispatch(clearTissueSiteSelection());
-
     dispatch(selectGenePanel(genePanelId));
+  };
 
-    let fetchGenePanel = fetch(
-      "http://127.0.0.1:5000/api/gene_panels/" + genePanelId,
-      {
-        mode: "cors"
-      }
-    )
+  const fetchGenePanel = (genePanelId: string) => {
+    return fetch("http://127.0.0.1:5000/api/gene_panels/" + genePanelId, {
+      mode: "cors"
+    })
       .then(response => response.json())
       .then(genePanel => {
         dispatch(
@@ -124,56 +124,22 @@ const mapDispatchToProps = dispatch => {
             panelGenes: genePanel.map(gene => gene.ensembl_id)
           })
         );
-
-        genePanel.map(gene => {
-          dispatch(
-            addGene({
-              ensemblId: gene.ensembl_id,
-              geneSymbol: gene.symbol
-            })
-          );
-          /* 
-              Once a genePanel is selected, call fetch on 
-              all genes related to the panel such that 
-              -- exonExpr 
-              -- geneExpr 
-              are populated 
-            */
-          fetchExonExpr(gene.ensembl_id);
-          fetchGeneExpr(gene.ensembl_id);
-        });
-      })
-      .catch(err => console.log("fetch: ", err));
-
-    fetch("http://127.0.0.1:5000/api/gene_panels/ranking/" + genePanelId, {
-      mode: "cors"
-    })
-      .then(response => response.json())
-      .then(tissueRanking => {
-        dispatch(
-          addGenePanel({
-            genePanelId,
-            tissueRanking
-          })
-        );
       })
       .catch(err => console.log("fetch: ", err));
   };
 
-  const onSearchBarChange = options => {
-    console.log({ where: "onSearchBarChange", options });
-
-    options.forEach(option => {
-      if (option.type === GENE_OPTION) {
-        fetchExonExpr(option.name);
-        fetchGeneExpr(option.name);
-      } else if (option.type === PANEL_OPTION) {
-        onGenePanelListSelect(option.name);
-      }
-    });
+  const onOptionChange = options => {
+    dispatch(updateIncludeGene(options));
   };
 
-  return { fetchSearchIndex, onSearchBarChange };
+  return {
+    fetchSearchIndex,
+    fetchExonExpr,
+    fetchGeneExpr,
+    fetchGenePanel,
+    onGenePanelSelect,
+    onOptionChange
+  };
 };
 
 const SearchBarContainer = connect(mapStateToProps, mapDispatchToProps)(
