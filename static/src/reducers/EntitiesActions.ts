@@ -7,6 +7,9 @@ import {
   OPTION_TYPE
 } from "../Interfaces";
 
+import { getOptionByType, makeGeneOption } from "../utils/Option";
+import { getGeneEntityById } from "../store/Query";
+
 // actionTypes
 export const HYDRATE_INITIAL_STATE = "HYDRATE_INITIAL_STATE";
 
@@ -44,6 +47,36 @@ export function updateSearchOptions(options: searchIndexEntity[] = []) {
   return {
     type: UPDATE_SEARCH_OPTIONS,
     options
+  };
+}
+
+export function updateSearchOptionWithCollapse(
+  options: searchIndexEntity[] = []
+) {
+  return (dispatch, getState) => {
+    let start = performance.now();
+
+    let { entities: { gene }, ui: { search: { collapse } } } = getState();
+    let selectedOption: searchIndexEntity[] = [];
+    let geneOptions = getOptionByType(options, OPTION_TYPE.GENE_TYPE);
+    let panelOptions = getOptionByType(options, OPTION_TYPE.PANEL_TYPE);
+
+    geneOptions.forEach(geneOption => selectedOption.push(geneOption));
+    if (collapse) {
+      panelOptions.forEach(panelOption => selectedOption.push(panelOption));
+    } else {
+      panelOptions.forEach(panelOption => {
+        panelOption.panelGenes.forEach(ensemblId => {
+          let geneEntity = getGeneEntityById(gene, ensemblId);
+          let name = geneEntity && geneEntity.geneSymbol;
+          selectedOption.push(makeGeneOption({ name, ensemblId }));
+        });
+      });
+    }
+
+    let end = performance.now();
+    console.log(`updateSearchOptionwithcollapse: elapsed ${end - start}ms`);
+    return dispatch(updateSearchOptions(selectedOption));
   };
 }
 

@@ -157,13 +157,19 @@ function _fetchPanelGenesList(genePanelId: string) {
 
 /*
   fetch and populate panelGenes for the first num number of entities.genePanel
+  -- num === -1: all panels 
+  -- num !== -1: number specified by num
 */
 function _fetchSomePanelGenesList(num: number) {
   return (dispatch, getState) => {
     let { entities: { genePanel } } = getState();
 
     let promises: Promise<Response>[] = [];
-    genePanel.slice(0, num).forEach((panel: genePanelEntity) => {
+    let panelSlice: genePanelEntity[] = num === -1
+      ? genePanel
+      : genePanel.slice(0, num);
+
+    panelSlice.forEach((panel: genePanelEntity) => {
       promises.push(dispatch(_fetchPanelGenesList(panel.genePanelId)));
     });
 
@@ -199,12 +205,7 @@ function _fetchGenePanelTissueRanking(genePanelId: string) {
     -- update networks.fetchStatus with either {STATUS_SUCCESS, STATUS_FAILURE}
 */
 function _fetchExonExpr(ensemblId: string) {
-  return (dispatch, getState) => {
-    let { entities: { gene } } = getState();
-    if (genePropertyPopulated(gene, ensemblId, "exonExpr")) {
-      return Promise.resolve();
-    }
-
+  return dispatch => {
     return fetchJson(
       EXON_EXPR_URL(ensemblId),
       data => {
@@ -224,12 +225,7 @@ function _fetchExonExpr(ensemblId: string) {
     -- update networks.fetchStatus with either {STATUS_SUCCESS, STATUS_FAILURE}
 */
 function _fetchGeneExpr(ensemblId: string) {
-  return (dispatch, getState) => {
-    let { entities: { gene } } = getState();
-    if (genePropertyPopulated(gene, ensemblId, "geneExpr")) {
-      return Promise.resolve();
-    }
-
+  return dispatch => {
     return fetchJson(
       GENE_EXPR_URL(ensemblId),
       geneExpr => dispatch(addGene({ ensemblId, geneExpr })),
@@ -241,11 +237,7 @@ function _fetchGeneExpr(ensemblId: string) {
 }
 
 function _fetchGeneSymbol(ensemblId: string) {
-  return (dispatch, getState) => {
-    let { entities: { gene } } = getState();
-    if (geneSymbolPopulated(gene, ensemblId)) {
-      return Promise.resolve();
-    }
+  return dispatch => {
     return fetchJson(
       GENE_SYMBOL_URL(ensemblId),
       data => {
@@ -265,12 +257,20 @@ function _fetchGeneSymbol(ensemblId: string) {
   -- geneExpr 
 */
 function _fetchGene(ensemblId: string) {
-  return dispatch => {
-    return Promise.all([
-      dispatch(_fetchGeneSymbol(ensemblId)),
-      dispatch(_fetchExonExpr(ensemblId)),
-      dispatch(_fetchGeneExpr(ensemblId))
-    ]);
+  return (dispatch, getState) => {
+    let { entities: { gene } } = getState();
+
+    let promises = [];
+    if (!geneSymbolPopulated(gene, ensemblId)) {
+      promises.push(dispatch(_fetchGeneSymbol(ensemblId)));
+    } else if (!genePropertyPopulated(gene, ensemblId, "exonExpr")) {
+      promises.push(dispatch(_fetchExonExpr(ensemblId)));
+    } else if (!genePropertyPopulated(gene, ensemblId, "geneExpr")) {
+      promises.push(dispatch(_fetchGeneExpr(ensemblId)));
+    } else {
+      return Promise.resolve();
+    }
+    return Promise.all([promises]);
   };
 }
 
@@ -288,10 +288,7 @@ function _fetchGeneSet(ensemblIds: string[]) {
 */
 export function fetchGene(ensemblId: string) {
   return dispatch => {
-    dispatch(startFetch(`${ensemblId}`));
-    return dispatch(_fetchGene(ensemblId)).then(() =>
-      dispatch(endFetchSuccess())
-    );
+    return dispatch(_fetchGene(ensemblId));
   };
 }
 
@@ -323,17 +320,18 @@ export function hydrateInitialState() {
 */
 export function fetchGenePanel(genePanelId: string) {
   return (dispatch, getState) => {
-    let { entities: { genePanel } } = getState();
-    let panelEntity = getGenePanelEntityById(genePanel, genePanelId);
-
     dispatch(startFetch(`${genePanelId}`));
     return Promise.all([
       dispatch(_fetchPanelGenesList(genePanelId)),
       dispatch(_fetchGenePanelTissueRanking(genePanelId))
-    ]).then(() =>
-      dispatch(
-        _fetchGeneSet(!isEmptyObject(panelEntity) && panelEntity.panelGenes)
-      )
-    );
+    ])
+      .then(() => {
+        let { entities: { genePanel } } = getState();
+        let panelEntity = getGenePanelEntityById(genePanel, genePanelId);
+        dispatch(
+          _fetchGeneSet(!isEmptyObject(panelEntity) && panelEntity.panelGenes)
+        );
+      })
+      .then(() => dispatch(endFetchSuccess()));
   };
 }

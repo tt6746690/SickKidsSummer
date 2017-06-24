@@ -91,7 +91,7 @@ function search(state, action) {
     case SET_SEARCH_COLLAPSE:
       return {
         ...state,
-        collapse: [...action.collapse]
+        collapse: action.collapse
       };
     default:
       return state;

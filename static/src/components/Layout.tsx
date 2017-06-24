@@ -61,11 +61,10 @@ class Layout extends React.Component<any, object> {
           onSelect={onTabSelect}
           animation={true}
           id="noanim-tab-example"
-        >
-          <Tab eventKey={VIEW_TYPE.TISSUESITE_RANKING} title="Ranking">
-            <TissueSiteRankingContainer />
-          </Tab>
-        </Tabs>
+        />
+        <Tab eventKey={VIEW_TYPE.TISSUESITE_RANKING} title="Ranking">
+          <TissueSiteRankingContainer />
+        </Tab>;
 
       </Grid>
     );
@@ -74,10 +73,15 @@ class Layout extends React.Component<any, object> {
 
 export default Layout;
 
-//  <Tab eventKey={VIEW_TYPE.EXON_EXPR_PLOT} title="Exon Plot">
-//             <ExonBoxPlotContainer />
-//             <ExonBoxPlotLegendContainer />
-//           </Tab>
-//           <Tab eventKey={VIEW_TYPE.GENE_EXPR_PLOT} title="Gene Plot">
-//             <GeneBoxPlotContainer />
-//           </Tab>
+/* 
+<Tab eventKey={VIEW_TYPE.TISSUESITE_RANKING} title="Ranking">
+  <TissueSiteRankingContainer />
+</Tab>;
+ <Tab eventKey={VIEW_TYPE.EXON_EXPR_PLOT} title="Exon Plot">
+            <ExonBoxPlotContainer />
+            <ExonBoxPlotLegendContainer />
+          </Tab>
+          <Tab eventKey={VIEW_TYPE.GENE_EXPR_PLOT} title="Gene Plot">
+            <GeneBoxPlotContainer />
+          </Tab>
+*/
