@@ -41,7 +41,7 @@ class SearchBar extends React.Component<any, object> {
   };
 
   render() {
-    let { options, onSearchBarChange } = this.props;
+    let { options, selectedOptionsOnDisplay, onSearchBarChange } = this.props;
 
     return (
       <Typeahead
@@ -56,6 +56,7 @@ class SearchBar extends React.Component<any, object> {
         maxResults={5}
         maxHeight={330}
         paginate={true}
+        selected={selectedOptionsOnDisplay}
         onChange={onSearchBarChange}
         renderMenuItemChildren={this._renderMenuItemChildren}
         placeholder="Pick a gene or gene panel..."

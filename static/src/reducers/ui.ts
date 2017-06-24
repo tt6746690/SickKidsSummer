@@ -6,7 +6,9 @@ import {
   TOGGLE_TISSUE_SITE,
   SELECT_VIEW,
   CLEAR_GENE_SELECTION,
-  CLEAR_TISSUE_SITE_SELECTION
+  CLEAR_TISSUE_SITE_SELECTION,
+  UPDATE_SEARCH_OPTIONS,
+  SET_SEARCH_COLLAPSE
 } from "./EntitiesActions";
 
 import {
@@ -79,6 +81,23 @@ function select(state, action) {
   }
 }
 
+function search(state, action) {
+  switch (action.type) {
+    case UPDATE_SEARCH_OPTIONS:
+      return {
+        ...state,
+        selectedOptions: [...action.options]
+      };
+    case SET_SEARCH_COLLAPSE:
+      return {
+        ...state,
+        collapse: [...action.collapse]
+      };
+    default:
+      return state;
+  }
+}
+
 export default function ui(state, action) {
   switch (action.type) {
     case SELECT_GENE_PANEL:
@@ -91,6 +110,9 @@ export default function ui(state, action) {
       return { ...state, select: select(state.select, action) };
     case SELECT_VIEW:
       return { ...state, viewType: action.viewType };
+    case UPDATE_SEARCH_OPTIONS:
+    case SET_SEARCH_COLLAPSE:
+      return { ...state, search: search(state.search, action) };
     default:
       return state;
   }

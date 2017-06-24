@@ -52,6 +52,22 @@ export function genePropertyPopulated(
   );
 }
 
+/* 
+  Return true if entities.gene.geneSymbol is empty 
+  false otherwise 
+*/
+export function geneSymbolPopulated(
+  genes: geneEntity[],
+  ensemblId: string
+): boolean {
+  let result = getGeneEntityById(genes, ensemblId);
+  return (
+    !isEmptyObject(result) &&
+    result.hasOwnProperty("geneSymbol") &&
+    result["geneSymbol"] !== ""
+  );
+}
+
 /*
   Queries entities.genePanel and 
   returns an array of genePanelEntity given a single panel Id

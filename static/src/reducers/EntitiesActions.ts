@@ -28,6 +28,10 @@ export const TOGGLE_TISSUE_SITE = "TOGGLE_TISSUE_SITE";
 export const CLEAR_GENE_SELECTION = "CLEAR_GENE_PANEL_SELECTION";
 export const CLEAR_TISSUE_SITE_SELECTION = "CLEAR_TISSUE_SITE_SELECTION";
 
+// ui.search
+export const UPDATE_SEARCH_OPTIONS = "UPDATE_SEARCH_OPTIONS";
+export const SET_SEARCH_COLLAPSE = "SET_SEARCH_COLLAPSE";
+
 // ui.viewType
 export const SELECT_VIEW = "SELECT_VIEW";
 export const VIEW_TYPE = {
@@ -35,6 +39,20 @@ export const VIEW_TYPE = {
   EXON_EXPR_PLOT: "EXON_EXPR_PLOT",
   TISSUESITE_RANKING: "TISSUESITE_RANKING"
 };
+
+export function updateSearchOptions(options: searchIndexEntity[] = []) {
+  return {
+    type: UPDATE_SEARCH_OPTIONS,
+    options
+  };
+}
+
+export function setSearchCollapse(collapse: boolean = false) {
+  return {
+    type: SET_SEARCH_COLLAPSE,
+    collapse
+  };
+}
 
 export function addGene({
   ensemblId,

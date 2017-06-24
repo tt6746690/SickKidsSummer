@@ -55,6 +55,10 @@ export interface stateInterface {
       height: number;
       offset: number;
     };
+    search: {
+      selectedOptions: searchIndexEntity[];
+      collapse: boolean;
+    };
   };
   networks: {
     isFetching: boolean;

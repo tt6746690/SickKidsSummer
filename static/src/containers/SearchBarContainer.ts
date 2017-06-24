@@ -7,9 +7,14 @@ import {
   selectRefTissueSite,
   clearGeneSelection,
   clearTissueSiteSelection,
-  updateGene
+  updateGene,
+  updateSearchOptions
 } from "../reducers/EntitiesActions";
-import { fetchGene, fetchGenePanel } from "../reducers/FetchActions";
+import {
+  fetchGene,
+  fetchGenePanel,
+  endFetchSuccess
+} from "../reducers/FetchActions";
 import {
   stateInterface,
   geneEntity,
@@ -17,7 +22,7 @@ import {
   OPTION_TYPE
 } from "../Interfaces";
 import SearchBar from "../components/SearchBar";
-import { getGenePanelEntityById } from "../store/Query";
+import { getGenePanelEntityById, getGeneEntityById } from "../store/Query";
 import {
   EXON_EXPR_URL,
   GENE_EXPR_URL,
@@ -26,8 +31,26 @@ import {
   SEARCH_INDEX_URL
 } from "../utils/Url";
 
+const getOptionByType = (
+  options: searchIndexEntity[],
+  optionType: OPTION_TYPE.GENE_TYPE | OPTION_TYPE.PANEL_TYPE
+): searchIndexEntity[] => {
+  return options.filter(opt => opt.type === optionType);
+};
+
+const makeGeneOption = (index: searchIndexEntity): searchIndexEntity => {
+  return { ...index, type: OPTION_TYPE.GENE_TYPE };
+};
+
+const makePanelOption = (index: searchIndexEntity): searchIndexEntity => {
+  return { ...index, type: OPTION_TYPE.PANEL_TYPE };
+};
+
 const mapStateToProps = (state: stateInterface) => {
-  let { entities: { gene, genePanel, searchIndex } } = state;
+  let {
+    entities: { gene, genePanel, searchIndex },
+    ui: { search: { selectedOptions, collapse } }
+  } = state;
 
   /* 
     options consists of 
@@ -35,15 +58,10 @@ const mapStateToProps = (state: stateInterface) => {
     -- genes listed udner entities.searchIndex
   */
   const getOptions = (): searchIndexEntity[] => {
-    let geneOptions: searchIndexEntity[] = searchIndex.map(gene => {
-      return { type: OPTION_TYPE.GENE_TYPE, ...gene };
-    });
-    let panelOptions: searchIndexEntity[] = genePanel.map(panel => {
-      return {
-        type: OPTION_TYPE.PANEL_TYPE,
-        name: panel.genePanelId,
-        panelGenes: panel.panelGenes
-      };
+    let geneOptions = searchIndex.map(g => makeGeneOption(g));
+    let panelOptions = genePanel.map(panel => {
+      let { genePanelId: name, panelGenes } = panel;
+      return makePanelOption({ name, panelGenes });
     });
 
     return panelOptions.concat(geneOptions) || [];
@@ -55,10 +73,34 @@ const mapStateToProps = (state: stateInterface) => {
       .map(d => d.replace(/\b\w/g, f => f.toUpperCase()))
       .join(" ");
 
+  const getSelectedOptions = (): searchIndexEntity[] => {
+    let selectedOpt: searchIndexEntity[] = [];
+    let geneOptions = getOptionByType(selectedOptions, OPTION_TYPE.GENE_TYPE);
+    let panelOptions = getOptionByType(selectedOptions, OPTION_TYPE.PANEL_TYPE);
+
+    geneOptions.forEach(geneOption => selectedOpt.push(geneOption));
+    /* 
+      convert panelOptions to several geneOptions if collapse is false
+    */
+    if (collapse) {
+      panelOptions.forEach(panelOption => selectedOpt.push(panelOption));
+    } else {
+      panelOptions.forEach(panelOption => {
+        panelOption.panelGenes.forEach(ensemblId => {
+          let geneEntity = getGeneEntityById(gene, ensemblId);
+          let name = geneEntity && geneEntity.geneSymbol;
+          selectedOpt.push(makeGeneOption({ name, ensemblId }));
+        });
+      });
+    }
+    return selectedOpt;
+  };
+
   return {
-    options: getOptions(),
     gene,
     genePanel,
+    options: getOptions(),
+    selectedOptionsOnDisplay: getSelectedOptions(),
     panelFormat
   };
 };
@@ -83,10 +125,8 @@ const mapDispatchToProps = dispatch => {
       options
     });
 
-    let geneOptions = options.filter(opt => opt.type === OPTION_TYPE.GENE_TYPE);
-    let panelOptions = options.filter(
-      opt => opt.type === OPTION_TYPE.PANEL_TYPE
-    );
+    let geneOptions = getOptionByType(options, OPTION_TYPE.GENE_TYPE);
+    let panelOptions = getOptionByType(options, OPTION_TYPE.PANEL_TYPE);
 
     geneOptions.forEach(option => {
       dispatch(fetchGene(option.ensemblId));
@@ -97,7 +137,9 @@ const mapDispatchToProps = dispatch => {
       // dispatch(selectRefTissueSite(""));
       // dispatch(clearTissueSiteSelection());
       dispatch(selectGenePanel(genePanelId));
-      dispatch(fetchGenePanel(genePanelId));
+      dispatch(fetchGenePanel(genePanelId)).then(() =>
+        dispatch(endFetchSuccess())
+      );
     });
 
     /* 
@@ -109,6 +151,8 @@ const mapDispatchToProps = dispatch => {
       .map(opt => opt.ensemblId)
       .concat(flattenPanelOption(panelOptions));
     dispatch(updateGene(allGenes));
+
+    dispatch(updateSearchOptions(options));
   };
 
   return { onSearchBarChange };

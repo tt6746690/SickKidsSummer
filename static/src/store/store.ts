@@ -34,6 +34,10 @@ let defaultState: stateInterface = {
       width: 1100,
       height: 600,
       offset: 40
+    },
+    search: {
+      selectedOptions: [],
+      collapse: false
     }
   },
   networks: {
