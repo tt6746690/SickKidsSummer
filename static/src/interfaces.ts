@@ -48,9 +48,6 @@ export interface stateInterface {
       gene: string[];
       tissueSite: string[];
     };
-    include: {
-      gene: searchIndexEntity[];
-    };
     viewType: string;
     plot: {
       color: any;

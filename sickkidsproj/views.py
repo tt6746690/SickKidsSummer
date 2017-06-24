@@ -8,7 +8,7 @@ from sickkidsproj import app, db
 from sickkidsproj.database.models import ExonReadsMapping, GeneReadsMapping
 from sickkidsproj.database.query import get_exonexpr_storepath, get_geneexpr_storepath
 from sickkidsproj.analysis.ranking import computeGeneLevelRanking, computePanelLevelRanking
-from sickkidsproj.cache.g import GENE_PANELS, ONE_EXONEXPR, TISSUE_SITES, PANEL_REF
+from sickkidsproj.cache.g import GENE_PANELS, ONE_EXONEXPR, TISSUE_SITES, PANEL_REF, GENE_SYMBOL_REF
 from sickkidsproj.cache.search import SEARCH_INDEX
 from sickkidsproj.utils.cors import crossdomain 
 from sickkidsproj.utils.check import isEnsemblId
@@ -77,6 +77,19 @@ def gene_rpkmreads(ensembl_id=None):
     fp = get_geneexpr_storepath(ensembl_id)
     with open(fp, 'r') as f:
         return json.dumps(json.loads(f.read()))
+
+
+@app.route('/api/gene_symbol/<ensembl_id>', methods=['GET'])
+@crossdomain(origin='*')
+def get_gene_symbol(ensembl_id=None):
+
+    res = {}
+    res["geneSymbol"] = "";
+
+    if ensembl_id in GENE_SYMBOL_REF:
+        res["geneSymbol"] = GENE_SYMBOL_REF[ensembl_id]
+
+    return jsonify(res)
 
 
 @app.route('/api/search/index', methods=['GET'])

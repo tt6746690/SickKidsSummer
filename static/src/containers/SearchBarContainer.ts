@@ -7,7 +7,6 @@ import {
   selectRefTissueSite,
   clearGeneSelection,
   clearTissueSiteSelection,
-  updateIncludeGene,
   updateGene
 } from "../reducers/EntitiesActions";
 import { fetchGene, fetchGenePanel } from "../reducers/FetchActions";

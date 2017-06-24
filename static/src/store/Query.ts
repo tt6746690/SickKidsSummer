@@ -2,6 +2,7 @@ import {
   geneEntity,
   genePanelEntity,
   tissueSiteEntity,
+  searchIndexEntity,
   stateInterface
 } from "../Interfaces";
 import { isEmptyObject, isNonEmptyArray } from "../utils/Utils";
@@ -78,20 +79,31 @@ export function getGenePanelEntityByIdList(
 }
 
 /* 
-  Return true if entities.genePanel.property is populated previously 
+  Return true if entities.genePanel.panelGenes is populated previously 
   false otherwise 
 */
-export function genePanelPropertyPopulated(
+export function genePanelPanelGenesPopulated(
   genePanels: genePanelEntity[],
-  genePanelId: string,
-  property: string
+  genePanelId: string
 ): boolean {
   let result = getGenePanelEntityById(genePanels, genePanelId);
 
   return (
     !isEmptyObject(result) &&
-    result.hasOwnProperty(property) &&
-    isNonEmptyArray(result[property])
+    result.hasOwnProperty("panelGenes") &&
+    isNonEmptyArray(result["panelGenes"])
+  );
+}
+
+export function genePanelTissueRankingPopulated(
+  genePanels: genePanelEntity[],
+  genePanelId: string
+): boolean {
+  let result = getGenePanelEntityById(genePanels, genePanelId);
+  return (
+    !isEmptyObject(result) &&
+    result.hasOwnProperty("tissueRanking") &&
+    !isEmptyObject(result["tissueRanking"])
   );
 }
 

@@ -36,9 +36,28 @@ def get_panel_gene(panel):
                 "symbol": pair[0].strip(),
                 "ensembl_id": pair[1].strip()
                 })
-    return genes
+        return genes
 
 PANEL_REF = {}
 for panel in GENE_PANELS:
     PANEL_REF[panel] = get_panel_gene(panel)
+
+
+""" A reference dictionary that maps ensembl_id to gene_symbol
+    @rType: {
+        ensembl_id: gene_symbol
+    } 
+"""
+GENE_SYMBOL_REF = {}
+with open(app.config["GENE_SYMBOL_MAPPING"], 'r') as f:
+    for l in f.read().strip().split('\n'):
+        ll = l.strip().split('\t')
+
+        ensembl_id = ll[0]
+        symbol = ""
+        if len(ll) == 2:
+            symbol = ll[1]
+
+        GENE_SYMBOL_REF[ensembl_id] = symbol
+
 

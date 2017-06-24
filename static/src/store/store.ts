@@ -28,9 +28,6 @@ let defaultState: stateInterface = {
       gene: [],
       tissueSite: []
     },
-    include: {
-      gene: []
-    },
     viewType: VIEW_TYPE.TISSUESITE_RANKING,
     plot: {
       color: d3.scaleOrdinal(d3.schemeCategory20),

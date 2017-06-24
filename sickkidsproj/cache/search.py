@@ -1,7 +1,7 @@
 import os
 from sickkidsproj import app, db
 from sickkidsproj.database.query import get_all_exonreadsmapping_keys
-from sickkidsproj.cache.g import GENE_PANELS, PANEL_REF
+from sickkidsproj.cache.g import GENE_PANELS, PANEL_REF, GENE_SYMBOL_REF
 
 def get_search_index():
     """ Returns a list of search index containing 
@@ -14,16 +14,8 @@ def get_search_index():
 
     genes = []
 
-    with open(app.config["GENE_SYMBOL_MAPPING"], 'r') as f:
-        for l in f.read().strip().split('\n'):
-            ll = l.strip().split('\t')
-
-            ensembl_id = ll[0]
-            symbol = ""
-            if len(ll) == 2:
-                symbol = ll[1]
-
-            genes.append([ensembl_id, symbol])
+    for ensembl_id, gene_symbol in GENE_SYMBOL_REF.items():
+        genes.append([ensembl_id, gene_symbol])
 
     panels = []
     for panel in GENE_PANELS:

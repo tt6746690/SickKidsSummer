@@ -6,8 +6,7 @@ import {
   TOGGLE_TISSUE_SITE,
   SELECT_VIEW,
   CLEAR_GENE_SELECTION,
-  CLEAR_TISSUE_SITE_SELECTION,
-  UPDATE_INCLUDE_GENE
+  CLEAR_TISSUE_SITE_SELECTION
 } from "./EntitiesActions";
 
 import {
@@ -80,15 +79,6 @@ function select(state, action) {
   }
 }
 
-function include(state, action) {
-  console.log({ action });
-
-  return {
-    ...state,
-    gene: action.gene
-  };
-}
-
 export default function ui(state, action) {
   switch (action.type) {
     case SELECT_GENE_PANEL:
@@ -99,8 +89,6 @@ export default function ui(state, action) {
     case CLEAR_GENE_SELECTION:
     case CLEAR_TISSUE_SITE_SELECTION:
       return { ...state, select: select(state.select, action) };
-    case UPDATE_INCLUDE_GENE:
-      return { ...state, include: include(state.include, action) };
     case SELECT_VIEW:
       return { ...state, viewType: action.viewType };
     default:

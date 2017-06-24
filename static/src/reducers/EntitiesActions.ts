@@ -28,9 +28,6 @@ export const TOGGLE_TISSUE_SITE = "TOGGLE_TISSUE_SITE";
 export const CLEAR_GENE_SELECTION = "CLEAR_GENE_PANEL_SELECTION";
 export const CLEAR_TISSUE_SITE_SELECTION = "CLEAR_TISSUE_SITE_SELECTION";
 
-// ui.include
-export const UPDATE_INCLUDE_GENE = "UPDATE_INCLUDE_GENE";
-
 // ui.viewType
 export const SELECT_VIEW = "SELECT_VIEW";
 export const VIEW_TYPE = {
@@ -38,19 +35,6 @@ export const VIEW_TYPE = {
   EXON_EXPR_PLOT: "EXON_EXPR_PLOT",
   TISSUESITE_RANKING: "TISSUESITE_RANKING"
 };
-
-export function updateIncludeGene(options: searchIndexEntity[]) {
-  return {
-    type: UPDATE_INCLUDE_GENE,
-    gene: options.reduce((acc, cur) => {
-      if (cur.type === OPTION_TYPE.GENE_TYPE) {
-        return acc.concat(cur.ensemblId);
-      } else if (cur.type === OPTION_TYPE.PANEL_TYPE) {
-        return acc.concat(cur.panelGenes);
-      }
-    }, [])
-  };
-}
 
 export function addGene({
   ensemblId,
