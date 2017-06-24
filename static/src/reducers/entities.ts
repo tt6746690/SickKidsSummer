@@ -85,12 +85,7 @@ const pushGenePanel = (state: genePanelEntity[] = [], action) => {
 };
 
 const pushTissueSite = (state: tissueSiteEntity[] = [], action) => {
-  return [
-    ...state,
-    {
-      tissueSiteId: action.tissueSiteId
-    }
-  ];
+  return [...state, ...action.tissueSiteList];
 };
 
 export default function entities(state, action) {

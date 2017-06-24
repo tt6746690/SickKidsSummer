@@ -19,10 +19,10 @@ class SearchBar extends React.Component<any, object> {
     switch (option.type) {
       case OPTION_TYPE.GENE_TYPE:
         return [
-          <div key={"name"} style={{ fontSize: "20px" }}>
+          <div key={"name"} style={{ fontSize: "17px" }}>
             {option.name}
           </div>,
-          <div key={"ensemblId"}>
+          <div key={"ensemblId"} style={{ fontSize: "10px" }}>
             {option.ensemblId}
           </div>
         ];
@@ -53,7 +53,7 @@ class SearchBar extends React.Component<any, object> {
         clearButton
         emptyLabel
         justify
-        maxResults={5}
+        maxResults={30}
         maxHeight={330}
         paginate={true}
         selected={selectedOptionsOnDisplay}

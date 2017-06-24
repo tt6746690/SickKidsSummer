@@ -152,7 +152,17 @@ const mapDispatchToProps = dispatch => {
       .concat(flattenPanelOption(panelOptions));
     dispatch(updateGene(allGenes));
 
-    dispatch(updateSearchOptions(options));
+    /* 
+      Re-set search.selectedOption based on ui.select.gene if collapse is false
+    */
+    // if (collapse) {
+    //   dispatch(updateSearchOptions(options));
+    // } else {
+    //   let expandedOptions = allGenes.map(ensemblId => {
+    //     let geneEntity = getGeneEntityById(gene, ensemblId);
+    //     let name = geneEntity && geneEntity.geneSymbol;
+    //   })
+    // }
   };
 
   return { onSearchBarChange };

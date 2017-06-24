@@ -70,7 +70,15 @@ function _fetchTissueSiteList() {
       TISSUE_SITE_LIST_URL,
       tissueList => {
         isNonEmptyArray(tissueList) &&
-          tissueList.map(ts => dispatch(addTissueSite({ tissueSiteId: ts })));
+          dispatch(
+            addTissueSite(
+              tissueList.map(ts => {
+                return {
+                  tissueSiteId: ts
+                };
+              })
+            )
+          );
       },
       err => {
         console.log({ fetch: err });

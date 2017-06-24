@@ -79,11 +79,8 @@ export function addGenePanel({
   return { type: ADD_GENE_PANEL, genePanelId, panelGenes, tissueRanking };
 }
 
-export function addTissueSite({ tissueSiteId }: tissueSiteEntity) {
-  return {
-    type: ADD_TISSUE_SITE,
-    tissueSiteId
-  };
+export function addTissueSite(tissueSiteList: tissueSiteEntity[]) {
+  return { type: ADD_TISSUE_SITE, tissueSiteList };
 }
 
 export function loadSearchIndex(index = []) {
