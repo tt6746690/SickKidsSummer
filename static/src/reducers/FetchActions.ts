@@ -41,20 +41,25 @@ export const FETCH_STATUS = {
   FAILURE: "FALIURE"
 };
 
-export function startFetch(what: string = "") {
-  return { type: START_FETCH, what };
+export function startFetch(msg: string = "") {
+  return { type: START_FETCH, msg };
 }
-export function endFetchSuccess() {
-  return { type: END_FETCH_SUCCESS, status: FETCH_STATUS.SUCCESS };
+export function endFetchSuccess(msg: string = "") {
+  return { type: END_FETCH_SUCCESS, status: FETCH_STATUS.SUCCESS, msg };
 }
-export function endFetchFailure() {
-  return { type: END_FETCH_FAILURE, status: FETCH_STATUS.FAILURE };
+export function endFetchFailure(msg: string = "") {
+  return { type: END_FETCH_FAILURE, status: FETCH_STATUS.FAILURE, msg };
 }
 
 /* 
     fetch helper function 
 */
-const fetchJson = (url: string, onSuccess, onFailure): Promise<Response> => {
+const defaultOnFailure = err => console.log({ err });
+const fetchJson = (
+  url: string,
+  onSuccess,
+  onFailure = defaultOnFailure
+): Promise<Response> => {
   return fetch(url, { mode: "cors" })
     .then(res => res.json())
     .then(data => onSuccess(data))
@@ -66,24 +71,18 @@ const fetchJson = (url: string, onSuccess, onFailure): Promise<Response> => {
 */
 function _fetchTissueSiteList() {
   return dispatch => {
-    return fetchJson(
-      TISSUE_SITE_LIST_URL,
-      tissueList => {
-        isNonEmptyArray(tissueList) &&
-          dispatch(
-            addTissueSite(
-              tissueList.map(ts => {
-                return {
-                  tissueSiteId: ts
-                };
-              })
-            )
-          );
-      },
-      err => {
-        console.log({ fetch: err });
-      }
-    );
+    return fetchJson(TISSUE_SITE_LIST_URL, tissueList => {
+      isNonEmptyArray(tissueList) &&
+        dispatch(
+          addTissueSite(
+            tissueList.map(ts => {
+              return {
+                tissueSiteId: ts
+              };
+            })
+          )
+        );
+    });
   };
 }
 
@@ -92,18 +91,10 @@ function _fetchTissueSiteList() {
 */
 function _fetchGenePanelList() {
   return dispatch => {
-    return fetchJson(
-      GENE_PANEL_LIST_URL,
-      panelList => {
-        isNonEmptyArray(panelList) &&
-          panelList.map(panel =>
-            dispatch(addGenePanel({ genePanelId: panel }))
-          );
-      },
-      err => {
-        console.log({ fetch: err });
-      }
-    );
+    return fetchJson(GENE_PANEL_LIST_URL, panelList => {
+      isNonEmptyArray(panelList) &&
+        panelList.map(panel => dispatch(addGenePanel({ genePanelId: panel })));
+    });
   };
 }
 
@@ -112,13 +103,7 @@ function _fetchGenePanelList() {
 */
 function _fetchSearchIndex() {
   return dispatch => {
-    return fetchJson(
-      SEARCH_INDEX_URL,
-      data => dispatch(loadSearchIndex(data)),
-      err => {
-        console.log({ fetch: err });
-      }
-    );
+    return fetchJson(SEARCH_INDEX_URL, data => dispatch(loadSearchIndex(data)));
   };
 }
 
@@ -133,25 +118,19 @@ function _fetchPanelGenesList(genePanelId: string) {
       return Promise.resolve();
     }
 
-    return fetchJson(
-      GENE_PANEL_URL(genePanelId),
-      panel => {
-        dispatch(
-          addGenePanel({
-            genePanelId,
-            panelGenes: panel.map(g => g.ensembl_id)
-          })
-        );
+    return fetchJson(GENE_PANEL_URL(genePanelId), panel => {
+      dispatch(
+        addGenePanel({
+          genePanelId,
+          panelGenes: panel.map(g => g.ensembl_id)
+        })
+      );
 
-        panel.map(gene => {
-          let { ensembl_id: ensemblId, symbol: geneSymbol } = gene;
-          dispatch(addGene({ ensemblId, geneSymbol }));
-        });
-      },
-      err => {
-        console.log({ fetch: err });
-      }
-    );
+      panel.map(gene => {
+        let { ensembl_id: ensemblId, symbol: geneSymbol } = gene;
+        dispatch(addGene({ ensemblId, geneSymbol }));
+      });
+    });
   };
 }
 
@@ -189,12 +168,8 @@ function _fetchGenePanelTissueRanking(genePanelId: string) {
       return Promise.resolve();
     }
 
-    return fetchJson(
-      GENE_PANEL_RANKING_URL(genePanelId),
-      tissueRanking => dispatch(addGenePanel({ genePanelId, tissueRanking })),
-      err => {
-        console.log({ fetch: err });
-      }
+    return fetchJson(GENE_PANEL_RANKING_URL(genePanelId), tissueRanking =>
+      dispatch(addGenePanel({ genePanelId, tissueRanking }))
     );
   };
 }
@@ -206,16 +181,10 @@ function _fetchGenePanelTissueRanking(genePanelId: string) {
 */
 function _fetchExonExpr(ensemblId: string) {
   return dispatch => {
-    return fetchJson(
-      EXON_EXPR_URL(ensemblId),
-      data => {
-        let { exonExpr, tissueRanking } = data;
-        dispatch(addGene({ ensemblId, exonExpr, tissueRanking }));
-      },
-      err => {
-        console.log({ fetch: err });
-      }
-    );
+    return fetchJson(EXON_EXPR_URL(ensemblId), data => {
+      let { exonExpr, tissueRanking } = data;
+      dispatch(addGene({ ensemblId, exonExpr, tissueRanking }));
+    });
   };
 }
 
@@ -226,28 +195,18 @@ function _fetchExonExpr(ensemblId: string) {
 */
 function _fetchGeneExpr(ensemblId: string) {
   return dispatch => {
-    return fetchJson(
-      GENE_EXPR_URL(ensemblId),
-      geneExpr => dispatch(addGene({ ensemblId, geneExpr })),
-      err => {
-        console.log({ fetch: err });
-      }
+    return fetchJson(GENE_EXPR_URL(ensemblId), geneExpr =>
+      dispatch(addGene({ ensemblId, geneExpr }))
     );
   };
 }
 
 function _fetchGeneSymbol(ensemblId: string) {
   return dispatch => {
-    return fetchJson(
-      GENE_SYMBOL_URL(ensemblId),
-      data => {
-        let { geneSymbol } = data;
-        dispatch(addGene({ ensemblId, geneSymbol }));
-      },
-      err => {
-        console.log({ fetch: err });
-      }
-    );
+    return fetchJson(GENE_SYMBOL_URL(ensemblId), data => {
+      let { geneSymbol } = data;
+      dispatch(addGene({ ensemblId, geneSymbol }));
+    });
   };
 }
 
@@ -263,15 +222,18 @@ function _fetchGene(ensemblId: string) {
     let promises = [];
     if (!geneSymbolPopulated(gene, ensemblId)) {
       promises.push(dispatch(_fetchGeneSymbol(ensemblId)));
-    } else if (!genePropertyPopulated(gene, ensemblId, "exonExpr")) {
-      promises.push(dispatch(_fetchExonExpr(ensemblId)));
-      // no need to display gene plot so dont fetch that data
-      // } else if (!genePropertyPopulated(gene, ensemblId, "geneExpr")) {
-      //   promises.push(dispatch(_fetchGeneExpr(ensemblId)));
-    } else {
-      return Promise.resolve();
     }
-    return Promise.all([promises]);
+    if (!genePropertyPopulated(gene, ensemblId, "exonExpr")) {
+      promises.push(dispatch(_fetchExonExpr(ensemblId)));
+    }
+    // no need to display gene plot so dont fetch that data
+    // if (!genePropertyPopulated(gene, ensemblId, "geneExpr")) {
+    //   promises.push(dispatch(_fetchGeneExpr(ensemblId)));
+    // }
+
+    return isNonEmptyArray(promises)
+      ? Promise.all([promises])
+      : Promise.resolve();
   };
 }
 
@@ -289,7 +251,10 @@ function _fetchGeneSet(ensemblIds: string[]) {
 */
 export function fetchGene(ensemblId: string) {
   return dispatch => {
-    return dispatch(_fetchGene(ensemblId));
+    dispatch(startFetch(`fetching ${ensemblId}...`));
+    return dispatch(_fetchGene(ensemblId)).then(() =>
+      dispatch(endFetchSuccess())
+    );
   };
 }
 
@@ -301,7 +266,7 @@ export function fetchGene(ensemblId: string) {
 */
 export function hydrateInitialState() {
   return (dispatch, getState) => {
-    dispatch(startFetch("HydrateInitialState"));
+    dispatch(startFetch("hydrate initial state..."));
     return Promise.all([
       dispatch(_fetchTissueSiteList()),
       dispatch(_fetchGenePanelList()),
@@ -321,15 +286,18 @@ export function hydrateInitialState() {
 */
 export function fetchGenePanel(genePanelId: string) {
   return (dispatch, getState) => {
+    dispatch(startFetch(`fetching ${genePanelId}...`));
     return Promise.all([
       dispatch(_fetchPanelGenesList(genePanelId)),
       dispatch(_fetchGenePanelTissueRanking(genePanelId))
-    ]).then(() => {
-      let { entities: { genePanel } } = getState();
-      let panelEntity = getGenePanelEntityById(genePanel, genePanelId);
-      dispatch(
-        _fetchGeneSet(!isEmptyObject(panelEntity) && panelEntity.panelGenes)
-      );
-    });
+    ])
+      .then(() => {
+        let { entities: { genePanel } } = getState();
+        let panelEntity = getGenePanelEntityById(genePanel, genePanelId);
+        dispatch(
+          _fetchGeneSet(!isEmptyObject(panelEntity) && panelEntity.panelGenes)
+        );
+      })
+      .then(() => dispatch(endFetchSuccess()));
   };
 }

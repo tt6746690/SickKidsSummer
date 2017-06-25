@@ -37,20 +37,20 @@ class Layout extends React.Component<any, object> {
       <Grid>
         <Row id="search-bar">
           <Panel>
-            <Col md={8}>
+            <Col md={10}>
               <SearchBarContainer />
             </Col>
-            <Col md={1}>
+            <Col md={2}>
               <FetchStatusContainer />
-            </Col>
-            <Col md={3}>
-              <TissueSiteListingContainer />
             </Col>
           </Panel>
         </Row>
         <Row id="gene-panel">
           <Panel>
-            <Col md={12} xs={12}>
+            <Col md={4} xs={12}>
+              <TissueSiteListingContainer />
+            </Col>
+            <Col md={8} xs={12}>
               <GenePanelInfoContainer />
             </Col>
           </Panel>

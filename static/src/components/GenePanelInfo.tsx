@@ -25,6 +25,7 @@ class GenePanelInfo extends React.Component<any, object> {
     let selectedGeneButtons = isNonEmptyArray(geneEntityList)
       ? geneEntityList.map((g: geneEntity, i: number) =>
           <Button
+            bsStyle={!isEmptyObject(g.exonExpr) ? "default" : "warning"}
             className={"panelGeneButton"}
             value={g.ensemblId}
             key={i.toString()}

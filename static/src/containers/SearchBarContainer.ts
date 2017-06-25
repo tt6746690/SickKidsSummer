@@ -15,7 +15,8 @@ import {
   fetchGene,
   fetchGenePanel,
   startFetch,
-  endFetchSuccess
+  endFetchSuccess,
+  endFetchFailure
 } from "../reducers/FetchActions";
 import {
   stateInterface,
@@ -109,13 +110,10 @@ const mapDispatchToProps = dispatch => {
     /* 
       When finished fetching data for {gene, genePanel} in options 
     */
-    dispatch(startFetch("SearchBarSelect"));
-    Promise.all(promises)
-      .then(() => {
-        dispatch(updateSearchOptionWithCollapse(options));
-        dispatch(updateSelectedGeneWithOptions(options));
-      })
-      .then(() => dispatch(endFetchSuccess()));
+    Promise.all(promises).then(() => {
+      dispatch(updateSearchOptionWithCollapse(options));
+      dispatch(updateSelectedGeneWithOptions(options));
+    });
   };
 
   return { onSearchBarChange };
