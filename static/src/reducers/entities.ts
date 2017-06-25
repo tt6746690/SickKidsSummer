@@ -1,17 +1,11 @@
+import { geneEntity, genePanelEntity, tissueSiteEntity } from "../interfaces";
+import { isEmptyObject } from "../utils/Utils";
 import {
   ADD_GENE,
   ADD_GENE_PANEL,
   ADD_TISSUE_SITE,
   LOAD_SEARCH_INDEX
 } from "./EntitiesActions";
-
-import {
-  geneEntity,
-  genePanelEntity,
-  tissueSiteEntity,
-  stateInterface
-} from "../interfaces";
-import { isEmptyObject } from "../utils/Utils";
 
 const pushGene = (state: geneEntity[] = [], action) => {
   if (state.findIndex(e => e.ensemblId === action.ensemblId) == -1) {

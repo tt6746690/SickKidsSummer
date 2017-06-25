@@ -1,10 +1,4 @@
-import {
-  geneEntity,
-  genePanelEntity,
-  tissueSiteEntity,
-  searchIndexEntity,
-  stateInterface
-} from "../Interfaces";
+import { geneEntity, genePanelEntity } from "../Interfaces";
 import { isEmptyObject, isNonEmptyArray } from "../utils/Utils";
 
 /*

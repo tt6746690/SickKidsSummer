@@ -1,11 +1,10 @@
-import { connect } from "react-redux";
 import * as d3 from "d3";
+import { connect } from "react-redux";
 
-import { stateInterface } from "../Interfaces";
 import ExonPlot from "../components/ExonPlot";
-import { getTissueRanking } from "../store/Query";
-import { isNonEmptyArray } from "../utils/Utils";
+import { stateInterface } from "../Interfaces";
 import { toggleGene } from "../reducers/EntitiesActions";
+import { isNonEmptyArray } from "../utils/Utils";
 
 const mapStateToProps = (state: stateInterface) => {
   let {

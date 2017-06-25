@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ButtonGroup, Button, Panel } from "react-bootstrap";
+import { Button, ButtonGroup, Panel } from "react-bootstrap";
 
 class ExonBoxPlotLegend extends React.Component<any, object> {
   render() {

@@ -1,11 +1,9 @@
 import { connect } from "react-redux";
 
-import { setViewType, VIEW_TYPE } from "../reducers/EntitiesActions";
-import { hydrateInitialState } from "../reducers/FetchActions";
-import { isNonEmptyArray } from "../utils/Utils";
-import { stateInterface } from "../Interfaces";
 import Layout from "../components/Layout";
-import { TISSUE_SITE_LIST_URL, GENE_PANEL_LIST_URL } from "../utils/Url";
+import { stateInterface } from "../Interfaces";
+import { setViewType } from "../reducers/EntitiesActions";
+import { hydrateInitialState } from "../reducers/FetchActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let { ui: { viewType, select: { genePanel: selectedGenePanel } } } = state;

@@ -1,6 +1,7 @@
 import "whatwg-fetch";
+
 import * as d3 from "d3";
-import { createStore, applyMiddleware } from "redux";
+import { applyMiddleware, createStore } from "redux";
 import ReduxThunk from "redux-thunk";
 
 import { stateInterface } from "../Interfaces";

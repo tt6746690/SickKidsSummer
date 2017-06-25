@@ -1,14 +1,8 @@
 import * as React from "react";
-import {
-  Typeahead,
-  AsyncTypeahead,
-  Token,
-  tokenContainer
-} from "react-bootstrap-typeahead";
+import { Typeahead } from "react-bootstrap-typeahead";
 
-import { getGeneEntityByIdList } from "../store/Query";
 import { OPTION_TYPE } from "../Interfaces";
-import { genePropertyPopulated, getGenePanelEntityById } from "../store/Query";
+import { getGeneEntityByIdList } from "../store/Query";
 
 class SearchBar extends React.Component<any, object> {
   _renderMenuItemChildren = option => {

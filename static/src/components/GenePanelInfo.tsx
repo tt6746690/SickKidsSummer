@@ -1,9 +1,9 @@
 import * as React from "react";
-import { ButtonGroup, Button } from "react-bootstrap";
+import { Button, ButtonGroup } from "react-bootstrap";
 
-import { isEmptyObject, isNonEmptyArray } from "../utils/Utils";
-import { getGenePanelEntityById, getGeneEntityByIdList } from "../store/Query";
 import { geneEntity } from "../Interfaces";
+import { getGeneEntityByIdList } from "../store/Query";
+import { isEmptyObject, isNonEmptyArray } from "../utils/Utils";
 
 class GenePanelInfo extends React.Component<any, object> {
   render() {

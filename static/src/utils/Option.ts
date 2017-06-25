@@ -1,4 +1,4 @@
-import { searchIndexEntity, OPTION_TYPE } from "../Interfaces";
+import { OPTION_TYPE, searchIndexEntity } from "../Interfaces";
 
 export const getOptionByType = (
   options: searchIndexEntity[],

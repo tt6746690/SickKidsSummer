@@ -1,10 +1,8 @@
 import * as React from "react";
-import { Table, Button, Panel, Collapse } from "react-bootstrap";
+import { Button, Collapse, Panel, Table } from "react-bootstrap";
 
 import ExonPlotContainer from "../containers/ExonPlotContainer";
-import { tissueSiteEntity } from "../Interfaces";
 import { isNonEmptyArray } from "../utils/Utils";
-import { formatExonPlotData } from "../utils/Plot";
 
 class TissueSiteRanking extends React.Component<any, object> {
   render() {

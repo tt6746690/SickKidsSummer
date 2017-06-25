@@ -1,19 +1,17 @@
 import {
   geneEntity,
   genePanelEntity,
-  tissueSiteEntity,
-  stateInterface,
+  OPTION_TYPE,
   searchIndexEntity,
-  OPTION_TYPE
+  tissueSiteEntity
 } from "../Interfaces";
-
+import { getGeneEntityById, getGenePanelEntityById } from "../store/Query";
 import {
+  flattenPanelOptionPanelGenes,
   getOptionByType,
-  makeGeneOption,
-  flattenPanelOptionPanelGenes
+  makeGeneOption
 } from "../utils/Option";
 import { isEmptyObject } from "../utils/Utils";
-import { getGeneEntityById, getGenePanelEntityById } from "../store/Query";
 
 // actionTypes
 export const HYDRATE_INITIAL_STATE = "HYDRATE_INITIAL_STATE";

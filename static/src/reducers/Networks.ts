@@ -1,7 +1,7 @@
 import {
-  START_FETCH,
+  END_FETCH_FAILURE,
   END_FETCH_SUCCESS,
-  END_FETCH_FAILURE
+  START_FETCH
 } from "./FetchActions";
 
 export default function networks(state, action) {

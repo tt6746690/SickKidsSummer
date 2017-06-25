@@ -1,8 +1,8 @@
 import * as React from "react";
+import { Button, Col, Panel, Row } from "react-bootstrap";
 
-import { Row, Col, Panel, Button, Well } from "react-bootstrap";
-import { formatExonPlotData } from "../utils/Plot";
 import { queryTissueRankingByGeneId } from "../store/Query";
+import { formatExonPlotData } from "../utils/Plot";
 
 class ExonPlot extends React.Component<any, object> {
   componentDidMount() {

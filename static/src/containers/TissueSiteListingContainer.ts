@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
 
+import TissueSiteListing from "../components/TissueSiteListing";
+import { stateInterface } from "../Interfaces";
 import {
   selectRefTissueSite,
   setViewType,
   VIEW_TYPE
 } from "../reducers/EntitiesActions";
-import { stateInterface } from "../Interfaces";
-import TissueSiteListing from "../components/TissueSiteListing";
 
 const mapStateToProps = (state: stateInterface) => {
   let {

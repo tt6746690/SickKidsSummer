@@ -1,6 +1,7 @@
 import { connect } from "react-redux";
-import { stateInterface } from "../Interfaces";
+
 import FetchStatus from "../components/FetchStatus";
+import { stateInterface } from "../Interfaces";
 
 const mapStateToProps = (state: stateInterface) => {
   let { networks: { isFetching, fetchStatus } } = state;

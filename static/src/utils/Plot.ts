@@ -1,5 +1,7 @@
 import * as d3 from "d3";
-import { geneEntity, tissueSiteEntity } from "../Interfaces";
+
+import { geneEntity } from "../Interfaces";
+
 /* 
     Formats gene expression data for scatter plotting
     Returns data: {

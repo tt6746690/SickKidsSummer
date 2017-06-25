@@ -1,14 +1,11 @@
-import { connect } from "react-redux";
 import * as d3 from "d3";
+import { connect } from "react-redux";
 
 import ExonBoxPlot from "../components/ExonBoxPlot";
-import { isNonEmptyArray } from "../utils/Utils";
-import {
-  formatExonBoxPlotData,
-  formatExonScatterPlotData
-} from "../utils/Plot";
-import { getGeneEntityByIdList } from "../store/Query";
 import { geneEntity, stateInterface } from "../Interfaces";
+import { getGeneEntityByIdList } from "../store/Query";
+import { formatExonBoxPlotData } from "../utils/Plot";
+import { isNonEmptyArray } from "../utils/Utils";
 
 const mapStateToProps = (state: stateInterface) => {
   let {

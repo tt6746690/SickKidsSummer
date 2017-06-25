@@ -1,25 +1,16 @@
+import { geneEntity, tissueSiteEntity } from "../interfaces";
 import {
-  SELECT_GENE_PANEL,
-  SELECT_REF_TISSUE_SITE,
-  TOGGLE_GENE,
-  UPDATE_GENE,
-  TOGGLE_TISSUE_SITE,
-  SELECT_VIEW,
   CLEAR_GENE_SELECTION,
   CLEAR_TISSUE_SITE_SELECTION,
-  UPDATE_SEARCH_OPTIONS,
-  SET_SEARCH_COLLAPSE
+  SELECT_GENE_PANEL,
+  SELECT_REF_TISSUE_SITE,
+  SELECT_VIEW,
+  SET_SEARCH_COLLAPSE,
+  TOGGLE_GENE,
+  TOGGLE_TISSUE_SITE,
+  UPDATE_GENE,
+  UPDATE_SEARCH_OPTIONS
 } from "./EntitiesActions";
-
-import {
-  geneEntity,
-  genePanelEntity,
-  tissueSiteEntity,
-  stateInterface,
-  OPTION_TYPE
-} from "../interfaces";
-
-import { getOptionByType } from "../utils/Option";
 
 function toggleGeneReducer(state: geneEntity[], action) {
   if (state.includes(action.ensemblId)) {

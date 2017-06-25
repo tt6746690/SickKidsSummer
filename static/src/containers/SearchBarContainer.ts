@@ -1,35 +1,14 @@
 import { connect } from "react-redux";
 
-import {
-  addGene,
-  addGenePanel,
-  selectGenePanel,
-  selectRefTissueSite,
-  clearGeneSelection,
-  clearTissueSiteSelection,
-  updateSelectedGeneWithOptions,
-  updateSearchOptions,
-  updateSearchOptionWithCollapse
-} from "../reducers/EntitiesActions";
-import {
-  fetchGene,
-  fetchGenePanel,
-  startFetch,
-  endFetchSuccess,
-  endFetchFailure
-} from "../reducers/FetchActions";
-import {
-  stateInterface,
-  geneEntity,
-  searchIndexEntity,
-  OPTION_TYPE
-} from "../Interfaces";
 import SearchBar from "../components/SearchBar";
+import { OPTION_TYPE, searchIndexEntity, stateInterface } from "../Interfaces";
 import {
-  getGenePanelEntityById,
-  getGeneEntityById,
-  getGenePanelEntityByIdList
-} from "../store/Query";
+  selectGenePanel,
+  updateSearchOptions,
+  updateSearchOptionWithCollapse,
+  updateSelectedGeneWithOptions
+} from "../reducers/EntitiesActions";
+import { fetchGene, fetchGenePanel } from "../reducers/FetchActions";
 import {
   getOptionByType,
   makeGeneOption,

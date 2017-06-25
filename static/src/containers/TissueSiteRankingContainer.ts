@@ -1,16 +1,9 @@
 import { connect } from "react-redux";
-import * as d3 from "d3";
 
-import {
-  toggleTissueSite,
-  setViewType,
-  VIEW_TYPE
-} from "../reducers/EntitiesActions";
-import { stateInterface } from "../Interfaces";
 import TissueSiteRanking from "../components/TissueSiteRanking";
+import { stateInterface } from "../Interfaces";
+import { toggleTissueSite } from "../reducers/EntitiesActions";
 import { getTissueRanking } from "../store/Query";
-
-import { isNonEmptyArray } from "../utils/Utils";
 
 const mapStateToProps = (state: stateInterface) => {
   let {

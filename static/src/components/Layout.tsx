@@ -1,27 +1,13 @@
-import * as React from "react";
 import "whatwg-fetch";
-import {
-  Grid,
-  Row,
-  Col,
-  Button,
-  ButtonGroup,
-  Nav,
-  NavItem,
-  Panel,
-  Tabs,
-  Tab
-} from "react-bootstrap";
 
+import * as React from "react";
+import { Col, Grid, Panel, Row, Tab, Tabs } from "react-bootstrap";
+
+import FetchStatusContainer from "../containers/FetchStatusContainer";
 import GenePanelInfoContainer from "../containers/GenePanelInfoContainer";
+import SearchBarContainer from "../containers/SearchBarContainer";
 import TissueSiteListingContainer from "../containers/TissueSiteListingContainer";
 import TissueSiteRankingContainer from "../containers/TissueSiteRankingContainer";
-import ExonBoxPlotContainer from "../containers/ExonBoxPlotContainer";
-import ExonBoxPlotLegendContainer from "../containers/ExonBoxPlotLegendContainer";
-import SearchBarContainer from "../containers/SearchBarContainer";
-import GeneBoxPlotContainer from "../containers/GeneBoxPlotContainer";
-import FetchStatusContainer from "../containers/FetchStatusContainer";
-
 import { VIEW_TYPE } from "../reducers/EntitiesActions";
 
 class Layout extends React.Component<any, object> {

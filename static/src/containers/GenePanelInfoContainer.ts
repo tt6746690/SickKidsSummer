@@ -1,13 +1,8 @@
 import { connect } from "react-redux";
 
-import {
-  addGene,
-  toggleGene,
-  clearGeneSelection
-} from "../reducers/EntitiesActions";
-import { isNonEmptyArray } from "../utils/Utils";
-import { stateInterface } from "../Interfaces";
 import GenePanelInfo from "../components/GenePanelInfo";
+import { stateInterface } from "../Interfaces";
+import { toggleGene } from "../reducers/EntitiesActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let {

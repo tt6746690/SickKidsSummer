@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
-import { toggleTissueSite } from "../reducers/EntitiesActions";
-import { stateInterface } from "../Interfaces";
+
 import ExonBoxPlotLegend from "../components/ExonBoxPlotLegend";
-import { getTissueRanking } from "../store/Query";
+import { stateInterface } from "../Interfaces";
+import { toggleTissueSite } from "../reducers/EntitiesActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let {

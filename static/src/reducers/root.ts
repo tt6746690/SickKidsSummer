@@ -1,8 +1,7 @@
-import entities from "./Entities";
-import ui from "./Ui";
-import networks from "./Networks";
-
 import { stateInterface } from "../Interfaces";
+import entities from "./Entities";
+import networks from "./Networks";
+import ui from "./Ui";
 
 export default function rootReducer(state: stateInterface, action) {
   let start = performance.now();

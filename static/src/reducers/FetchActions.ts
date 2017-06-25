@@ -1,36 +1,28 @@
+import { genePanelEntity } from "../Interfaces";
 import {
-  geneEntity,
-  genePanelEntity,
-  tissueSiteEntity,
-  stateInterface,
-  searchIndexEntity,
-  OPTION_TYPE
-} from "../Interfaces";
-
+  genePanelPanelGenesPopulated,
+  genePanelTissueRankingPopulated,
+  genePropertyPopulated,
+  geneSymbolPopulated
+} from "../store/Query";
+import { getGenePanelEntityById } from "../store/Query";
 import {
-  SEARCH_INDEX_URL,
-  TISSUE_SITE_LIST_URL,
-  GENE_PANEL_LIST_URL,
   EXON_EXPR_URL,
   GENE_EXPR_URL,
-  GENE_SYMBOL_URL,
+  GENE_PANEL_LIST_URL,
+  GENE_PANEL_RANKING_URL,
   GENE_PANEL_URL,
-  GENE_PANEL_RANKING_URL
+  GENE_SYMBOL_URL,
+  SEARCH_INDEX_URL,
+  TISSUE_SITE_LIST_URL
 } from "../utils/Url";
+import { isEmptyObject, isNonEmptyArray } from "../utils/Utils";
 import {
-  addTissueSite,
-  addGenePanel,
   addGene,
+  addGenePanel,
+  addTissueSite,
   loadSearchIndex
 } from "./EntitiesActions";
-import {
-  geneSymbolPopulated,
-  genePropertyPopulated,
-  genePanelPanelGenesPopulated,
-  genePanelTissueRankingPopulated
-} from "../store/Query";
-import { isNonEmptyArray, isEmptyObject } from "../utils/Utils";
-import { getGenePanelEntityById } from "../store/Query";
 
 // status
 export const START_FETCH = "START_FETCH";

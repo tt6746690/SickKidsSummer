@@ -1,8 +1,7 @@
-import * as React from "react";
-import * as d3 from "d3";
-
-import { PanelGroup, Panel } from "react-bootstrap";
 import { isEmptyObject } from "../utils/Utils";
+
+import * as React from "react";
+import { Panel } from "react-bootstrap";
 
 class ExonBoxPlot extends React.Component<any, object> {
   componentDidMount() {
