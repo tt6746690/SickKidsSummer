@@ -53,7 +53,7 @@ class SearchBar extends React.Component<any, object> {
         clearButton
         emptyLabel
         justify
-        maxResults={30}
+        maxResults={5}
         maxHeight={330}
         paginate={true}
         selected={selectedOptions}

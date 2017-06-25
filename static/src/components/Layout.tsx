@@ -50,7 +50,7 @@ class Layout extends React.Component<any, object> {
         </Row>
         <Row id="gene-panel">
           <Panel>
-            <Col md={8} xs={12}>
+            <Col md={12} xs={12}>
               <GenePanelInfoContainer />
             </Col>
           </Panel>

@@ -36,10 +36,6 @@ const mapDispatchToProps = dispatch => {
     onPanelGeneClick: evt => {
       let ensemblId = evt.target.value;
       dispatch(toggleGene(ensemblId));
-    },
-
-    onPanelGeneClear: () => {
-      dispatch(clearGeneSelection());
     }
   };
 };

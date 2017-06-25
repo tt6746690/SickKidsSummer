@@ -7,8 +7,13 @@ import {
   OPTION_TYPE
 } from "../Interfaces";
 
-import { getOptionByType, makeGeneOption } from "../utils/Option";
-import { getGeneEntityById } from "../store/Query";
+import {
+  getOptionByType,
+  makeGeneOption,
+  flattenPanelOptionPanelGenes
+} from "../utils/Option";
+import { isEmptyObject } from "../utils/Utils";
+import { getGeneEntityById, getGenePanelEntityById } from "../store/Query";
 
 // actionTypes
 export const HYDRATE_INITIAL_STATE = "HYDRATE_INITIAL_STATE";
@@ -43,6 +48,35 @@ export const VIEW_TYPE = {
   TISSUESITE_RANKING: "TISSUESITE_RANKING"
 };
 
+/* 
+  Given searchOptions, 
+  -- update ui.select.genes considering that option can be of GENE_TYPE and PANEL_TYPE
+  -- queries entities.genePanel.panelGenes to expand PANEL_TYPE options
+  ---- this is necessary since during onSearchChange panelGenes is yet to be fetched
+*/
+export function updateSelectedGeneWithOptions(options: searchIndexEntity[]) {
+  return (dispatch, getState) => {
+    let { entities: { genePanel } } = getState();
+
+    let ensemblId;
+    let geneOptions = getOptionByType(options, OPTION_TYPE.GENE_TYPE);
+    let panelOptions = getOptionByType(options, OPTION_TYPE.PANEL_TYPE);
+
+    panelOptions = panelOptions.map(panelOption => {
+      let genePanelEntity = getGenePanelEntityById(genePanel, panelOption.name);
+      let panelGenes =
+        !isEmptyObject(genePanelEntity) && genePanelEntity["panelGenes"];
+      return { ...panelOption, panelGenes };
+    });
+
+    let allGenes = geneOptions
+      .map(opt => opt.ensemblId)
+      .concat(flattenPanelOptionPanelGenes(panelOptions));
+
+    return dispatch(updateGene(allGenes));
+  };
+}
+
 export function updateSearchOptions(options: searchIndexEntity[] = []) {
   return {
     type: UPDATE_SEARCH_OPTIONS,
@@ -50,17 +84,44 @@ export function updateSearchOptions(options: searchIndexEntity[] = []) {
   };
 }
 
+/*
+  Updates panelOption with the latest value of entities.genePanel.panelGenes
+  Updates ui.search.searchOption depending on value of collapse 
+  -- if collapse is true: then panelOption (i.e. OPTION_TYPE.PANEL_TYPE) is collapsed into one
+  -- otherwise, panelOption is expanded to its constituent geneOptions
+*/
 export function updateSearchOptionWithCollapse(
   options: searchIndexEntity[] = []
 ) {
   return (dispatch, getState) => {
-    let start = performance.now();
+    let {
+      entities: { gene, genePanel },
+      ui: { search: { collapse } }
+    } = getState();
 
-    let { entities: { gene }, ui: { search: { collapse } } } = getState();
-    let selectedOption: searchIndexEntity[] = [];
     let geneOptions = getOptionByType(options, OPTION_TYPE.GENE_TYPE);
     let panelOptions = getOptionByType(options, OPTION_TYPE.PANEL_TYPE);
 
+    /*
+      update ui.search.searchOption.panelGenes (whose type is PANEL_TYPE)
+      with value in entities.genePanel.panelGenes
+    */
+    panelOptions = panelOptions.map(panelOption => {
+      let genePanelEntity = getGenePanelEntityById(genePanel, panelOption.name);
+
+      let panelGenes =
+        !isEmptyObject(genePanelEntity) && genePanelEntity["panelGenes"];
+
+      return {
+        ...panelOption,
+        panelGenes
+      };
+    });
+
+    /*
+      update selectedOption depending on value of collapse
+    */
+    let selectedOption: searchIndexEntity[] = [];
     geneOptions.forEach(geneOption => selectedOption.push(geneOption));
     if (collapse) {
       panelOptions.forEach(panelOption => selectedOption.push(panelOption));
@@ -74,8 +135,6 @@ export function updateSearchOptionWithCollapse(
       });
     }
 
-    let end = performance.now();
-    console.log(`updateSearchOptionwithcollapse: elapsed ${end - start}ms`);
     return dispatch(updateSearchOptions(selectedOption));
   };
 }

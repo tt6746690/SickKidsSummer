@@ -37,7 +37,7 @@ let defaultState: stateInterface = {
     },
     search: {
       selectedOptions: [],
-      collapse: false
+      collapse: true
     }
   },
   networks: {

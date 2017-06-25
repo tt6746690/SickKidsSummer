@@ -15,8 +15,11 @@ import {
   geneEntity,
   genePanelEntity,
   tissueSiteEntity,
-  stateInterface
+  stateInterface,
+  OPTION_TYPE
 } from "../interfaces";
+
+import { getOptionByType } from "../utils/Option";
 
 function toggleGeneReducer(state: geneEntity[], action) {
   if (state.includes(action.ensemblId)) {
@@ -84,15 +87,10 @@ function select(state, action) {
 function search(state, action) {
   switch (action.type) {
     case UPDATE_SEARCH_OPTIONS:
-      return {
-        ...state,
-        selectedOptions: [...action.options]
-      };
+      return { ...state, selectedOptions: [...action.options] };
     case SET_SEARCH_COLLAPSE:
-      return {
-        ...state,
-        collapse: action.collapse
-      };
+      return { ...state, collapse: action.collapse };
+
     default:
       return state;
   }

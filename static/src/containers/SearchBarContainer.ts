@@ -7,13 +7,14 @@ import {
   selectRefTissueSite,
   clearGeneSelection,
   clearTissueSiteSelection,
-  updateGene,
+  updateSelectedGeneWithOptions,
   updateSearchOptions,
   updateSearchOptionWithCollapse
 } from "../reducers/EntitiesActions";
 import {
   fetchGene,
   fetchGenePanel,
+  startFetch,
   endFetchSuccess
 } from "../reducers/FetchActions";
 import {
@@ -28,13 +29,6 @@ import {
   getGeneEntityById,
   getGenePanelEntityByIdList
 } from "../store/Query";
-import {
-  EXON_EXPR_URL,
-  GENE_EXPR_URL,
-  GENE_PANEL_URL,
-  GENE_PANEL_RANKING_URL,
-  SEARCH_INDEX_URL
-} from "../utils/Url";
 import {
   getOptionByType,
   makeGeneOption,
@@ -79,10 +73,6 @@ const mapStateToProps = (state: stateInterface) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  const flattenPanelOption = (panelOption: searchIndexEntity[]): string[] => {
-    return panelOption.reduce((acu, cur) => acu.concat(cur.panelGenes), []);
-  };
-
   /* 
     Selecting/De-selecting an option triggers changes 
     -- update ui.include.gene with options 
@@ -116,18 +106,16 @@ const mapDispatchToProps = dispatch => {
     */
     dispatch(updateSearchOptions(options));
 
-    let allGenes = geneOptions
-      .map(opt => opt.ensemblId)
-      .concat(flattenPanelOption(panelOptions));
-
     /* 
       When finished fetching data for {gene, genePanel} in options 
     */
-    Promise.all(promises).then(() => {
-      console.log({ geneOptions, panelOptions, allGenes });
-      dispatch(updateGene(allGenes));
-      dispatch(updateSearchOptionWithCollapse(options));
-    });
+    dispatch(startFetch("SearchBarSelect"));
+    Promise.all(promises)
+      .then(() => {
+        dispatch(updateSearchOptionWithCollapse(options));
+        dispatch(updateSelectedGeneWithOptions(options));
+      })
+      .then(() => dispatch(endFetchSuccess()));
   };
 
   return { onSearchBarChange };

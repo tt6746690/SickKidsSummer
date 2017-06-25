@@ -16,3 +16,13 @@ export const makePanelOption = (
 ): searchIndexEntity => {
   return { ...index, type: OPTION_TYPE.PANEL_TYPE };
 };
+
+export const flattenPanelOptionPanelGenes = (
+  panelOption: searchIndexEntity[]
+): string[] => {
+  let accumulatedEmsemblIds = panelOption.reduce(
+    (acu, cur) => acu.concat(cur.panelGenes),
+    []
+  );
+  return accumulatedEmsemblIds;
+};

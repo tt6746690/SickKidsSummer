@@ -38,10 +38,6 @@ class GenePanelInfo extends React.Component<any, object> {
     return (
       <ButtonGroup>
         {selectedGeneButtons}
-        {selectedGeneButtons &&
-          <Button bsStyle={"warning"} onClick={onPanelGeneClear}>
-            {"Clear"}
-          </Button>}
       </ButtonGroup>
     );
   }
