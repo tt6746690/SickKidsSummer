@@ -6,9 +6,14 @@ import { setViewType } from "../reducers/EntitiesActions";
 import { hydrateInitialState } from "../reducers/FetchActions";
 
 const mapStateToProps = (state: stateInterface) => {
-  let { ui: { viewType, select: { genePanel: selectedGenePanel } } } = state;
+  let {
+    ui: {
+      viewType,
+      select: { gene: selectedGene, genePanel: selectedGenePanel }
+    }
+  } = state;
 
-  return { viewType, selectedGenePanel };
+  return { viewType, selectedGene, selectedGenePanel };
 };
 
 const mapDispatchToProps = dispatch => {

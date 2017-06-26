@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 
 import FetchStatus from "../components/FetchStatus";
 import { stateInterface } from "../Interfaces";
+import { resetFetchStatus } from "../reducers/FetchActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let { networks: { isFetching, fetchStatus } } = state;
@@ -13,7 +14,11 @@ const mapStateToProps = (state: stateInterface) => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    hide() {
+      setTimeout(() => dispatch(resetFetchStatus()), 500);
+    }
+  };
 };
 
 const FetchStatusContainer = connect(mapStateToProps, mapDispatchToProps)(

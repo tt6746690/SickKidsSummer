@@ -1,7 +1,7 @@
 import "whatwg-fetch";
 
 import * as d3 from "d3";
-import { applyMiddleware, createStore } from "redux";
+import { applyMiddleware, createStore, compose } from "redux";
 import ReduxThunk from "redux-thunk";
 
 import { stateInterface } from "../Interfaces";
@@ -47,16 +47,20 @@ let defaultState: stateInterface = {
   }
 };
 
-let store = createStore(rootReducer, defaultState, applyMiddleware(ReduxThunk));
+const composeEnhancers =
+  (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+let store = createStore(
+  rootReducer,
+  defaultState,
+  compose(applyMiddleware(ReduxThunk))
+);
 
 let unsubscribe = store.subscribe(() => {
   let { entities, ui, networks } = store.getState();
+  let { networks: { isFetching } } = store.getState();
 
-  console.log({
-    entities,
-    ui,
-    networks
-  });
+  console.log({ entities, ui, networks, isFetching });
 });
 
 export default store;

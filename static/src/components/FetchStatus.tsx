@@ -4,22 +4,22 @@ import "react-bootstrap";
 
 import { FETCH_STATUS } from "../reducers/FetchActions";
 
-class FetchStatus extends React.Component<any, object> {
-  state = {
-    statusMsg: ""
-  };
+class FetchStatus extends React.Component<any, any> {
+  componentDidUpdate() {
+    let { isFetching, fetchStatus, hide } = this.props;
+    if (!isFetching && fetchStatus !== "") {
+      setTimeout(() => hide(), 200);
+    }
+  }
 
   render() {
     let { isFetching, fetchStatus } = this.props;
-    console.log({ where: "FetchStatus::render()", isFetching, fetchStatus });
-
-    let statusMsg = fetchStatus;
 
     return (
       <div>
         {isFetching && <i className="fa fa-cog fa-spin fa-2x fa-fw" />}
         <div>
-          {setTimeout(() => (statusMsg = ""), 1000) && statusMsg}
+          {fetchStatus}
         </div>
       </div>
     );

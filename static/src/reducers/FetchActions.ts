@@ -32,6 +32,7 @@ export const FETCH_STATUS = {
   SUCCESS: "SUCCESS",
   FAILURE: "FALIURE"
 };
+export const RESET_FETCH_STATUS = "RESET_FETCH_STATUS";
 
 export function startFetch(msg: string = "") {
   return { type: START_FETCH, msg };
@@ -41,6 +42,12 @@ export function endFetchSuccess(msg: string = "") {
 }
 export function endFetchFailure(msg: string = "") {
   return { type: END_FETCH_FAILURE, status: FETCH_STATUS.FAILURE, msg };
+}
+
+export function resetFetchStatus() {
+  return {
+    type: RESET_FETCH_STATUS
+  };
 }
 
 /* 
@@ -224,7 +231,10 @@ function _fetchGene(ensemblId: string) {
     // }
 
     return isNonEmptyArray(promises)
-      ? Promise.all([promises])
+      ? dispatch(startFetch(`fetching ${ensemblId}...`)) &&
+          Promise.all([promises]).then(() =>
+            setTimeout(() => dispatch(endFetchSuccess(), 500))
+          )
       : Promise.resolve();
   };
 }
@@ -243,10 +253,7 @@ function _fetchGeneSet(ensemblIds: string[]) {
 */
 export function fetchGene(ensemblId: string) {
   return dispatch => {
-    dispatch(startFetch(`fetching ${ensemblId}...`));
-    return dispatch(_fetchGene(ensemblId)).then(() =>
-      dispatch(endFetchSuccess())
-    );
+    return dispatch(_fetchGene(ensemblId));
   };
 }
 

@@ -68,6 +68,14 @@ const mapDispatchToProps = dispatch => {
       options
     });
 
+    /* 
+      avoid lag behavior by displaying option selected asap
+    */
+    dispatch(updateSearchOptions(options));
+
+    /* 
+      Populate promises with fetching promise
+    */
     let promises = [];
 
     let geneOptions = getOptionByType(options, OPTION_TYPE.GENE_TYPE);
@@ -77,17 +85,14 @@ const mapDispatchToProps = dispatch => {
     });
     panelOptions.forEach(option => {
       let genePanelId = option.name;
-      promises.push(dispatch(selectGenePanel(genePanelId)));
+      dispatch(selectGenePanel(genePanelId));
       promises.push(dispatch(fetchGenePanel(genePanelId)));
     });
 
     /* 
-      avoid lag behavior by displaying option selected asap
-    */
-    dispatch(updateSearchOptions(options));
-
-    /* 
       When finished fetching data for {gene, genePanel} in options 
+      -- update search option depending on value of collapse 
+      -- update ui.select.gene 
     */
     Promise.all(promises).then(() => {
       dispatch(updateSearchOptionWithCollapse(options));

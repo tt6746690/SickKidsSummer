@@ -1,11 +1,17 @@
 import {
   END_FETCH_FAILURE,
   END_FETCH_SUCCESS,
-  START_FETCH
+  START_FETCH,
+  RESET_FETCH_STATUS
 } from "./FetchActions";
 
 export default function networks(state, action) {
   switch (action.type) {
+    case RESET_FETCH_STATUS:
+      return {
+        ...state,
+        fetchStatus: ""
+      };
     case START_FETCH:
       return {
         ...state,

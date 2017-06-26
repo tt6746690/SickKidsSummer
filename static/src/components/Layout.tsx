@@ -9,6 +9,7 @@ import SearchBarContainer from "../containers/SearchBarContainer";
 import TissueSiteListingContainer from "../containers/TissueSiteListingContainer";
 import TissueSiteRankingContainer from "../containers/TissueSiteRankingContainer";
 import { VIEW_TYPE } from "../reducers/EntitiesActions";
+import { isNonEmptyArray } from "../utils/Utils";
 
 class Layout extends React.Component<any, object> {
   componentWillMount() {
@@ -17,7 +18,7 @@ class Layout extends React.Component<any, object> {
   }
 
   render() {
-    let { viewType, selectedGenePanel, onTabSelect } = this.props;
+    let { viewType, selectedGene, selectedGenePanel, onTabSelect } = this.props;
 
     return (
       <Grid>
@@ -33,11 +34,12 @@ class Layout extends React.Component<any, object> {
         </Row>
         <Row id="gene-panel">
           <Panel>
+            {isNonEmptyArray(selectedGene) &&
+              <Col md={8} xs={12}>
+                <GenePanelInfoContainer />
+              </Col>}
             <Col md={4} xs={12}>
               <TissueSiteListingContainer />
-            </Col>
-            <Col md={8} xs={12}>
-              <GenePanelInfoContainer />
             </Col>
           </Panel>
         </Row>

@@ -8,8 +8,6 @@ class SearchBar extends React.Component<any, object> {
   _renderMenuItemChildren = option => {
     let { gene, panelFormat } = this.props;
 
-    console.log("render Menuitemchildren with option: ", option);
-
     switch (option.type) {
       case OPTION_TYPE.GENE_TYPE:
         return [
