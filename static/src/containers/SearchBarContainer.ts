@@ -41,8 +41,6 @@ const mapStateToProps = (state: stateInterface) => {
       .map(d => d.replace(/\b\w/g, f => f.toUpperCase()))
       .join(" ");
 
-  console.log({ selectedOptions });
-
   return {
     gene,
     genePanel,

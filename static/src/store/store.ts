@@ -24,10 +24,11 @@ let defaultState: stateInterface = {
   },
   ui: {
     select: {
+      gene: [],
+      geneForPlot: "",
       genePanel: "",
       refTissueSite: "",
-      gene: [],
-      tissueSite: []
+      rankedTissueSite: ""
     },
     viewType: VIEW_TYPE.TISSUESITE_RANKING,
     plot: {

@@ -43,10 +43,11 @@ export interface stateInterface {
   };
   ui: {
     select: {
+      gene: string[];
+      geneForPlot: string;
       genePanel: string;
       refTissueSite: string;
-      gene: string[];
-      tissueSite: string[];
+      rankedTissueSite: string;
     };
     viewType: string;
     plot: {

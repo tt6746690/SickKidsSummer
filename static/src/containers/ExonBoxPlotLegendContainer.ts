@@ -2,17 +2,20 @@ import { connect } from "react-redux";
 
 import ExonBoxPlotLegend from "../components/ExonBoxPlotLegend";
 import { stateInterface } from "../Interfaces";
-import { toggleTissueSite } from "../reducers/EntitiesActions";
+import { setRankedTissueSite } from "../reducers/EntitiesActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let {
-    ui: { select: { tissueSite: selectedTissueSite }, plot: { color } }
+    ui: {
+      select: {
+        rankedTissueSite: selectedRankedTissueSite,
+        refTissueSite: selectedRefTissueSite
+      },
+      plot: { color }
+    }
   } = state;
 
-  return {
-    selectedTissueSite,
-    color
-  };
+  return { selectedRefTissueSite, selectedRankedTissueSite, color };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -23,8 +26,8 @@ const mapDispatchToProps = dispatch => {
         -- view switch to exon boxplot, if activating tissueSite only
     */
     onTissueSiteClick: evt => {
-      let tissueSite = evt.target.value;
-      dispatch(toggleTissueSite(tissueSite));
+      // let tissueSite = evt.target.value;
+      // dispatch(setRankedTissueSite(tissueSite));
     }
   };
 };

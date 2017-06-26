@@ -1,31 +1,37 @@
 import * as React from "react";
-import { Button, Col, Panel, Row } from "react-bootstrap";
+import { Button, Col, Modal, Panel, Row } from "react-bootstrap";
 
-import { queryTissueRankingByGeneId } from "../store/Query";
+import ExonBoxPlotContainer from "../containers/ExonBoxPlotContainer";
+import ExonBoxPlotLegendContainer from "../containers/ExonBoxPlotLegendContainer";
+import {
+  getGeneEntityById,
+  getGeneEntityByIdList,
+  queryTissueRankingByGeneId
+} from "../store/Query";
 import { formatExonPlotData } from "../utils/Plot";
 
 class ExonPlot extends React.Component<any, object> {
   componentDidMount() {
-    console.log("ExonPlot: setUp() + plot()");
     let {
       gene,
-      selectedTissueSiteLast,
-      preconditionSatisfied,
+      selectedGene,
       selectedRefTissueSite,
+      selectedRankedTissueSite,
       setUp,
-      plot
+      plot,
+      preconditionSatisfied
     } = this.props;
 
-    gene.forEach(g => {
-      setUp(g.geneSymbol, selectedTissueSiteLast);
+    let geneEntityList = getGeneEntityByIdList(gene, selectedGene);
+
+    geneEntityList.forEach(g => {
+      setUp(g.geneSymbol, selectedRankedTissueSite);
       setUp(g.geneSymbol, selectedRefTissueSite);
 
       let refData = formatExonPlotData(g, selectedRefTissueSite);
-      let rankedData = formatExonPlotData(g, selectedTissueSiteLast);
+      let rankedData = formatExonPlotData(g, selectedRankedTissueSite);
 
       if (preconditionSatisfied(rankedData) && preconditionSatisfied(refData)) {
-        console.log("ExonPlot: plot()", rankedData, refData);
-
         plot(rankedData, { noXLabel: true });
         plot(refData);
       }
@@ -36,14 +42,17 @@ class ExonPlot extends React.Component<any, object> {
 
     let {
       gene,
-      cleanUp,
-      selectedTissueSiteLast,
-      selectedRefTissueSite
+      selectedGene,
+      selectedRefTissueSite,
+      selectedRankedTissueSite,
+      cleanUp
     } = this.props;
-    gene.forEach(
+
+    let geneEntityList = getGeneEntityByIdList(gene, selectedGene);
+    geneEntityList.forEach(
       g =>
-        cleanUp(g.geneSymbol, selectedTissueSiteLast) &&
-        cleanUp(g.geneSymbol, selectedRefTissueSite)
+        cleanUp(g.geneSymbol, selectedRefTissueSite) &&
+        cleanUp(g.geneSymbol, selectedRankedTissueSite)
     );
   }
 
@@ -52,21 +61,22 @@ class ExonPlot extends React.Component<any, object> {
       color,
       gene,
       selectedGene,
+      selectedGeneForPlot,
       getPlotId,
-      selectedTissueSiteLast,
+      selectedRankedTissueSite,
       selectedRefTissueSite,
-      onPanelGeneClick
+      onModalOpen,
+      onModalClose
     } = this.props;
 
-    console.log("ExonPlot::render()");
-
+    let geneEntityList = getGeneEntityByIdList(gene, selectedGene);
     /* 
       sort gene based on
       -- 1. fraction, descending
       -- 2. exonNumLen, descending
       -- 3. geneSymbol, alphabetical
     */
-    let geneSorted = gene
+    let geneSorted = geneEntityList
       .map((g, i) => {
         let geneSymbol = g.geneSymbol;
         let {
@@ -76,7 +86,7 @@ class ExonPlot extends React.Component<any, object> {
           gene,
           g.ensemblId,
           selectedRefTissueSite,
-          selectedTissueSiteLast
+          selectedRankedTissueSite
         );
         let {
           exonNumLen: total,
@@ -92,12 +102,7 @@ class ExonPlot extends React.Component<any, object> {
           ? Number(0).toPrecision(3)
           : (sub / total).toPrecision(3);
 
-        return {
-          g,
-          sub,
-          total,
-          fraction
-        };
+        return { g, sub, total, fraction };
       })
       .sort((a, b) => {
         let { fraction: aFrac, sub: aSub, g: { geneSymbol: aGeneSymbol } } = a;
@@ -113,28 +118,32 @@ class ExonPlot extends React.Component<any, object> {
           } else if (aSub > bSub) {
             return -1;
           } else {
-            return aGeneSymbol - bGeneSymbol;
+            return aGeneSymbol.length - bGeneSymbol.length;
           }
         }
       });
 
     let ExonPlotList = geneSorted.map(({ g, sub, total, fraction }, i) => {
-      return (
-        <Row key={i.toString()}>
-          <Col md={2}>
-            <Row>
-              <Button
-                className={"panelGeneButton"}
-                value={g.ensemblId}
-                onClick={onPanelGeneClick}
-                style={
+      /* 
+      style={
                   selectedGene.includes(g.ensemblId)
                     ? { backgroundColor: color(g.ensemblId) }
                     : undefined
                 }
-              >
-                {g.geneSymbol.toUpperCase()}
-              </Button>
+              */
+      return (
+        <Row key={i.toString()}>
+          <Col md={2}>
+            <Row>
+              <Col xsOffset={2}>
+                <Button
+                  className={"panelGeneButton"}
+                  value={g.ensemblId}
+                  onClick={onModalOpen}
+                >
+                  {g.geneSymbol.toUpperCase()}
+                </Button>
+              </Col>
             </Row>
             <Row style={{ paddingTop: "7px" }}>
               <Col xs={4}>
@@ -147,7 +156,7 @@ class ExonPlot extends React.Component<any, object> {
 
           </Col>
           <Col md={10}>
-            <div id={getPlotId(g.geneSymbol, selectedTissueSiteLast)} />
+            <div id={getPlotId(g.geneSymbol, selectedRankedTissueSite)} />
             <div id={getPlotId(g.geneSymbol, selectedRefTissueSite)} />
           </Col>
         </Row>
@@ -155,9 +164,34 @@ class ExonPlot extends React.Component<any, object> {
     });
 
     return (
-      <Panel>
-        {ExonPlotList}
-      </Panel>
+      <div>
+        <Panel>
+          {ExonPlotList}
+        </Panel>
+        <Modal
+          bsSize={"large"}
+          show={selectedGeneForPlot !== ""}
+          onHide={onModalClose}
+          dialogClassName={"ExonBoxPlotModal"}
+        >
+          <Modal.Header>
+            <Modal.Title>
+              {`${getGeneEntityById(gene, selectedGeneForPlot)
+                .geneSymbol} Exon RNA-Expression plot`}
+            </Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <ExonBoxPlotContainer />
+            <ExonBoxPlotLegendContainer />
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button onClick={onModalClose}>Close</Button>
+          </Modal.Footer>
+
+        </Modal>
+      </div>
     );
   }
 }

@@ -7,6 +7,20 @@ body {
   height: 100%;
   max-width: 100%;
 }
+
+/* exon box plot */
+.ExonBoxPlotModal {
+  width: 1200px;
+}
+/* transparent background */
+.modal-backdrop {
+  opacity: 0;
+  transition: opacity .2s;
+}
+.modal-backdrop.in {
+  opacity: .7;
+}
+
 .x.axis, .y.axis {
   font-family: 'Lato', sans-serif;
 }

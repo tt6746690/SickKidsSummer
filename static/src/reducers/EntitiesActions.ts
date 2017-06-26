@@ -33,12 +33,13 @@ export const LOAD_SEARCH_INDEX = "LOAD_SEARCH_INDEX";
 export const SELECT_GENE_PANEL = "SELECT_GENE_PANEL";
 export const SELECT_REF_TISSUE_SITE = "SELECT_REF_TISSUE_SITE";
 
-export const TOGGLE_GENE = "TOGGLE_GENE";
 export const UPDATE_GENE = "UPDATE_GENE";
-export const TOGGLE_TISSUE_SITE = "TOGGLE_TISSUE_SITE";
+export const SET_GENEFORPLOT = "SET_GENEFORPLOT";
 
-export const CLEAR_GENE_SELECTION = "CLEAR_GENE_PANEL_SELECTION";
+export const CLEAR_GENE_SELECTION = "CLEAR_GENE_SELECTION";
 export const CLEAR_TISSUE_SITE_SELECTION = "CLEAR_TISSUE_SITE_SELECTION";
+
+export const SET_RANKED_TISSUESITE = "SET_RANKED_TISSUESITE";
 
 // ui.search
 export const UPDATE_SEARCH_OPTIONS = "UPDATE_SEARCH_OPTIONS";
@@ -257,11 +258,15 @@ export function updateSelectedGene(ensemblIds: string[]) {
   };
 }
 
-export function toggleTissueSite(tissueSite: string) {
+export function setGeneForPlot(ensemblId: string = "") {
   return {
-    type: TOGGLE_TISSUE_SITE,
-    tissueSite
+    type: SET_GENEFORPLOT,
+    ensemblId
   };
+}
+
+export function setRankedTissueSite(tissueSiteId: string = "") {
+  return { type: SET_RANKED_TISSUESITE, tissueSiteId };
 }
 
 export function clearGeneSelection() {

@@ -5,33 +5,24 @@ import { Panel } from "react-bootstrap";
 
 class ExonBoxPlot extends React.Component<any, object> {
   componentDidMount() {
-    let { setUp } = this.props;
+    let { data, setUp, plot, preconditionSatisfied } = this.props;
     setUp();
-  }
-  componentWillUnmount() {
-    let { cleanUp } = this.props;
-    cleanUp();
-  }
-  componentWillUpdate() {
-    let { tearDown } = this.props;
-    tearDown();
-  }
-  componentDidUpdate() {
-    let { preconditionSatisfied, plot, data } = this.props;
     if (preconditionSatisfied()) {
-      console.log("ExonBoxPlot: plot()", data);
       plot();
     }
   }
+  componentWillUnmount() {
+    let { tearDown, cleanUp } = this.props;
+    tearDown();
+    cleanUp();
+  }
   render() {
-    let { data, lastGeneEntity, preconditionSatisfied } = this.props;
+    let { data, geneEntity, preconditionSatisfied } = this.props;
 
     return (
       <Panel
         bsStyle={preconditionSatisfied() ? "success" : "default"}
-        header={
-          isEmptyObject(lastGeneEntity) ? undefined : lastGeneEntity.geneSymbol
-        }
+        header={isEmptyObject(geneEntity) ? undefined : geneEntity.geneSymbol}
       >
         <div id="ExonBoxPlot" />
       </Panel>

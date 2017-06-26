@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Collapse, Panel, Table } from "react-bootstrap";
+import { Button, Collapse, Panel, Table, Row, Col } from "react-bootstrap";
 
 import ExonPlotContainer from "../containers/ExonPlotContainer";
 import { isNonEmptyArray } from "../utils/Utils";
@@ -8,9 +8,8 @@ class TissueSiteRanking extends React.Component<any, object> {
   render() {
     let {
       selectedGenePanel,
-      selectedTissueSite,
       selectedRefTissueSite,
-      selectedTissueSiteLast,
+      selectedRankedTissueSite,
       color,
       getRanking,
       onTissueSiteClick
@@ -62,11 +61,12 @@ class TissueSiteRanking extends React.Component<any, object> {
 
       const selectedTissueListGroupItem = ranking.map(
         ([tissueSiteId, totalExonCount, medianFrac, meanFrac], index) => {
-          let style = {
-            ...selectedTissueSite.includes(tissueSiteId) && {
-              backgroundColor: color(tissueSiteId)
-            }
-          };
+          let style = selectedRankedTissueSite === tissueSiteId ||
+            selectedRefTissueSite === tissueSiteId
+            ? {
+                backgroundColor: color(tissueSiteId)
+              }
+            : undefined;
 
           let tableRow = (
             <tr key={index.toString()}>
@@ -87,10 +87,10 @@ class TissueSiteRanking extends React.Component<any, object> {
 
           return [
             tableRow,
-            selectedTissueSiteLast === tissueSiteId &&
+            selectedRankedTissueSite === tissueSiteId &&
               selectedGenePanel !== "" &&
               selectedRefTissueSite !== "" &&
-              isNonEmptyArray(selectedTissueSite)
+              selectedRankedTissueSite !== ""
               ? <Collapse in={true}>
                   <tr>
                     <td colSpan={4}>

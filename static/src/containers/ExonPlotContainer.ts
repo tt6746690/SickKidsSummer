@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import ExonPlot from "../components/ExonPlot";
 import { stateInterface } from "../Interfaces";
-import { toggleGene } from "../reducers/EntitiesActions";
+import { setGeneForPlot } from "../reducers/EntitiesActions";
 import { isNonEmptyArray } from "../utils/Utils";
 
 const mapStateToProps = (state: stateInterface) => {
@@ -12,9 +12,10 @@ const mapStateToProps = (state: stateInterface) => {
     ui: {
       select: {
         gene: selectedGene,
+        geneForPlot: selectedGeneForPlot,
         genePanel: selectedGenePanel,
         refTissueSite: selectedRefTissueSite,
-        tissueSite: selectedTissueSite
+        rankedTissueSite: selectedRankedTissueSite
       },
       plot: { color, width, height, offset }
     }
@@ -41,13 +42,11 @@ const mapStateToProps = (state: stateInterface) => {
 
   let xGroupingWidthRatio = 0.5;
 
-  let selectedTissueSiteLast =
-    selectedTissueSite[selectedTissueSite.length - 1];
-
   return {
     gene,
     selectedGene,
-    selectedTissueSiteLast,
+    selectedGeneForPlot,
+    selectedRankedTissueSite,
     selectedRefTissueSite,
     getPlotId,
     color,
@@ -76,7 +75,6 @@ const mapStateToProps = (state: stateInterface) => {
         .selectAll("*")
         .remove();
     },
-
     plot(data, { noXLabel } = { noXLabel: false }) {
       let { "0": { geneSymbol, tissueSite } } = data;
 
@@ -144,9 +142,13 @@ const mapDispatchToProps = dispatch => {
         Selecting a gene
         -- sets toggles genes in ui.select.gene 
     */
-    onPanelGeneClick: evt => {
+    onModalOpen: evt => {
       let ensemblId = evt.target.value;
-      dispatch(toggleGene(ensemblId));
+      dispatch(setGeneForPlot(ensemblId));
+    },
+
+    onModalClose: () => {
+      dispatch(setGeneForPlot());
     }
   };
 };

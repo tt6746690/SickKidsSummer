@@ -23,22 +23,23 @@ class GenePanelInfo extends React.Component<any, object> {
     */
     let geneEntityList = getGeneEntityByIdList(gene, selectedGene);
     let selectedGeneButtons = isNonEmptyArray(geneEntityList)
-      ? geneEntityList.map((g: geneEntity, i: number) =>
+      ? geneEntityList.map((g: geneEntity, i: number) => [
           <Button
             bsStyle={!isEmptyObject(g.exonExpr) ? "default" : "warning"}
             className={"panelGeneButton"}
-            value={g.ensemblId}
             key={i.toString()}
+            value={g.ensemblId}
             onClick={onPanelGeneClick}
           >
-            {g.geneSymbol.toUpperCase()}
+            {g.geneSymbol.toUpperCase() + " x"}
           </Button>
-        )
+        ])
       : undefined;
 
     return (
       <ButtonGroup>
-        {selectedGeneButtons}
+        {selectedGeneButtons &&
+          selectedGeneButtons.reduce((acc, cur) => acc.concat(cur), [])}
       </ButtonGroup>
     );
   }

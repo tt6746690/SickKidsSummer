@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 
 import TissueSiteRanking from "../components/TissueSiteRanking";
 import { stateInterface } from "../Interfaces";
-import { toggleTissueSite } from "../reducers/EntitiesActions";
+import { setRankedTissueSite } from "../reducers/EntitiesActions";
 import {
   getGenePanelEntityById,
   getGenePanelEntityByIdList
@@ -19,22 +19,17 @@ const mapStateToProps = (state: stateInterface) => {
         gene: selectedGene,
         genePanel: selectedGenePanel,
         refTissueSite: selectedRefTissueSite,
-        tissueSite: selectedTissueSite
+        rankedTissueSite: selectedRankedTissueSite
       },
       plot: { color, width, height, offset }
     }
   } = state;
 
-  let selectedTissueSiteLast =
-    selectedTissueSite[selectedTissueSite.length - 1];
-
   return {
     selectedGenePanel,
     selectedRefTissueSite,
-    selectedTissueSite,
-    selectedTissueSiteLast,
+    selectedRankedTissueSite,
     color,
-
     /* 
       Gets ranking for ui.select.gene 
       -- compute panel ranking is tissueRanking has not been computed beforehand 
@@ -58,7 +53,7 @@ const mapDispatchToProps = dispatch => {
     */
     onTissueSiteClick: evt => {
       let tissueSite = evt.target.value;
-      dispatch(toggleTissueSite(tissueSite));
+      dispatch(setRankedTissueSite(tissueSite));
     }
   };
 };

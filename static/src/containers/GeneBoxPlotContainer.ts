@@ -11,11 +11,7 @@ const mapStateToProps = (state: stateInterface) => {
   let {
     entities: { gene, genePanel, tissueSite },
     ui: {
-      select: {
-        gene: selectedGene,
-        genePanel: selectedGenePanel,
-        tissueSite: selectedTissueSite
-      },
+      select: { gene: selectedGene, genePanel: selectedGenePanel },
       plot: { color, width, height, offset }
     }
   } = state;

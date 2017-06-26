@@ -25,6 +25,7 @@ const mapDispatchToProps = dispatch => {
         -- switch view to the ranking table
     */
     onTissueSiteListSelect: (refTissueSite: string) => {
+      /* reset ui.select.tissueSite first*/
       dispatch(selectRefTissueSite(refTissueSite));
       dispatch(setViewType(VIEW_TYPE.TISSUESITE_RANKING));
     }

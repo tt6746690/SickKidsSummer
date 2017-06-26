@@ -113,7 +113,6 @@ function _fetchPanelGenesList(genePanelId: string) {
   return (dispatch, getState) => {
     let { entities: { genePanel } } = getState();
     if (genePanelPanelGenesPopulated(genePanel, genePanelId)) {
-      console.log("fetchPanelGenesList: skip");
       return Promise.resolve();
     }
 
@@ -163,7 +162,6 @@ function _fetchGenePanelTissueRanking(genePanelId: string) {
     let { entities: { genePanel } } = getState();
 
     if (genePanelTissueRankingPopulated(genePanel, genePanelId)) {
-      console.log("_fetchGenePanelTissueRanking: skip");
       return Promise.resolve();
     }
 

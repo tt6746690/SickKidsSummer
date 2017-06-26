@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import ExonBoxPlot from "../components/ExonBoxPlot";
 import { geneEntity, stateInterface } from "../Interfaces";
-import { getGeneEntityByIdList } from "../store/Query";
+import { getGeneEntityById, getGeneEntityByIdList } from "../store/Query";
 import { formatExonBoxPlotData } from "../utils/Plot";
 import { isNonEmptyArray } from "../utils/Utils";
 
@@ -13,8 +13,10 @@ const mapStateToProps = (state: stateInterface) => {
     ui: {
       select: {
         gene: selectedGene,
+        geneForPlot: selectedGeneForPlot,
         genePanel: selectedGenePanel,
-        tissueSite: selectedTissueSite
+        refTissueSite: selectedRefTissueSite,
+        rankedTissueSite: selectedRankedTissueSite
       },
       plot: { color, width, height, offset }
     }
@@ -36,32 +38,34 @@ const mapStateToProps = (state: stateInterface) => {
   let xAxis = d3.axisBottom(x);
   let yAxis = d3.axisLeft(y).tickFormat(d3.format(".5"));
 
-  let numPerTick = selectedTissueSite.length;
+  let numPerTick = 2; /* hard code 2 for now -- ref and ranked TissueSite respectively*/
   let xGroupingWidthRatio = 0.4;
 
   let xTicks: number[];
   let xTickCount = 0;
 
   let data = [];
-  let geneEntities = getGeneEntityByIdList(gene, selectedGene); // defaults to []
-  let lastGeneEntity: geneEntity = {} as geneEntity;
+  let geneEntity = getGeneEntityById(gene, selectedGeneForPlot);
 
   /* 
         Precondition for computing data for exon expression plot 
-        -- select.gene array non empty and query for exonExpr in entities yield valid result
+        -- select.geneForPlot is non-Empty
         -- select.tissueSite array non empty
         -- select.genePanel
     */
   if (
     selectedGenePanel !== "" &&
-    isNonEmptyArray(selectedGene) &&
-    isNonEmptyArray(selectedTissueSite)
+    selectedGeneForPlot !== "" &&
+    selectedRankedTissueSite !== ""
   ) {
-    lastGeneEntity = geneEntities[geneEntities.length - 1];
+    data = formatExonBoxPlotData(geneEntity.exonExpr, [
+      selectedRefTissueSite,
+      selectedRankedTissueSite
+    ]);
 
-    data = formatExonBoxPlotData(lastGeneEntity.exonExpr, selectedTissueSite);
+    console.log(data);
 
-    xTicks = Object.keys(lastGeneEntity.exonExpr).map(x => parseInt(x));
+    xTicks = Object.keys(geneEntity.exonExpr).map(x => parseInt(x));
     xTickCount = xTicks.length;
 
     x.domain([0, xTickCount + 1]);
@@ -74,20 +78,18 @@ const mapStateToProps = (state: stateInterface) => {
   return {
     svg,
     data,
-    lastGeneEntity,
-    /*
+    geneEntity /*
       Returns true of data is valid for plotting 
-    */
+    */,
     preconditionSatisfied() {
       return typeof data !== "undefined" && isNonEmptyArray(data);
-    },
-    /* 
+    } /* 
         Set up 
         -- toplevel svg, g 
         -- perform appropriate transformation 
         -- global event handler 
         ---- zoom
-        */
+        */,
     setUp: () => {
       svg = d3
         .select("#" + plotName)
@@ -97,12 +99,11 @@ const mapStateToProps = (state: stateInterface) => {
         .append("g")
         .attr("transform", "translate(" + offset + "," + offset + ")")
         .classed(plotName + "Group", true);
-    },
-    /*
+    } /*
         Removes all dom element under 
         -- .ExonBarPlotGroup everytime before update 
         -- svg everytime component unmounted
-    */
+    */,
     tearDown: () => {
       d3.select("." + plotName + "Group").selectAll("*").remove();
       d3.select("#" + plotName).select("svg").on(".zoom", null);
@@ -110,7 +111,6 @@ const mapStateToProps = (state: stateInterface) => {
     cleanUp: () => {
       d3.select("#" + plotName).selectAll("*").remove();
     },
-
     /* 
         Plotting 
         -- x and y axis

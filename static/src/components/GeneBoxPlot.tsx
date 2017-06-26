@@ -20,7 +20,6 @@ class GeneBoxPlot extends React.Component<any, object> {
   componentDidUpdate() {
     let { data, plot, preconditionSatisfied } = this.props;
     if (preconditionSatisfied()) {
-      console.log("GeneBoxPlot: plot()", data);
       plot();
     }
   }
