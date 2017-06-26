@@ -25,3 +25,22 @@ export function pad(
   }
   return s;
 }
+
+/* 
+  precondition: values are sorted
+*/
+export function median(values: number[]) {
+  let lowMiddle = Math.floor((values.length - 1) / 2);
+  let highMiddle = Math.ceil((values.length - 1) / 2);
+  return (values[lowMiddle] + values[highMiddle]) / 2;
+}
+
+export function mean(values: number[]) {
+  let count = values.length;
+  if (count === 0) {
+    return;
+  }
+
+  let sum = values.reduce((acc, cur) => (acc += cur), 0);
+  return sum / count;
+}

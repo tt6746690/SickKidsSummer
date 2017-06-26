@@ -16,7 +16,7 @@ const mapStateToProps = (state: stateInterface) => {
 const mapDispatchToProps = dispatch => {
   return {
     hide() {
-      setTimeout(() => dispatch(resetFetchStatus()), 500);
+      setTimeout(() => dispatch(resetFetchStatus()), 200);
     }
   };
 };

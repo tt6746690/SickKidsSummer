@@ -5,13 +5,19 @@ import {
   searchIndexEntity,
   tissueSiteEntity
 } from "../Interfaces";
-import { getGeneEntityById, getGenePanelEntityById } from "../store/Query";
+import {
+  getGeneEntityById,
+  getGenePanelEntityById,
+  getGeneEntityByIdList
+} from "../store/Query";
 import {
   flattenPanelOptionPanelGenes,
   getOptionByType,
   makeGeneOption
 } from "../utils/Option";
 import { isEmptyObject } from "../utils/Utils";
+import { getGeneSetHash } from "../utils/Hash";
+import { computePanelRanking } from "../utils/Ranking";
 
 // actionTypes
 export const HYDRATE_INITIAL_STATE = "HYDRATE_INITIAL_STATE";
@@ -47,10 +53,50 @@ export const VIEW_TYPE = {
 };
 
 /* 
+  compute panelRanking and add resultant ranking to entities.genePanel.tissueRanking
+*/
+export const populatePanelRanking = (genePanelId: string) => {
+  return (dispatch, getState) => {
+    let {
+      ui: { select: { gene: selectedGene } },
+      entities: { genePanel, gene, tissueSite }
+    } = getState();
+
+    let panelEntity = getGenePanelEntityById(genePanel, genePanelId);
+
+    if (isEmptyObject(panelEntity.tissueRanking)) {
+      let { panelGenes } = panelEntity;
+
+      let panelGeneEntities = getGeneEntityByIdList(gene, panelGenes);
+      let ranking = computePanelRanking(panelGeneEntities, tissueSite);
+      dispatch(addGenePanel({ genePanelId, tissueRanking: ranking }));
+    }
+  };
+};
+
+/* 
+  Given an array of genes 
+  -- compute <panelHash> for genePanel based on ensemblIds 
+  -- make new genePanel on <panelHash> if not exists 
+  -- compute panel's tissueRanking and populate entities.genePanel.<panelHash>.tissueRanking
+*/
+export function updatePanelEntity(ensemblIds: string[]) {
+  return dispatch => {
+    let genePanelId = getGeneSetHash(ensemblIds);
+
+    return Promise.all([
+      dispatch(addGenePanel({ genePanelId, panelGenes: ensemblIds })),
+      dispatch(selectGenePanel(genePanelId))
+    ]).then(() => dispatch(populatePanelRanking(genePanelId)));
+  };
+}
+
+/* 
   Given searchOptions, 
   -- update ui.select.genes considering that option can be of GENE_TYPE and PANEL_TYPE
-  -- queries entities.genePanel.panelGenes to expand PANEL_TYPE options
-  ---- this is necessary since during onSearchChange panelGenes is yet to be fetched
+  ---- queries entities.genePanel.panelGenes to expand PANEL_TYPE options
+  ------ this is necessary since during onSearchChange panelGenes is yet to be fetched
+  -- update entities.genePanel to reflect currently selected set of genes
 */
 export function updateSelectedGeneWithOptions(options: searchIndexEntity[]) {
   return (dispatch, getState) => {
@@ -70,15 +116,9 @@ export function updateSelectedGeneWithOptions(options: searchIndexEntity[]) {
     let allGenes = geneOptions
       .map(opt => opt.ensemblId)
       .concat(flattenPanelOptionPanelGenes(panelOptions));
+    dispatch(updateSelectedGene(allGenes));
 
-    return dispatch(updateGene(allGenes));
-  };
-}
-
-export function updateSearchOptions(options: searchIndexEntity[] = []) {
-  return {
-    type: UPDATE_SEARCH_OPTIONS,
-    options
+    return dispatch(updatePanelEntity(allGenes));
   };
 }
 
@@ -134,6 +174,13 @@ export function updateSearchOptionWithCollapse(
     }
 
     return dispatch(updateSearchOptions(selectedOption));
+  };
+}
+
+export function updateSearchOptions(options: searchIndexEntity[] = []) {
+  return {
+    type: UPDATE_SEARCH_OPTIONS,
+    options
   };
 }
 
@@ -195,12 +242,15 @@ export function selectRefTissueSite(tissueSiteId: string) {
 }
 
 export function toggleGene(ensemblId: string) {
-  return {
-    type: TOGGLE_GENE,
-    ensemblId
+  return (dispatch, getState) => {
+    let { ui: { select: { gene: selectedGene } } } = getState();
+    let restOfGene = selectedGene.filter(id => id !== ensemblId);
+    dispatch(updateSelectedGene(restOfGene));
+    return dispatch(updatePanelEntity(restOfGene));
   };
 }
-export function updateGene(ensemblIds: string[]) {
+
+export function updateSelectedGene(ensemblIds: string[]) {
   return {
     type: UPDATE_GENE,
     ensemblIds

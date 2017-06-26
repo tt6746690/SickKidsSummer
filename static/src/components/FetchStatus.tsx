@@ -8,7 +8,7 @@ class FetchStatus extends React.Component<any, any> {
   componentDidUpdate() {
     let { isFetching, fetchStatus, hide } = this.props;
     if (!isFetching && fetchStatus !== "") {
-      setTimeout(() => hide(), 200);
+      hide();
     }
   }
 

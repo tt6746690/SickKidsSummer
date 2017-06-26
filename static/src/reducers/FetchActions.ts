@@ -61,8 +61,8 @@ const fetchJson = (
 ): Promise<Response> => {
   return fetch(url, { mode: "cors" })
     .then(res => res.json())
-    .then(data => onSuccess(data))
-    .catch(err => onFailure(err));
+    .then(data => onSuccess(data));
+  // .catch(err => onFailure(err));
 };
 
 /* 
@@ -182,7 +182,7 @@ function _fetchExonExpr(ensemblId: string) {
   return dispatch => {
     return fetchJson(EXON_EXPR_URL(ensemblId), data => {
       let { exonExpr, tissueRanking } = data;
-      dispatch(addGene({ ensemblId, exonExpr, tissueRanking }));
+      return dispatch(addGene({ ensemblId, exonExpr, tissueRanking }));
     });
   };
 }
@@ -204,7 +204,7 @@ function _fetchGeneSymbol(ensemblId: string) {
   return dispatch => {
     return fetchJson(GENE_SYMBOL_URL(ensemblId), data => {
       let { geneSymbol } = data;
-      dispatch(addGene({ ensemblId, geneSymbol }));
+      return dispatch(addGene({ ensemblId, geneSymbol }));
     });
   };
 }
@@ -217,25 +217,16 @@ function _fetchGeneSymbol(ensemblId: string) {
 function _fetchGene(ensemblId: string) {
   return (dispatch, getState) => {
     let { entities: { gene } } = getState();
-
-    let promises = [];
-    if (!geneSymbolPopulated(gene, ensemblId)) {
-      promises.push(dispatch(_fetchGeneSymbol(ensemblId)));
+    if (
+      !geneSymbolPopulated(gene, ensemblId) ||
+      !genePropertyPopulated(gene, ensemblId, "exonExpr")
+    ) {
+      return dispatch(_fetchGeneSymbol(ensemblId)).then(() =>
+        dispatch(_fetchExonExpr(ensemblId))
+      );
+    } else {
+      return Promise.resolve();
     }
-    if (!genePropertyPopulated(gene, ensemblId, "exonExpr")) {
-      promises.push(dispatch(_fetchExonExpr(ensemblId)));
-    }
-    // no need to display gene plot so dont fetch that data
-    // if (!genePropertyPopulated(gene, ensemblId, "geneExpr")) {
-    //   promises.push(dispatch(_fetchGeneExpr(ensemblId)));
-    // }
-
-    return isNonEmptyArray(promises)
-      ? dispatch(startFetch(`fetching ${ensemblId}...`)) &&
-          Promise.all([promises]).then(() =>
-            setTimeout(() => dispatch(endFetchSuccess(), 500))
-          )
-      : Promise.resolve();
   };
 }
 
@@ -244,7 +235,7 @@ function _fetchGene(ensemblId: string) {
 */
 function _fetchGeneSet(ensemblIds: string[]) {
   return dispatch => {
-    return ensemblIds.map(id => dispatch(_fetchGene(id)));
+    return Promise.all(ensemblIds.map(id => dispatch(_fetchGene(id))));
   };
 }
 
@@ -252,8 +243,19 @@ function _fetchGeneSet(ensemblIds: string[]) {
   fetch Gene and record fetch status in state.networks
 */
 export function fetchGene(ensemblId: string) {
-  return dispatch => {
-    return dispatch(_fetchGene(ensemblId));
+  return (dispatch, getState) => {
+    let { entities: { gene } } = getState();
+    if (
+      !geneSymbolPopulated(gene, ensemblId) ||
+      !genePropertyPopulated(gene, ensemblId, "exonExpr")
+    ) {
+      dispatch(startFetch(`fetching ${ensemblId}`));
+      return dispatch(_fetchGene(ensemblId)).then(() =>
+        dispatch(endFetchSuccess())
+      );
+    } else {
+      return Promise.resolve();
+    }
   };
 }
 
@@ -286,17 +288,17 @@ export function hydrateInitialState() {
 export function fetchGenePanel(genePanelId: string) {
   return (dispatch, getState) => {
     dispatch(startFetch(`fetching ${genePanelId}...`));
-    return Promise.all([
-      dispatch(_fetchPanelGenesList(genePanelId)),
-      dispatch(_fetchGenePanelTissueRanking(genePanelId))
-    ])
-      .then(() => {
+
+    return dispatch(_fetchPanelGenesList(genePanelId))
+      .then(() => dispatch(_fetchGenePanelTissueRanking(genePanelId)))
+      .then(result => {
+        console.log("fetchGenePanel", result);
         let { entities: { genePanel } } = getState();
         let panelEntity = getGenePanelEntityById(genePanel, genePanelId);
-        dispatch(
+        return dispatch(
           _fetchGeneSet(!isEmptyObject(panelEntity) && panelEntity.panelGenes)
         );
       })
-      .then(() => dispatch(endFetchSuccess()));
+      .then(() => dispatch(endFetchSuccess("success!")));
   };
 }

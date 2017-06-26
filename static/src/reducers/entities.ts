@@ -25,18 +25,18 @@ const pushGene = (state: geneEntity[] = [], action) => {
         return {
           ...gene,
           ensemblId: action.ensemblId,
-          geneSymbol: gene.geneSymbol === ""
-            ? action.geneSymbol
-            : gene.geneSymbol,
-          geneExpr: isEmptyObject(gene.geneExpr)
-            ? action.geneExpr
-            : gene.geneExpr,
-          exonExpr: isEmptyObject(gene.exonExpr)
-            ? action.exonExpr
-            : gene.exonExpr,
-          tissueRanking: isEmptyObject(gene.tissueRanking)
-            ? action.tissueRanking
-            : gene.tissueRanking
+          geneSymbol: action.geneSymbol === ""
+            ? gene.geneSymbol
+            : action.geneSymbol,
+          geneExpr: isEmptyObject(action.geneExpr)
+            ? gene.geneExpr
+            : action.geneExpr,
+          exonExpr: isEmptyObject(action.exonExpr)
+            ? gene.exonExpr
+            : action.exonExpr,
+          tissueRanking: isEmptyObject(action.tissueRanking)
+            ? gene.tissueRanking
+            : action.tissueRanking
         };
       } else {
         return { ...gene };
@@ -64,12 +64,12 @@ const pushGenePanel = (state: genePanelEntity[] = [], action) => {
       if (genePanel.genePanelId == action.genePanelId) {
         return {
           genePanelId: action.genePanelId,
-          panelGenes: genePanel.panelGenes.length === 0
-            ? [...action.panelGenes]
-            : [...genePanel.panelGenes],
-          tissueRanking: isEmptyObject(genePanel.tissueRanking)
-            ? { ...action.tissueRanking }
-            : { ...genePanel.tissueRanking }
+          panelGenes: action.panelGenes.length === 0
+            ? [...genePanel.panelGenes]
+            : [...action.panelGenes],
+          tissueRanking: isEmptyObject(action.tissueRanking)
+            ? { ...genePanel.tissueRanking }
+            : { ...action.tissueRanking }
         };
       } else {
         return { ...genePanel };

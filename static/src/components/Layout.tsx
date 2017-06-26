@@ -43,16 +43,11 @@ class Layout extends React.Component<any, object> {
             </Col>
           </Panel>
         </Row>
-
-        <Tabs
-          activeKey={viewType}
-          onSelect={onTabSelect}
-          animation={true}
-          id="noanim-tab-example"
-        />
-        <Tab eventKey={VIEW_TYPE.TISSUESITE_RANKING} title="Ranking">
-          <TissueSiteRankingContainer />
-        </Tab>;
+        <Row id="ranking">
+          <Col md={12}>
+            <TissueSiteRankingContainer />
+          </Col>
+        </Row>
 
       </Grid>
     );
@@ -62,6 +57,15 @@ class Layout extends React.Component<any, object> {
 export default Layout;
 
 /* 
+ <Tabs
+          activeKey={viewType}
+          onSelect={onTabSelect}
+          animation={true}
+          id="noanim-tab-example"
+        />
+        <Tab eventKey={VIEW_TYPE.TISSUESITE_RANKING} title="Ranking">
+          <TissueSiteRankingContainer />
+        </Tab>;
 <Tab eventKey={VIEW_TYPE.TISSUESITE_RANKING} title="Ranking">
   <TissueSiteRankingContainer />
 </Tab>;

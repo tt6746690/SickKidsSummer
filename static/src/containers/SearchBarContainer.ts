@@ -85,7 +85,6 @@ const mapDispatchToProps = dispatch => {
     });
     panelOptions.forEach(option => {
       let genePanelId = option.name;
-      dispatch(selectGenePanel(genePanelId));
       promises.push(dispatch(fetchGenePanel(genePanelId)));
     });
 

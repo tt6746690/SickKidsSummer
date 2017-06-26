@@ -118,29 +118,6 @@ export function genePanelTissueRankingPopulated(
 }
 
 /*
-  Get the tissueSite ranking given 
-  -- entities.genePanel: store to query from
-  -- genePanelId: selected gene panel within entities.genePanel
-  -- tissueSite: reference tissueSite 
-  Return 
-  -- genePanel.tissueRanking if found 
-  -- [] otherwise
-*/
-export function getTissueRanking(
-  genePanel: genePanelEntity[],
-  genePanelId: string,
-  tissueSite: string
-): Object[] {
-  let panel = getGenePanelEntityById(genePanel, genePanelId);
-
-  if ("tissueRanking" in panel && tissueSite in panel.tissueRanking) {
-    return panel.tissueRanking[tissueSite];
-  } else {
-    return [];
-  }
-}
-
-/*
   Queries gene and returns a subset such that either
   -- exonExpr
   -- geneExpr

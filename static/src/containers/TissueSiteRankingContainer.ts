@@ -3,13 +3,20 @@ import { connect } from "react-redux";
 import TissueSiteRanking from "../components/TissueSiteRanking";
 import { stateInterface } from "../Interfaces";
 import { toggleTissueSite } from "../reducers/EntitiesActions";
-import { getTissueRanking } from "../store/Query";
+import {
+  getGenePanelEntityById,
+  getGenePanelEntityByIdList
+} from "../store/Query";
+import { computePanelRanking, getTissueRanking } from "../utils/Ranking";
+import { isEmptyObject } from "../utils/Utils";
+import { getGeneSetHash } from "../utils/Hash";
 
 const mapStateToProps = (state: stateInterface) => {
   let {
     entities: { gene, tissueSite, genePanel },
     ui: {
       select: {
+        gene: selectedGene,
         genePanel: selectedGenePanel,
         refTissueSite: selectedRefTissueSite,
         tissueSite: selectedTissueSite
@@ -27,6 +34,11 @@ const mapStateToProps = (state: stateInterface) => {
     selectedTissueSite,
     selectedTissueSiteLast,
     color,
+
+    /* 
+      Gets ranking for ui.select.gene 
+      -- compute panel ranking is tissueRanking has not been computed beforehand 
+      */
     getRanking() {
       return getTissueRanking(
         genePanel,
