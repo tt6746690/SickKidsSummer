@@ -4,7 +4,6 @@ import mygene
 mg = mygene.MyGeneInfo()
 
 PANELS = ["neuropathy.txt", "channelopathies.txt", "congenital_myasthenic_syndromes.txt", "distal_myopathies.txt", "muscular_dystrophies.txt", "vacuolar_and_others.txt", "limb_girdle_dystrophies.txt", "congenital_myopathy.txt", "congenital_muscular_dystrophies.txt"]
-PANELS=["neuropathy.txt"]
 
 def sym_to_ensembl(sym_fp, out_fp):
     """ Takes comma seperated list of gene symbol at sym_fp
