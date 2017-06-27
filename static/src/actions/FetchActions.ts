@@ -178,7 +178,7 @@ function _fetchGenePanelTissueRanking(genePanelId: string) {
 function _fetchExonExpr(ensemblId: string) {
   return dispatch => {
     return fetchJson(EXON_EXPR_URL(ensemblId), data => {
-      let { exonExpr, tissueRanking } = data;
+      let { exonExpression: exonExpr, tissueRanking } = data;
       return dispatch(addGene({ ensemblId, exonExpr, tissueRanking }));
     });
   };
