@@ -5,7 +5,6 @@ import { applyMiddleware, createStore, compose } from "redux";
 import ReduxThunk from "redux-thunk";
 
 import { stateInterface } from "../Interfaces";
-import { VIEW_TYPE } from "../reducers/EntitiesActions";
 import rootReducer from "../reducers/Root";
 
 /* 
@@ -30,7 +29,6 @@ let defaultState: stateInterface = {
       refTissueSite: "",
       rankedTissueSite: ""
     },
-    viewType: VIEW_TYPE.TISSUESITE_RANKING,
     plot: {
       color: d3.scaleOrdinal(d3.schemeCategory20),
       width: 1100,

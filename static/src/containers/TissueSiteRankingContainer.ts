@@ -1,15 +1,9 @@
 import { connect } from "react-redux";
 
+import { setRankedTissueSite } from "../actions/UIActions";
 import TissueSiteRanking from "../components/TissueSiteRanking";
 import { stateInterface } from "../Interfaces";
-import { setRankedTissueSite } from "../reducers/EntitiesActions";
-import {
-  getGenePanelEntityById,
-  getGenePanelEntityByIdList
-} from "../store/Query";
-import { computePanelRanking, getTissueRanking } from "../utils/Ranking";
-import { isEmptyObject } from "../utils/Utils";
-import { getGeneSetHash } from "../utils/Hash";
+import { getTissueRanking } from "../utils/Ranking";
 
 const mapStateToProps = (state: stateInterface) => {
   let {

@@ -2,27 +2,20 @@ import { connect } from "react-redux";
 
 import Layout from "../components/Layout";
 import { stateInterface } from "../Interfaces";
-import { setViewType } from "../reducers/EntitiesActions";
-import { hydrateInitialState } from "../reducers/FetchActions";
+import { hydrateInitialState } from "../actions/FetchActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let {
-    ui: {
-      viewType,
-      select: { gene: selectedGene, genePanel: selectedGenePanel }
-    }
+    ui: { select: { gene: selectedGene, genePanel: selectedGenePanel } }
   } = state;
 
-  return { viewType, selectedGene, selectedGenePanel };
+  return { selectedGene, selectedGenePanel };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onComponentWillMount: () => {
       dispatch(hydrateInitialState());
-    },
-    onTabSelect: tabType => {
-      dispatch(setViewType(tabType));
     }
   };
 };

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import ExonPlot from "../components/ExonPlot";
 import { stateInterface } from "../Interfaces";
-import { setGeneForPlot } from "../reducers/EntitiesActions";
+import { setGeneForPlot } from "../actions/UIActions";
 import { isNonEmptyArray } from "../utils/Utils";
 
 const mapStateToProps = (state: stateInterface) => {

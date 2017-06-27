@@ -1,14 +1,13 @@
 import { connect } from "react-redux";
 
-import SearchBar from "../components/SearchBar";
-import { OPTION_TYPE, searchIndexEntity, stateInterface } from "../Interfaces";
+import { fetchGene, fetchGenePanel } from "../actions/FetchActions";
 import {
-  selectGenePanel,
   updateSearchOptions,
   updateSearchOptionWithCollapse,
   updateSelectedGeneWithOptions
-} from "../reducers/EntitiesActions";
-import { fetchGene, fetchGenePanel } from "../reducers/FetchActions";
+} from "../actions/UIActions";
+import SearchBar from "../components/SearchBar";
+import { OPTION_TYPE, searchIndexEntity, stateInterface } from "../Interfaces";
 import {
   getOptionByType,
   makeGeneOption,

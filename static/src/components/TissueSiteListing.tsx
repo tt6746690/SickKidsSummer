@@ -31,6 +31,7 @@ class TissueSiteListing extends React.Component<any, object> {
             ? "Tissue Types"
             : selectedRefTissueSite.replace(/ *\([^)]*\) */g, "")
         }
+        bsSize={"large"}
         id="bg-nested-dropdown"
         onSelect={onTissueSiteListSelect}
         className="tissueSiteListing"

@@ -3,7 +3,7 @@ import {
   END_FETCH_SUCCESS,
   START_FETCH,
   RESET_FETCH_STATUS
-} from "./FetchActions";
+} from "../actions/FetchActions";
 
 export default function networks(state, action) {
   switch (action.type) {

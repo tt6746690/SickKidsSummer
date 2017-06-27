@@ -1,54 +1,30 @@
-import { geneEntity, tissueSiteEntity } from "../interfaces";
+import "../actions/EntitiesActions";
+
 import {
-  CLEAR_TISSUE_SITE_SELECTION,
-  SELECT_GENE_PANEL,
-  SELECT_REF_TISSUE_SITE,
-  SELECT_VIEW,
-  SET_SEARCH_COLLAPSE,
-  UPDATE_GENE,
-  UPDATE_SEARCH_OPTIONS,
+  EMPTY_SELECTED_GENE,
+  SET_GENE_PANEL,
   SET_GENEFORPLOT,
-  CLEAR_GENE_SELECTION,
-  SET_RANKED_TISSUESITE
-} from "./EntitiesActions";
+  SET_RANKED_TISSUESITE,
+  SET_REF_TISSUESITE,
+  SET_SEARCH_COLLAPSE,
+  SET_SELECTED_GENE,
+  UPDATE_SEARCH_OPTIONS
+} from "../actions/UIActions";
 
 function select(state, action) {
   switch (action.type) {
-    case SELECT_GENE_PANEL:
-      return {
-        ...state,
-        genePanel: action.genePanelId
-      };
-    case SELECT_REF_TISSUE_SITE:
-      return {
-        ...state,
-        refTissueSite: action.tissueSiteId
-      };
-    case SET_RANKED_TISSUESITE:
-      return {
-        ...state,
-        rankedTissueSite: action.tissueSiteId
-      };
-    case UPDATE_GENE:
-      return {
-        ...state,
-        gene: [...action.ensemblIds]
-      };
+    case SET_SELECTED_GENE:
+      return { ...state, gene: [...action.ensemblIds] };
+    case EMPTY_SELECTED_GENE:
+      return { ...state, gene: [] };
     case SET_GENEFORPLOT:
-      return {
-        ...state,
-        geneForPlot: action.ensemblId
-      };
-    case CLEAR_GENE_SELECTION:
-      return {
-        ...state,
-        gene: []
-      };
-    case CLEAR_TISSUE_SITE_SELECTION:
-      return {
-        ...state,
-        tissueSite: []
-      };
+      return { ...state, geneForPlot: action.ensemblId };
+    case SET_GENE_PANEL:
+      return { ...state, genePanel: action.genePanelId };
+    case SET_REF_TISSUESITE:
+      return { ...state, refTissueSite: action.tissueSiteId };
+    case SET_RANKED_TISSUESITE:
+      return { ...state, rankedTissueSite: action.tissueSiteId };
     default:
       return state;
   }
@@ -68,15 +44,13 @@ function search(state, action) {
 
 export default function ui(state, action) {
   switch (action.type) {
-    case SELECT_GENE_PANEL:
-    case SELECT_REF_TISSUE_SITE:
-    case UPDATE_GENE:
+    case SET_SELECTED_GENE:
+    case EMPTY_SELECTED_GENE:
     case SET_GENEFORPLOT:
+    case SET_GENE_PANEL:
+    case SET_REF_TISSUESITE:
     case SET_RANKED_TISSUESITE:
-    case CLEAR_GENE_SELECTION:
       return { ...state, select: select(state.select, action) };
-    case SELECT_VIEW:
-      return { ...state, viewType: action.viewType };
     case UPDATE_SEARCH_OPTIONS:
     case SET_SEARCH_COLLAPSE:
       return { ...state, search: search(state.search, action) };

@@ -49,7 +49,6 @@ export interface stateInterface {
       refTissueSite: string;
       rankedTissueSite: string;
     };
-    viewType: string;
     plot: {
       color: any;
       width: number;

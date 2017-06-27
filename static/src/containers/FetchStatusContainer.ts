@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 
 import FetchStatus from "../components/FetchStatus";
 import { stateInterface } from "../Interfaces";
-import { resetFetchStatus } from "../reducers/FetchActions";
+import { resetFetchStatus } from "../actions/FetchActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let { networks: { isFetching, fetchStatus } } = state;

@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 
 import ExonBoxPlotLegend from "../components/ExonBoxPlotLegend";
 import { stateInterface } from "../Interfaces";
-import { setRankedTissueSite } from "../reducers/EntitiesActions";
+import { setRankedTissueSite } from "../actions/UIActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let {

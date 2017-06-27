@@ -2,7 +2,7 @@ import * as React from "react";
 import "whatwg-fetch";
 import "react-bootstrap";
 
-import { FETCH_STATUS } from "../reducers/FetchActions";
+import { FETCH_STATUS } from "../actions/FetchActions";
 
 class FetchStatus extends React.Component<any, any> {
   componentDidUpdate() {

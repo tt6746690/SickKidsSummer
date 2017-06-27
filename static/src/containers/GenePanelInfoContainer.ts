@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 
 import GenePanelInfo from "../components/GenePanelInfo";
 import { stateInterface } from "../Interfaces";
-import { toggleGene } from "../reducers/EntitiesActions";
+import { toggleGene } from "../actions/UIActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let {

@@ -5,7 +5,7 @@ import {
   ADD_GENE_PANEL,
   ADD_TISSUE_SITE,
   LOAD_SEARCH_INDEX
-} from "./EntitiesActions";
+} from "../actions/EntitiesActions";
 
 const pushGene = (state: geneEntity[] = [], action) => {
   if (state.findIndex(e => e.ensemblId === action.ensemblId) == -1) {

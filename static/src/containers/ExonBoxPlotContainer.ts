@@ -2,8 +2,8 @@ import * as d3 from "d3";
 import { connect } from "react-redux";
 
 import ExonBoxPlot from "../components/ExonBoxPlot";
-import { geneEntity, stateInterface } from "../Interfaces";
-import { getGeneEntityById, getGeneEntityByIdList } from "../store/Query";
+import { stateInterface } from "../Interfaces";
+import { getGeneEntityById } from "../store/Query";
 import { formatExonBoxPlotData } from "../utils/Plot";
 import { isNonEmptyArray } from "../utils/Utils";
 

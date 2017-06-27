@@ -61,8 +61,8 @@ const fetchJson = (
 ): Promise<Response> => {
   return fetch(url, { mode: "cors" })
     .then(res => res.json())
-    .then(data => onSuccess(data));
-  // .catch(err => onFailure(err));
+    .then(data => onSuccess(data))
+    .catch(err => onFailure(err));
 };
 
 /* 
@@ -90,10 +90,9 @@ function _fetchTissueSiteList() {
 */
 function _fetchGenePanelList() {
   return dispatch => {
-    return fetchJson(GENE_PANEL_LIST_URL, panelList => {
-      isNonEmptyArray(panelList) &&
-        panelList.map(panel => dispatch(addGenePanel({ genePanelId: panel })));
-    });
+    return fetchJson(GENE_PANEL_LIST_URL, panelList =>
+      panelList.map(panel => dispatch(addGenePanel({ genePanelId: panel })))
+    );
   };
 }
 
@@ -238,8 +237,18 @@ function _fetchGeneSet(ensemblIds: string[]) {
 }
 
 /* 
-  fetch Gene and record fetch status in state.networks
+  Publicly exposed API 
+  -- fetchGene 
+  ---- fetch Gene.{exonExpr, geneSymbol} and populate corresponding entry in state.entities.gene
+  -- fetchGenePanel
+  ---- fetch and update entities.gene for all genes in the panel (i.e. call fetchGene(g) for all g in panel)
+  -- hydrateInitialState
+  ---- fetch tissueSiteList, genePanelList, searchIndex
+
+  Note these network actions are prefixed by a startFetch action and 
+  postfixed by either a endFetch{Success, Failure} action
 */
+
 export function fetchGene(ensemblId: string) {
   return (dispatch, getState) => {
     let { entities: { gene } } = getState();
@@ -257,12 +266,23 @@ export function fetchGene(ensemblId: string) {
   };
 }
 
-/* 
-    hydrateInitialState 
-    -- fetch tissueSiteList 
-    -- fetch genePanelList
-    -- fetch searchIndex
-*/
+export function fetchGenePanel(genePanelId: string) {
+  return (dispatch, getState) => {
+    dispatch(startFetch(`fetching ${genePanelId}...`));
+
+    return dispatch(_fetchPanelGenesList(genePanelId))
+      .then(() => dispatch(_fetchGenePanelTissueRanking(genePanelId)))
+      .then(result => {
+        let { entities: { genePanel } } = getState();
+        let panelEntity = getGenePanelEntityById(genePanel, genePanelId);
+        return dispatch(
+          _fetchGeneSet(!isEmptyObject(panelEntity) && panelEntity.panelGenes)
+        );
+      })
+      .then(() => dispatch(endFetchSuccess("success!")));
+  };
+}
+
 export function hydrateInitialState() {
   return (dispatch, getState) => {
     dispatch(startFetch("hydrate initial state..."));
@@ -275,28 +295,5 @@ export function hydrateInitialState() {
         dispatch(_fetchSomePanelGenesList(1));
       })
       .then(() => dispatch(endFetchSuccess()));
-  };
-}
-
-/* 
-    if not populated previously 
-    -- fetch and populate entities.genePanel.{tissueRanking} 
-    -- fetch and update entities.gene for all gene in the panel
-*/
-export function fetchGenePanel(genePanelId: string) {
-  return (dispatch, getState) => {
-    dispatch(startFetch(`fetching ${genePanelId}...`));
-
-    return dispatch(_fetchPanelGenesList(genePanelId))
-      .then(() => dispatch(_fetchGenePanelTissueRanking(genePanelId)))
-      .then(result => {
-        console.log("fetchGenePanel", result);
-        let { entities: { genePanel } } = getState();
-        let panelEntity = getGenePanelEntityById(genePanel, genePanelId);
-        return dispatch(
-          _fetchGeneSet(!isEmptyObject(panelEntity) && panelEntity.panelGenes)
-        );
-      })
-      .then(() => dispatch(endFetchSuccess("success!")));
   };
 }
