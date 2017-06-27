@@ -3,7 +3,7 @@ import os
 import mygene 
 mg = mygene.MyGeneInfo()
 
-PANELS = ["channelopathies.txt", "congenital_myasthenic_syndromes.txt", "distal_myopathies.txt", "muscular_dystrophies.txt", "vacuolar_and_others.txt", "limb_girdle_dystrophies.txt", "congenital_myopathy.txt", "congenital_muscular_dystrophies.txt"]
+PANELS = ["neuropathy.txt", "channelopathies.txt", "congenital_myasthenic_syndromes.txt", "distal_myopathies.txt", "muscular_dystrophies.txt", "vacuolar_and_others.txt", "limb_girdle_dystrophies.txt", "congenital_myopathy.txt", "congenital_muscular_dystrophies.txt"]
 
 
 def sym_to_ensembl(sym_fp, out_fp):
@@ -25,7 +25,7 @@ def sym_to_ensembl(sym_fp, out_fp):
 
             symbols = []
             symbols = line.split(', ')
-            
+
             query = mg.getgenes(symbols, species='human', scopes='symbol', fields=['ensembl.gene'])
 
             lines = ""
@@ -48,5 +48,5 @@ if __name__ == '__main__':
         outfp = os.path.splitext(p)[0]
         sym_to_ensembl(p, outfp)
 
-        
+
 
