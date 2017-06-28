@@ -11,7 +11,8 @@ class BaseConfig(object):
     
     # setting up directory for serving templates/static files
     TEMPLATE_FOLDER = path.realpath(path.join(basedir, "static"))
-    STATIC_FOLDER  = path.realpath(path.join(basedir, "static"))
+    #  STATIC_FOLDER  = path.realpath(path.join(basedir, "static"))
+    STATIC_FOLDER = basedir
 
     # resources
     DATA_RESOURCES_DIR = path.realpath(path.join(basedir, "resources"))

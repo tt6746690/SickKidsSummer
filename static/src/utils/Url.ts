@@ -1,7 +1,7 @@
 // prefix
 export const SCHEME = "http";
-export const HOST = "127.0.0.1";
-export const PORT = 5000;
+export const HOST = "172.17.17.23" || "127.0.0.1";
+export const PORT = 80 || 5000;
 export const URL_PREFIX = `${SCHEME}:\/\/${HOST}:${PORT}`;
 
 // prefix strings
