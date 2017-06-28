@@ -17,6 +17,12 @@ from sickkidsproj.utils.check import isEnsemblId
 def index():
     return app.send_static_file('index.html')
 
+@app.route('/<path:path>')
+def send_dist(path):
+    """ serving files from config["STATIC_FOLDER"]
+        @param path: rel path from static folder
+    """ 
+    return app.send_static_file(path)
 
 @app.route('/api/gene_panels/gene_panel_list', methods=['GET'])
 @crossdomain(origin='*')
@@ -100,12 +106,6 @@ def send_search_index(ensembl_id=None):
 
 
 
-@app.route('/static/<path:path>')
-def send_dist(path):
-    """ serving files from config["STATIC_FOLDER"]
-        @param path: rel path from static folder
-    """ 
-    return app.send_static_file(path)
 
 
 @app.route('/admin/ranking/gene/all', methods=['GET']) 
