@@ -1,7 +1,8 @@
+export const PROD = false;
 // prefix
-export const SCHEME = "https";
-export const HOST = "page.ccm.sickkids.ca" || "127.0.0.1";
-export const PORT = 443 || 5000;
+export const SCHEME = PROD ? "https" : "http";
+export const HOST = PROD ? "page.ccm.sickkids.ca" : "127.0.0.1";
+export const PORT = PROD ? 443 : 5000;
 export const URL_PREFIX = `${SCHEME}:\/\/${HOST}:${PORT}`;
 
 // prefix strings

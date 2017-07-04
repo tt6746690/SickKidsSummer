@@ -38,6 +38,8 @@ const mapStateToProps = (state: stateInterface) => {
   let xAxis = d3.axisBottom(x);
   let yAxis = d3.axisLeft(y).tickFormat(d3.format(".5"));
 
+  let expressionCutOff = 10;
+
   let numPerTick = 2; /* hard code 2 for now -- ref and ranked TissueSite respectively*/
   let xGroupingWidthRatio = 0.4;
 
@@ -149,9 +151,9 @@ const mapStateToProps = (state: stateInterface) => {
         .append("line")
         .classed("ExpressionCutOffLine", true)
         .attr("x1", x(0))
-        .attr("y1", y(20))
+        .attr("y1", y(expressionCutOff))
         .attr("x2", x(xTickCount + 1))
-        .attr("y2", y(20))
+        .attr("y2", y(expressionCutOff))
         .style("stroke", "darkgray")
         .style("stroke-dasharray", "3, 3");
 

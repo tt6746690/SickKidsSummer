@@ -20,7 +20,7 @@ def get_exonexpr_storepath(ensembl_id):
     if mapping:
         return os.path.realpath(
                 os.path.join(app.config['DATA_RESOURCES_DIR'], 
-                mapping.store_path + ".20"))
+                mapping.store_path))
 
 
 def get_geneexpr_storepath(ensembl_id):

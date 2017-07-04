@@ -136,10 +136,11 @@ def rankOneGene(gp, threshold):
     return "Generating ranking for {}".format(gp)
 
 
-def computeGeneLevelRanking():
+def computeGeneLevelRanking(threshold):
     """ Process files under exon_expr/
         and generate tissueRanking for each 
 
+        @param threshold: int
         @rType str report: logging 
     """
     report = []
@@ -156,7 +157,7 @@ def computeGeneLevelRanking():
             # only the raw files are included
             if match('^ENSG[\d]{11}$', f):
                 gp = os.path.join(root, f)
-                report.append(rankOneGene(gp, 20))
+                report.append(rankOneGene(gp, threshold))
 
     return report
 
@@ -266,11 +267,12 @@ def rankOnePanel(gps):
     return panelRankingSorted
 
 
-def computePanelLevelRanking():
+def computePanelLevelRanking(threshold):
     """ Process all available gene panels, 
         generate and store <panel>.ranking for each 
         under /gene_panels/ranking
 
+        @param threshold: int
         @rType str report: logging 
     """
     report = ""
@@ -283,14 +285,14 @@ def computePanelLevelRanking():
         for gene in PANEL_REF[panel]:
             storepath = get_exonexpr_storepath(gene["ensembl_id"])
             if storepath:
-                gps.append(storepath)
+                gps.append(storepath + "." + str(threshold))
             else:
                 report += "---- {} missing\n".format(gene["ensembl_id"])
 
         ranking = rankOnePanel(gps)
 
         outp = os.path.join(
-            app.config["GENE_PANEL_RANKING_DIR"], panel + ".ranking.new")
+            app.config["GENE_PANEL_RANKING_DIR"], panel + ".ranking." + str(threshold))
         with open(outp, "w+") as outf:
             json.dump(ranking, outf)
 

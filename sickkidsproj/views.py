@@ -2,7 +2,7 @@ from re import match
 import os
 import json
 
-from flask import redirect, url_for, render_template, jsonify
+from flask import redirect, url_for, render_template, jsonify, request
 
 from sickkidsproj import app, db
 from sickkidsproj.database.models import ExonReadsMapping, GeneReadsMapping
@@ -48,8 +48,11 @@ def get_gene_panel(gene_panel):
 def get_gene_panel_ranking(gene_panel):
     """ Get ranking associated with gene_panel
     """
+
+    threshold = request.args["threshold"] if "threshold" in request.args else "10"
+
     fp = os.path.join(
-        app.config["GENE_PANEL_RANKING_DIR"], gene_panel + '.ranking.new')
+        app.config["GENE_PANEL_RANKING_DIR"], gene_panel + '.ranking.' + threshold)
     with open(fp, 'r') as f:
         return json.dumps(json.loads(f.read()))
 
@@ -66,8 +69,10 @@ def gene_exonreads(ensembl_id=None):
 
     if not isEnsemblId(ensembl_id):
         return abort(404)
+    
+    threshold = request.args["threshold"] if "threshold" in request.args else "10"
+    fp = get_exonexpr_storepath(ensembl_id) + "." + threshold
 
-    fp = get_exonexpr_storepath(ensembl_id)
     with open(fp, 'r') as f:
         return json.dumps(json.loads(f.read()))
 
@@ -106,13 +111,17 @@ def send_search_index(ensembl_id=None):
 @app.route('/admin/ranking/gene/all', methods=['GET'])
 @crossdomain(origin='*')
 def compute_ranking_all_gene():
-    return computeGeneLevelRanking()
+
+    threshold = request.args["threshold"]
+    return computeGeneLevelRanking(threshold)
+
 
 
 @app.route('/admin/ranking/panel/all', methods=['GET'])
 @crossdomain(origin='*')
 def compute_ranking_all_panel():
-    return str(computePanelLevelRanking())
+    threshold = request.args["threshold"]
+    return str(computePanelLevelRanking(threshold))
 
 
 @app.errorhandler(404)
