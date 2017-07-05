@@ -14,10 +14,10 @@ export function pad(
   s: string,
   c: string,
   len: number,
-  right: boolean = true
+  left: boolean = true
 ): string {
   while (s.length < len) {
-    if (right) {
+    if (left) {
       s = c + s;
     } else {
       s = s + c;

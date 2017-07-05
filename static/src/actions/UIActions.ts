@@ -23,6 +23,9 @@ export const SET_GENE_PANEL = "SET_GENE_PANEL";
 export const SET_REF_TISSUESITE = "SET_REF_TISSUESITE";
 export const SET_RANKED_TISSUESITE = "SET_RANKED_TISSUESITE";
 
+// ui.select.panelHistory
+export const APPEND_NEW_PANEL_HISTORY = "APPEND_NEW_PANEL_HISTORY";
+
 // ui.search
 export const UPDATE_SEARCH_OPTIONS = "UPDATE_SEARCH_OPTIONS";
 export const SET_SEARCH_COLLAPSE = "SET_SEARCH_COLLAPSE";
@@ -68,6 +71,10 @@ export function setRankedTissueSite(tissueSiteId: string = "") {
   return { type: SET_RANKED_TISSUESITE, tissueSiteId };
 }
 
+export function appendNewPanelHistory(genePanelId: string = "") {
+  return { type: APPEND_NEW_PANEL_HISTORY, genePanelId };
+}
+
 export function updateSearchOptions(options: searchIndexEntity[] = []) {
   return {
     type: UPDATE_SEARCH_OPTIONS,
@@ -79,6 +86,22 @@ export function setSearchCollapse(collapse: boolean = false) {
   return {
     type: SET_SEARCH_COLLAPSE,
     collapse
+  };
+}
+
+export function selectPanelHistory(genePanelId: string) {
+  return (dispatch, getState) => {
+    let { entities: { genePanel } } = getState();
+    let genePanelEntity = getGenePanelEntityById(genePanel, genePanelId);
+    let panelGenes =
+      !isEmptyObject(genePanelEntity) && genePanelEntity["panelGenes"];
+
+    dispatch(setSelectedGene(panelGenes));
+    dispatch(setGenePanel(genePanelId));
+
+    // Note not calling updatePanelEntity here since
+    // -- genePanelId already in entities.genePanel, so no need to add to it
+    // -- ranking already computed, so no need to recompute ranking
   };
 }
 

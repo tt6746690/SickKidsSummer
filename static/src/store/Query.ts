@@ -29,6 +29,19 @@ export function getGeneEntityByIdList(
 }
 
 /* 
+  Converts an array of ensemblIds to an array of corresponding geneSymbol
+*/
+export function ensemblIdsToGeneSymbolList(
+  genes: geneEntity[],
+  ensemblIds: string[]
+): string[] {
+  let geneEntities = getGeneEntityByIdList(genes, ensemblIds);
+  return geneEntities
+    .filter((gene: geneEntity) => gene["geneSymbol"] !== "")
+    .map((gene: geneEntity) => gene["geneSymbol"]);
+}
+
+/* 
   Return true if entities.gene.property is populated previouslly 
   false otherwise 
 */

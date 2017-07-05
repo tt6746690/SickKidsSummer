@@ -36,7 +36,8 @@ let defaultState: stateInterface = {
       geneForPlot: "",
       genePanel: "",
       refTissueSite: "",
-      rankedTissueSite: ""
+      rankedTissueSite: "",
+      panelHistory: []
     },
     plot: {
       color: d3.scaleOrdinal(d3.schemeCategory20),
@@ -77,7 +78,7 @@ if (!PROD) {
       return true;
     }
   });
-  devMiddlewares.push(logger);
+  // devMiddlewares.push(logger);
 }
 
 let store = createStore(

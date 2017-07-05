@@ -8,6 +8,7 @@ import {
   SET_REF_TISSUESITE,
   SET_SEARCH_COLLAPSE,
   SET_SELECTED_GENE,
+  APPEND_NEW_PANEL_HISTORY,
   UPDATE_SEARCH_OPTIONS
 } from "../actions/UIActions";
 
@@ -25,6 +26,11 @@ function select(state, action) {
       return { ...state, refTissueSite: action.tissueSiteId };
     case SET_RANKED_TISSUESITE:
       return { ...state, rankedTissueSite: action.tissueSiteId };
+    case APPEND_NEW_PANEL_HISTORY:
+      return {
+        ...state,
+        panelHistory: [...state.panelHistory, action.genePanelId]
+      };
     default:
       return state;
   }
@@ -50,6 +56,7 @@ export default function ui(state, action) {
     case SET_GENE_PANEL:
     case SET_REF_TISSUESITE:
     case SET_RANKED_TISSUESITE:
+    case APPEND_NEW_PANEL_HISTORY:
       return { ...state, select: select(state.select, action) };
     case UPDATE_SEARCH_OPTIONS:
     case SET_SEARCH_COLLAPSE:

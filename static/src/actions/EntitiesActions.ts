@@ -8,7 +8,7 @@ import { getGeneEntityByIdList, getGenePanelEntityById } from "../store/Query";
 import { getGeneSetHash } from "../utils/Hash";
 import { computePanelRanking } from "../utils/Ranking";
 import { isEmptyObject } from "../utils/Utils";
-import { setGenePanel } from "./UIActions";
+import { appendNewPanelHistory, setGenePanel } from "./UIActions";
 
 // entity actionTypes
 export const ADD_GENE = "ADD_GENE";
@@ -91,7 +91,8 @@ export function updatePanelEntity(ensemblIds: string[]) {
 
     return Promise.all([
       dispatch(addGenePanel({ genePanelId, panelGenes: ensemblIds })),
-      dispatch(setGenePanel(genePanelId))
+      dispatch(setGenePanel(genePanelId)),
+      dispatch(appendNewPanelHistory(genePanelId))
     ]).then(() => dispatch(populatePanelRanking(genePanelId)));
   };
 }

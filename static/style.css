@@ -21,7 +21,8 @@ body {
   opacity: .7;
 }
 
-.x.axis, .y.axis {
+.x.axis,
+.y.axis {
   font-family: 'Lato', sans-serif;
 }
 
@@ -35,9 +36,16 @@ ul.nav-stacked {
 }
 
 /* restrict dropdown size */
-.tissueSiteListing + button + ul, .tissueSiteRanking {
+.tissueSiteListing + button + ul,
+.tissueSiteRanking {
   max-height: 400px;
   overflow-y: auto;
+}
+
+/* let dropdown button be fixed width */
+.tissueSiteListing,
+.panelHistoryListing {
+  width: 200px;
 }
 
 .tissueRankingPanel {

@@ -8,6 +8,7 @@ import GenePanelInfoContainer from "../containers/GenePanelInfoContainer";
 import SearchBarContainer from "../containers/SearchBarContainer";
 import TissueSiteListingContainer from "../containers/TissueSiteListingContainer";
 import TissueSiteRankingContainer from "../containers/TissueSiteRankingContainer";
+import PanelHistoryListingContainer from "../containers/PanelHistoryListingContainer";
 import { isNonEmptyArray } from "../utils/Utils";
 
 class Layout extends React.Component<any, object> {
@@ -23,13 +24,13 @@ class Layout extends React.Component<any, object> {
       <Grid>
         <Row id="search-bar">
           <Panel>
-            <Col md={6}>
+            <Col md={7}>
               <SearchBarContainer />
             </Col>
             <Col md={2}>
               <FetchStatusContainer />
             </Col>
-            <Col md={4}>
+            <Col md={3}>
               <TissueSiteListingContainer />
             </Col>
           </Panel>
@@ -37,8 +38,11 @@ class Layout extends React.Component<any, object> {
         {isNonEmptyArray(selectedGene) &&
           <Row id="gene-panel">
             <Panel>
-              <Col md={12} xs={12}>
+              <Col md={9} xs={9}>
                 <GenePanelInfoContainer />
+              </Col>
+              <Col md={3}>
+                <PanelHistoryListingContainer />
               </Col>
             </Panel>
           </Row>}
@@ -47,7 +51,6 @@ class Layout extends React.Component<any, object> {
             <TissueSiteRankingContainer />
           </Col>
         </Row>
-
       </Grid>
     );
   }

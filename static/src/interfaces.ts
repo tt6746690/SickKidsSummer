@@ -48,6 +48,7 @@ export interface stateInterface {
       genePanel: string;
       refTissueSite: string;
       rankedTissueSite: string;
+      panelHistory: string[];
     };
     plot: {
       color: any;
