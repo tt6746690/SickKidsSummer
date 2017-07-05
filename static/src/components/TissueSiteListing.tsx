@@ -26,8 +26,8 @@ class TissueSiteListing extends React.Component<any, object> {
 
     let tsFormatted = selectedRefTissueSite.replace(/ *\([^)]*\) */g, "");
     tsFormatted =
-      tsFormatted.length >= 25
-        ? tsFormatted.substring(0, 22) + "..."
+      tsFormatted.length >= 22
+        ? tsFormatted.substring(0, 19) + "..."
         : tsFormatted;
 
     return (

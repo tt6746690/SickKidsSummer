@@ -43,9 +43,12 @@ ul.nav-stacked {
 }
 
 /* let dropdown button be fixed width */
-.tissueSiteListing,
-.panelHistoryListing {
+.tissueSiteListing {
   width: 200px;
+}
+
+.panelHistoryListing {
+  width: 120px;
 }
 
 .tissueRankingPanel {

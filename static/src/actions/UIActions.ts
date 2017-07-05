@@ -106,6 +106,46 @@ export function selectPanelHistory(genePanelId: string) {
 }
 
 /* 
+  Queries ui.select.panelHistory for ui.select.genePanel
+  selects the previous panelHistory
+  if ui.select.genePanel is the first element in panelHistory
+  do nothing
+*/
+export function selectPreviousPanelHistory() {
+  return (dispatch, getState) => {
+    let {
+      ui: { select: { genePanel: selectedGenePanel, panelHistory } }
+    } = getState();
+
+    let idx = panelHistory.indexOf(selectedGenePanel);
+    if (idx > 0) {
+      // found and not the first element
+      dispatch(selectPanelHistory(panelHistory[idx - 1]));
+    }
+  };
+}
+
+/* 
+  Queries ui.select.panelHistory for ui.select.genePanel
+  selects the previous panelHistory
+  if ui.select.genePanel is the last element in panelHistory
+  do nothing
+*/
+export function selectNextPanelHistory() {
+  return (dispatch, getState) => {
+    let {
+      ui: { select: { genePanel: selectedGenePanel, panelHistory } }
+    } = getState();
+
+    let idx = panelHistory.indexOf(selectedGenePanel);
+    if (idx > 0 && idx !== panelHistory.length) {
+      // found and not the first element
+      dispatch(selectPanelHistory(panelHistory[idx + 1]));
+    }
+  };
+}
+
+/* 
   Given searchOptions, 
   -- update ui.select.genes considering that option can be of GENE_TYPE and PANEL_TYPE
   ---- queries entities.genePanel.panelGenes to expand PANEL_TYPE options

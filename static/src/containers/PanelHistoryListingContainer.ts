@@ -1,7 +1,11 @@
 import { connect } from "react-redux";
 
 import { stateInterface } from "../Interfaces";
-import { selectPanelHistory } from "../actions/UIActions";
+import {
+  selectPanelHistory,
+  selectPreviousPanelHistory,
+  selectNextPanelHistory
+} from "../actions/UIActions";
 import PanelHistoryListing from "../components/PanelHistoryListing";
 
 const mapStateToProps = (state: stateInterface) => {
@@ -17,6 +21,13 @@ const mapDispatchToProps = dispatch => {
   return {
     onPanelHistorySelect: (genePanelId: string) => {
       dispatch(selectPanelHistory(genePanelId));
+    },
+    onPreviousHistoryClick: () => {
+      dispatch(selectPreviousPanelHistory());
+    },
+
+    onNextHistoryClick: () => {
+      dispatch(selectNextPanelHistory());
     }
   };
 };

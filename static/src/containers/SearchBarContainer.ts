@@ -60,11 +60,6 @@ const mapDispatchToProps = dispatch => {
     ---- fetch gene.{exonExpr, geneExpr} for all genes in the panel if not fetched already
   */
   const onSearchBarChange = options => {
-    console.log({
-      where: "onSearchBarChange",
-      options
-    });
-
     /* 
       avoid lag behavior by displaying option selected asap
     */

@@ -27,9 +27,14 @@ function select(state, action) {
     case SET_RANKED_TISSUESITE:
       return { ...state, rankedTissueSite: action.tissueSiteId };
     case APPEND_NEW_PANEL_HISTORY:
+      let panelHistory: string[] = state.panelHistory.filter(
+        genePanelId => genePanelId !== action.genePanelId
+      );
+      panelHistory.push(action.genePanelId);
+
       return {
         ...state,
-        panelHistory: [...state.panelHistory, action.genePanelId]
+        panelHistory
       };
     default:
       return state;

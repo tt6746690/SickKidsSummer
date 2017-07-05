@@ -1,5 +1,5 @@
 import * as React from "react";
-import { MenuItem, SplitButton } from "react-bootstrap";
+import { MenuItem, SplitButton, Row, Col, Button } from "react-bootstrap";
 
 import { genePanelEntity } from "../Interfaces";
 import {
@@ -15,7 +15,9 @@ class PanelHistoryListing extends React.Component<any, object> {
       genePanel,
       panelHistory,
       onPanelHistorySelect,
-      selectedGenePanel
+      selectedGenePanel,
+      onPreviousHistoryClick,
+      onNextHistoryClick
     } = this.props;
 
     let panelGeneSymbolHistory = panelHistory.map(genePanelId => {
@@ -39,15 +41,37 @@ class PanelHistoryListing extends React.Component<any, object> {
     );
 
     return (
-      <SplitButton
-        title={"history"}
-        bsSize={"large"}
-        id="bg-nested-dropdown"
-        onSelect={onPanelHistorySelect}
-        className="panelHistoryListing"
-      >
-        {panelHistoryList}
-      </SplitButton>
+      <Row>
+        <Col md={2}>
+          <a onClick={onPreviousHistoryClick}>
+            <i
+              className="fa fa-angle-double-left fa-border fa-2x"
+              aria-hidden="true"
+              style={{ height: "46px" }}
+            />
+          </a>
+        </Col>
+        <Col md={8}>
+          <SplitButton
+            title={"history"}
+            bsSize={"large"}
+            id="bg-nested-dropdown"
+            onSelect={onPanelHistorySelect}
+            className="panelHistoryListing"
+          >
+            {panelHistoryList}
+          </SplitButton>
+        </Col>
+        <Col md={2}>
+          <a onClick={onNextHistoryClick}>
+            <i
+              className="fa fa-angle-double-right fa-border fa-2x"
+              aria-hidden="true"
+              style={{ height: "46px" }}
+            />
+          </a>
+        </Col>
+      </Row>
     );
   }
 }
