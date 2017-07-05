@@ -78,7 +78,7 @@ if (!PROD) {
       return true;
     }
   });
-  devMiddlewares.push(logger);
+  // devMiddlewares.push(logger);
 }
 
 let store = createStore(

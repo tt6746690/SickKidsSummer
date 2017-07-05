@@ -138,8 +138,8 @@ export function selectNextPanelHistory() {
     } = getState();
 
     let idx = panelHistory.indexOf(selectedGenePanel);
-    if (idx > 0 && idx !== panelHistory.length) {
-      // found and not the first element
+    if (idx !== 0 && idx !== panelHistory.length) {
+      // found and not the last element
       dispatch(selectPanelHistory(panelHistory[idx + 1]));
     }
   };
