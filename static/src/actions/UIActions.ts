@@ -6,7 +6,7 @@ import {
   getOptionByType,
   makeGeneOption
 } from "../utils/Option";
-import { isEmptyObject } from "../utils/Utils";
+import { isEmptyObject, isNonEmptyArray } from "../utils/Utils";
 import { updatePanelEntity } from "./EntitiesActions";
 
 // ui.select.gene
@@ -138,7 +138,7 @@ export function selectNextPanelHistory() {
     } = getState();
 
     let idx = panelHistory.indexOf(selectedGenePanel);
-    if (idx !== 0 && idx !== panelHistory.length) {
+    if (idx !== -1 && idx !== panelHistory.length) {
       // found and not the last element
       dispatch(selectPanelHistory(panelHistory[idx + 1]));
     }
@@ -171,6 +171,10 @@ export function updateSelectedGeneWithOptions(options: searchIndexEntity[]) {
       .map(opt => opt.ensemblId)
       .concat(flattenPanelOptionPanelGenes(panelOptions));
     dispatch(setSelectedGene(allGenes));
+
+    if (!isNonEmptyArray(allGenes)) {
+      return Promise.resolve();
+    }
 
     return dispatch(updatePanelEntity(allGenes));
   };

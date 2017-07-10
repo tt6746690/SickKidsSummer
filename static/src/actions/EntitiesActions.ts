@@ -59,6 +59,8 @@ export function loadSearchIndex(index = []) {
   compute panelRanking and add resultant ranking to entities.genePanel.tissueRanking
 */
 export const populatePanelRanking = (genePanelId: string) => {
+  console.log("populating panel ranking for ", genePanelId);
+
   return (dispatch, getState) => {
     let {
       ui: { select: { gene: selectedGene } },

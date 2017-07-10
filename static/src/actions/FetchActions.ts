@@ -21,7 +21,8 @@ import {
   addGene,
   addGenePanel,
   addTissueSite,
-  loadSearchIndex
+  loadSearchIndex,
+  populatePanelRanking
 } from "./EntitiesActions";
 
 // status
@@ -141,9 +142,8 @@ function _fetchSomePanelGenesList(num: number) {
     let { entities: { genePanel } } = getState();
 
     let promises: Promise<Response>[] = [];
-    let panelSlice: genePanelEntity[] = num === -1
-      ? genePanel
-      : genePanel.slice(0, num);
+    let panelSlice: genePanelEntity[] =
+      num === -1 ? genePanel : genePanel.slice(0, num);
 
     panelSlice.forEach((panel: genePanelEntity) => {
       promises.push(dispatch(_fetchPanelGenesList(panel.genePanelId)));
@@ -155,6 +155,8 @@ function _fetchSomePanelGenesList(num: number) {
 
 /*  
   fetch and populate entities.genePanel.<panel>.tissueRanking
+
+  -- deprecated..
 */
 function _fetchGenePanelTissueRanking(genePanelId: string) {
   return (dispatch, getState) => {
@@ -271,7 +273,6 @@ export function fetchGenePanel(genePanelId: string) {
     dispatch(startFetch(`fetching ${genePanelId}...`));
 
     return dispatch(_fetchPanelGenesList(genePanelId))
-      .then(() => dispatch(_fetchGenePanelTissueRanking(genePanelId)))
       .then(result => {
         let { entities: { genePanel } } = getState();
         let panelEntity = getGenePanelEntityById(genePanel, genePanelId);
@@ -279,6 +280,7 @@ export function fetchGenePanel(genePanelId: string) {
           _fetchGeneSet(!isEmptyObject(panelEntity) && panelEntity.panelGenes)
         );
       })
+      .then(() => dispatch(populatePanelRanking(genePanelId)))
       .then(() => dispatch(endFetchSuccess("success!")));
   };
 }

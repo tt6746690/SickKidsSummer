@@ -43,18 +43,18 @@ def get_gene_panel(gene_panel):
     return jsonify(PANEL_REF[gene_panel])
 
 
-@app.route('/api/gene_panels/ranking/<gene_panel>', methods=['GET'])
-@crossdomain(origin='*')
-def get_gene_panel_ranking(gene_panel):
-    """ Get ranking associated with gene_panel
-    """
-
-    threshold = request.args["threshold"] if "threshold" in request.args else "10"
-
-    fp = os.path.join(
-        app.config["GENE_PANEL_RANKING_DIR"], gene_panel + '.ranking.' + threshold)
-    with open(fp, 'r') as f:
-        return json.dumps(json.loads(f.read()))
+#  @app.route('/api/gene_panels/ranking/<gene_panel>', methods=['GET'])
+#  @crossdomain(origin='*')
+#  def get_gene_panel_ranking(gene_panel):
+#      """ Get ranking associated with gene_panel
+#      """
+#
+#      threshold = request.args["threshold"] if "threshold" in request.args else "10"
+#
+#      fp = os.path.join(
+#          app.config["GENE_PANEL_RANKING_DIR"], gene_panel + '.ranking.' + threshold)
+#      with open(fp, 'r') as f:
+#          return json.dumps(json.loads(f.read()))
 
 
 @app.route('/api/exon_expr/tissue_site_list', methods=['GET'])

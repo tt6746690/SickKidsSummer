@@ -1,6 +1,10 @@
 import os
 from sickkidsproj import app
 
+# testing purpose
+ONE_EXPRDATA = os.path.join(app.config["EXPRIMENT_DATA_DIR"],"10-1-M.coverage")
+
+# panels
 GENE_PANELS = []
 GENE_PANEL_PATHS = []
 with open(app.config["GENE_PANEL_LIST"], "r") as f:

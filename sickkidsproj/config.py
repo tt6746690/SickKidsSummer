@@ -9,15 +9,21 @@ class BaseConfig(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite://:memory:'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     
-    # setting up directory for serving templates/static files
+    # template/static
     TEMPLATE_FOLDER = path.realpath(path.join(basedir, "static"))
     STATIC_FOLDER  = path.realpath(path.join(basedir, "static"))
-
     # resources
     DATA_RESOURCES_DIR = path.realpath(path.join(basedir, "resources"))
+    # data
+    DATA_FOLDER = path.realpath(path.join(basedir, "data"))
+
+    # experiment data
+    EXPRIMENT_DATA_DIR = path.join(DATA_FOLDER, "experiment")
+    GENCODE_EXON_POS_ID_MAPPING = path.join(DATA_FOLDER, "gencode.v19.genes.patched_contigs_exons.txt")
 
     # mapping
     EXON_READS_MAPPING = path.join(DATA_RESOURCES_DIR, "exon_expr.mapping")
+    EXON_ID_MAPPING = path.join(DATA_RESOURCES_DIR, "exon_pos_id.mapping")
     GENE_READS_MAPPING = path.join(DATA_RESOURCES_DIR, "gene_expr.mapping")
     GENE_SYMBOL_MAPPING = path.join(DATA_RESOURCES_DIR, "symbol.mapping")
 
