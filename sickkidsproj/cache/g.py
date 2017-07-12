@@ -76,6 +76,7 @@ def get_all_exprdata_filepaths():
 EXPRDATA_FILEPATHS = get_all_exprdata_filepaths()
 
 
+INC_EXT="inc"           # extension appended when original exon_expr files are merged with new data
 
 # dev specific globals
 if app.config["DEBUG"]:
