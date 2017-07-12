@@ -2,12 +2,43 @@ import os
 import mygene
 mg = mygene.MyGeneInfo()
 
+import click
+
 from sickkidsproj import app,  db
 from sickkidsproj.database.models import ExonReadsMapping, GeneReadsMapping
 from sickkidsproj.database.query import get_all_exonreadsmapping_keys
 from sickkidsproj.utils.utils import chunks
 
 from sickkidsproj.analysis.inc_data import inc_data
+from sickkidsproj.database.resources import inspect_resources, delete_fendswith
+
+from sickkidsproj.cache.g import RESOURCES_OPTIONS, EXTS
+
+
+
+@app.cli.command('resources.delete')
+@click.option('--option', default="exon_expr")
+@click.option('--ext', default="20")
+def c_inspect_resources(option, ext):
+    if option not in RESOURCES_OPTIONS:
+        print("Usage: flask resources.inspect [option]")
+        return
+    if ext not in EXTS:
+        print("Usage: flask resources.inspect [option]")
+        return
+    app.logger.info("cli::inspect_resources")
+    delete_fendswith(option, ext)
+
+
+@app.cli.command('resources.inspect')
+@click.argument('option')
+def c_inspect_resources(option):
+    if option not in RESOURCES_OPTIONS:
+        print("Usage: flask resources.inspect [option]")
+        return
+    app.logger.info("cli::inspect_resources")
+    print(option)
+    inspect_resources(option)
 
 
 @app.cli.command('inc_data')

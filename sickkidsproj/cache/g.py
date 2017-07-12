@@ -76,7 +76,19 @@ def get_all_exprdata_filepaths():
 EXPRDATA_FILEPATHS = get_all_exprdata_filepaths()
 
 
-INC_EXT="inc"           # extension appended when original exon_expr files are merged with new data
+        
+""" Available options for inspection  """
+OPTION_EXONEXPR = "exon_expr"
+OPTION_GENEEXPR = "gene_expr"
+OPTION_GENEPANELS = "gene_panels"
+RESOURCES_OPTIONS = [OPTION_EXONEXPR, OPTION_GENEEXPR, OPTION_GENEPANELS]
+
+
+""" Possible extensions for files under resources/"""
+EXT_TEN = "10"
+EXT_TWENTY = "20"
+EXT_INC = "inc"
+EXTS = [EXT_TEN, EXT_TWENTY, EXT_INC]
 
 # dev specific globals
 if app.config["DEBUG"]:

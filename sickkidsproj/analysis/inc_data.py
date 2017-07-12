@@ -3,7 +3,7 @@ import json
 
 from sickkidsproj import app, db
 from sickkidsproj.database.query import get_exonexpr_storepath
-from sickkidsproj.cache.g import ONE_EXPRDATA, GENCODEID_STRAND_REF, ENSEMBLID_EXONCOUNT_REF, EXPRDATA_FILEPATHS, INC_EXT
+from sickkidsproj.cache.g import ONE_EXPRDATA, GENCODEID_STRAND_REF, ENSEMBLID_EXONCOUNT_REF, EXPRDATA_FILEPATHS, EXT_INC
 from sickkidsproj.utils.check import isEnsemblId
 
 
@@ -57,6 +57,7 @@ def add_to_exonexpr(exon_expr, filename = ONE_EXPRDATA):
 
         inf.readline()
         iterations = 0
+
         for line in inf:
 
             row = line.strip().split('\t')
@@ -67,8 +68,9 @@ def add_to_exonexpr(exon_expr, filename = ONE_EXPRDATA):
             ensembl_id, exon_num = extract_gencodeid(exonid)
 
             assert (read >= 0 and isinstance(read, float)), "invalid read {}".format(read)
-            assert (isEnsemblId(ensembl_id)), "invalid ensembl_id {}".format(ensembl_id)
             assert (isinstance(exon_num, str)), "invalid exon_num {}".format(exon_num)
+            if not isEnsemblId(ensembl_id):
+                continue
 
             if ensembl_id not in exon_expr:
                 exon_expr[ensembl_id] = {}
@@ -79,9 +81,9 @@ def add_to_exonexpr(exon_expr, filename = ONE_EXPRDATA):
 
             exon_expr[ensembl_id][exon_num][tissueSite].append(read)
 
-            iterations -= 1
-            if iterations < 0:
-                break
+            #  iterations -= 1
+            #  if iterations < 0:
+            #      break
 
 
 def merge_exonexpr(src_exonexpr, new_exonexpr):
@@ -104,7 +106,6 @@ def merge_exonexpr(src_exonexpr, new_exonexpr):
             }, ...
         }
     """
-
 
     src_exon_nums = list(src_exonexpr.keys()) 
 
@@ -139,7 +140,7 @@ def inc_data(datafiles = EXPRDATA_FILEPATHS):
     files_modified = []
     for ensembl_id, exon_expr_per_gene in exon_expr.items():
         src_fp = get_exonexpr_storepath(ensembl_id)
-        dst_fp = src_fp + "." + INC_EXT
+        dst_fp = src_fp + "." + EXT_INC
 
         # Since only a small subset in mapping is in resources/exon_expr, 
         # we skip over files and continues merging only if file exists
@@ -151,7 +152,7 @@ def inc_data(datafiles = EXPRDATA_FILEPATHS):
                     merge_exonexpr(merged_exon_expr, exon_expr_per_gene)
                     outf.write(json.dumps(merged_exon_expr))
 
-            print("Merged to {}...".format(src_fp))
+            print("Merged to {}".format(src_fp))
             files_modified.append(src_fp)
     print(files_modified)
 
