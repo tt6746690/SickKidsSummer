@@ -2,7 +2,7 @@ import os
 from sickkidsproj import app
 
 # testing purpose
-ONE_EXPRDATA = os.path.join(app.config["EXPRIMENT_DATA_DIR"],"10-1-M.coverage")
+ONE_EXPRDATA = os.path.join(app.config["EXPRIMENT_DATA_DIR"],"10-1-M")
 
 # panels
 GENE_PANELS = []
@@ -19,8 +19,6 @@ with open(app.config["TISSUE_SITE_LIST"], "r") as f:
 
 # testing purposes
 ONE_EXONEXPR = os.path.join(app.config["EXON_EXPR_DIR"], "47/ENSG00000182533")
-
-
 
 def get_panel_gene(panel):
     """ Gets list of gene associated with a gene panel
@@ -63,5 +61,49 @@ with open(app.config["GENE_SYMBOL_MAPPING"], 'r') as f:
             symbol = ll[1]
 
         GENE_SYMBOL_REF[ensembl_id] = symbol
+
+
+
+""" EXPRDATA_FILEPATHS [...exprdata_fp]
+    A list of file path for experimental data in terms of exon reads
+"""
+def get_all_exprdata_filepaths():
+    fps = []
+    for f in os.listdir(app.config["EXPRIMENT_DATA_DIR"]):
+        if not f.startswith('.') and not f.endswith('coverage') and not f.endswith('.sh'):
+            fps.append(os.path.join(app.config["EXPRIMENT_DATA_DIR"], f))
+    return fps
+EXPRDATA_FILEPATHS = get_all_exprdata_filepaths()
+
+
+
+# dev specific globals
+if app.config["DEBUG"]:
+
+    GENCODEID_STRAND_REF = {}          # gencodeid -> strand +/-
+    ENSEMBLID_EXONCOUNT_REF = {}       # ensembl_id -> exon_count
+
+    with open(app.config["GENCODE_EXON_POS_ID_MAPPING"], 'r') as f:
+        f.readline()
+
+        for line in f:
+            row = line.strip().split('\t')
+            assert(len(row) == 5)
+
+            gencodeid = row[0]
+            ensembl_id = gencodeid.split('.')[0]
+            strand = row[-1]
+
+            # assumes entries in f unique, 
+            if ensembl_id not in ENSEMBLID_EXONCOUNT_REF: 
+                ENSEMBLID_EXONCOUNT_REF[ensembl_id] = 1
+            else:
+                ENSEMBLID_EXONCOUNT_REF[ensembl_id] += 1
+
+            GENCODEID_STRAND_REF[gencodeid] = strand
+
+
+
+
 
 

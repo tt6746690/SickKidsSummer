@@ -27,10 +27,10 @@ class Layout extends React.Component<any, object> {
             <Col md={7}>
               <SearchBarContainer />
             </Col>
-            <Col md={2}>
+            <Col md={1}>
               <FetchStatusContainer />
             </Col>
-            <Col md={3}>
+            <Col md={4}>
               <TissueSiteListingContainer />
             </Col>
           </Panel>

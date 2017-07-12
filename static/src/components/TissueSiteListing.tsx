@@ -26,12 +26,13 @@ class TissueSiteListing extends React.Component<any, object> {
 
     let tsFormatted = selectedRefTissueSite.replace(/ *\([^)]*\) */g, "");
     tsFormatted =
-      tsFormatted.length >= 22
-        ? tsFormatted.substring(0, 19) + "..."
+      tsFormatted.length >= 30
+        ? tsFormatted.substring(0, 27) + "..."
         : tsFormatted;
 
     return (
       <SplitButton
+        bsSize={"large"}
         title={selectedRefTissueSite === "" ? "Tissue Types" : tsFormatted}
         id="bg-nested-dropdown"
         onSelect={onTissueSiteListSelect}

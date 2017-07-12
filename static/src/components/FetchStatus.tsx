@@ -13,14 +13,11 @@ class FetchStatus extends React.Component<any, any> {
   }
 
   render() {
-    let { isFetching, fetchStatus } = this.props;
+    let { isFetching } = this.props;
 
     return (
       <div>
-        {isFetching && <i className="fa fa-cog fa-spin fa-2x fa-fw" />}
-        <div>
-          {fetchStatus}
-        </div>
+        {isFetching && <i className="fa fa-cog fa-spin fa-4x fa-fw" />}
       </div>
     );
   }

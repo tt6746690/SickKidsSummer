@@ -1,4 +1,11 @@
 
+
+gencode.v19.genes.patched_contigs_exons.txt -> 312883
+gencode from above that doesnt match to any ENSE id -> 168104
+
+10-1-M: unique start, end, ense, data in experimental data -> 316579
+exon_pos_id.mapping: unique start,end pair in ense -> 269129
+
 # Problem 
 
 + Given 

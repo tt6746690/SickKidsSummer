@@ -3,6 +3,10 @@ from sickkidsproj import app
 
 from sickkidsproj.cache.g import ONE_EXPRDATA
 
+"""
+For testing if a mapping between ENSE and Gtex exon id is possible, turns out its not...
+"""
+
 def combine_pos(start, end):
     """ combine start position and end position into a single string
 
@@ -51,13 +55,18 @@ def connect_ense_to_gtex_exonid():
                 gencoded[pos] = gtex_exonid
 
 
-            iterations = 1
+            duplicate_pos_in_exprdata = 0
             for ensel in ensef:
                 ensellist = ensel.strip().split("\t")
                 assert(len(ensellist) == 5)
                 
                 pos = combine_pos(ensellist[1], ensellist[2])
                 ense_exonid = ensellist[3]
+
+                if pos in ensed:
+                    print('duplicate start,end {} in experimental data 10-1-M: {} -> {} reads:{}'.format(pos, ensed[pos][0], ense_exonid, ensellist[4]))
+                    duplicate_pos_in_exprdata += 1
+
 
                 ensed[pos] = [ense_exonid]
 
@@ -67,6 +76,15 @@ def connect_ense_to_gtex_exonid():
                     ensed[pos].append(gencoded[pos])     # i.e. ensed[11869.12227] = [ENSE00002319515, ENSG00000223972.4_0]
                 else:
                     ensed[pos].append("")
+
+            no_ense_count = 0
+            for pos, gencode in gencoded.items():
+                if pos not in ensed:
+                    no_ense_count += 1
+                    print('missing ense id: {}'.format(gencode))
+
+            print("no_ense_count in gencode: {}".format(no_ense_count))
+            print("duplicate_pos_in_exprdata: {}".format(duplicate_pos_in_exprdata))
             
             outf.write('\t'.join(["start", "end", "ense", "gencode"]) + '\n')
             for pos, ids in ensed.items():
@@ -74,7 +92,6 @@ def connect_ense_to_gtex_exonid():
                 start, end = reverse_pos(pos)
 
                 l = '\t'.join([start, end, ense, gencode]) + '\n'
-                print(l)
 
                 outf.write(l)
 

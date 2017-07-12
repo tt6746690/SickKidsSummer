@@ -7,13 +7,13 @@ from sickkidsproj.database.models import ExonReadsMapping, GeneReadsMapping
 from sickkidsproj.database.query import get_all_exonreadsmapping_keys
 from sickkidsproj.utils.utils import chunks
 
-from sickkidsproj.cache.id import create_exonid_cache
+from sickkidsproj.analysis.inc_data import inc_data
 
 
-@app.cli.command('cache.exonid')
+@app.cli.command('inc_data')
 def c_caching_exonid():
-    app.logger.info("cli::caching exonid")
-    create_exonid_cache();
+    app.logger.info("cli::inc_data")
+    inc_data()
 
 
 def create_db():
