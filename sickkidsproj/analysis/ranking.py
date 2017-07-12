@@ -5,7 +5,7 @@ from re import match
 import numpy as np
 
 from sickkidsproj import app, db
-from sickkidsproj.cache.g import ONE_EXONEXPR, TISSUE_SITES, GENE_PANELS, PANEL_REF
+from sickkidsproj.cache.g import ONE_EXONEXPR, TISSUE_SITES, GENE_PANELS, PANEL_REF, OPTION_RANKING_GENE, OPTION_RANKING_GENEPANEL
 from sickkidsproj.database.query import get_exonexpr_storepath
 
 
@@ -121,7 +121,8 @@ def rankOneGene(gp, threshold):
     """
 
     with open(gp, "r") as inf:
-        gpp = gp + '.' + str(threshold)
+        f_noexit, ext = os.splitext(gp)
+        gpp = f_noexit + '.' + str(threshold)
 
         with open(gpp, 'w+') as outf:
             exonExpr = json.loads(inf.read())
@@ -145,17 +146,13 @@ def computeGeneLevelRanking(threshold):
     """
     report = []
 
-    firsttime = True
-    for root, dirs, files in os.walk(app.config["EXON_EXPR_DIR"], topdown=True):
-
-        if firsttime:
-            firsttime = False
-            continue
-
+    for root, files in traverse_resources_dir(option):
         for f in files:
-            # exclude the generated `.20` files
-            # only the raw files are included
-            if match('^ENSG[\d]{11}$', f):
+
+            f_noext, ext = os.splitext(f)
+
+            # use data, which includes experimental data, for calculating ranking
+            if ext == EXT_INC:
                 gp = os.path.join(root, f)
                 report.append(rankOneGene(gp, threshold))
 
@@ -297,3 +294,24 @@ def computePanelLevelRanking(threshold):
             json.dump(ranking, outf)
 
     return report
+
+
+
+def computeRanking(option, threshold):
+    """ Dispatch correct ranking methods given option
+    
+        @param option enum
+        @param threshold int
+    """
+
+    assert (isinstance(threshold, int) and threshold >= 0), "invalid threshold"
+
+    if option == OPTION_RANKING_GENE:
+        computeGeneLevelRanking(threshold)
+    elif option == OPTION_RANKING_GENEPANEL:
+        computePanelLevelRanking(threshold)
+    else:
+        return
+        
+
+

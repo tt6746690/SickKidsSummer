@@ -76,6 +76,11 @@ def get_all_exprdata_filepaths():
 EXPRDATA_FILEPATHS = get_all_exprdata_filepaths()
 
 
+"""Available options for ranking"""
+OPTION_RANKING_GENE = "gene"
+OPTION_RANKING_GENEPANEL = "gene_panel"
+RANKING_OPTIONS = [OPTION_RANKING_GENE, OPTION_RANKING_GENEPANEL]
+
         
 """ Available options for inspection  """
 OPTION_EXONEXPR = "exon_expr"

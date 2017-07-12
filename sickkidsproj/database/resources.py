@@ -6,7 +6,6 @@ from sickkidsproj.utils.check import isEnsemblId
 from sickkidsproj.cache.g import OPTION_EXONEXPR, OPTION_GENEEXPR, OPTION_GENEPANELS, EXT_INC, EXT_TEN, EXT_TWENTY
 
 
-
 def traverse_resources_dir(option):
     """ Traverses resources given by option
         @param dirp str

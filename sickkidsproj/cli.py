@@ -10,21 +10,39 @@ from sickkidsproj.database.query import get_all_exonreadsmapping_keys
 from sickkidsproj.utils.utils import chunks
 
 from sickkidsproj.analysis.inc_data import inc_data
+from sickkidsproj.analysis.ranking import computeRanking
 from sickkidsproj.database.resources import inspect_resources, delete_fendswith
 
-from sickkidsproj.cache.g import RESOURCES_OPTIONS, EXTS
+from sickkidsproj.cache.g import RESOURCES_OPTIONS, EXTS, EXT_TEN, EXT_TWENTY, OPTION_EXONEXPR, RANKING_OPTIONS, OPTION_RANKING_GENE
 
 
+
+@app.cli.command('analysis.rank')
+@click.option('--option', default=OPTION_RANKING_GENE)
+@click.option('--threshold', default=EXT_TEN)
+def c_ranking(option, threshold):
+    if option not in RANKING_OPTIONS:
+        print("Usage: flask resources.inspect --option --threshold")
+        return
+    if threshold not in EXTS:
+        print("Usage: flask resources.inspect --option --threshold")
+        return
+    return computeRanking(option, threshold)
+
+@app.cli.command('analysis.inc_data')
+def c_caching_exonid():
+    app.logger.info("cli::inc_data")
+    inc_data()
 
 @app.cli.command('resources.delete')
-@click.option('--option', default="exon_expr")
-@click.option('--ext', default="20")
+@click.option('--option', default=OPTION_EXONEXPR)
+@click.option('--threshold', default=EXT_TWENTY)
 def c_inspect_resources(option, ext):
     if option not in RESOURCES_OPTIONS:
-        print("Usage: flask resources.inspect [option]")
+        print("Usage: flask resources.inspect --option --threshold")
         return
     if ext not in EXTS:
-        print("Usage: flask resources.inspect [option]")
+        print("Usage: flask resources.inspect --option --threshold")
         return
     app.logger.info("cli::inspect_resources")
     delete_fendswith(option, ext)
@@ -41,10 +59,6 @@ def c_inspect_resources(option):
     inspect_resources(option)
 
 
-@app.cli.command('inc_data')
-def c_caching_exonid():
-    app.logger.info("cli::inc_data")
-    inc_data()
 
 
 def create_db():
