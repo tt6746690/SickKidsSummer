@@ -77,9 +77,10 @@ EXPRDATA_FILEPATHS = get_all_exprdata_filepaths()
 
 
 """Available options for ranking"""
+OPTION_RANKING_ALL_GENE = "all_gene"
+OPTION_RANKING_ALL_GENEPANEL = "all_gene_panel"
 OPTION_RANKING_GENE = "gene"
-OPTION_RANKING_GENEPANEL = "gene_panel"
-RANKING_OPTIONS = [OPTION_RANKING_GENE, OPTION_RANKING_GENEPANEL]
+RANKING_OPTIONS = [OPTION_RANKING_GENE, OPTION_RANKING_ALL_GENE, OPTION_RANKING_ALL_GENEPANEL]
 
         
 """ Available options for inspection  """
@@ -92,7 +93,7 @@ RESOURCES_OPTIONS = [OPTION_EXONEXPR, OPTION_GENEEXPR, OPTION_GENEPANELS]
 """ Possible extensions for files under resources/"""
 EXT_TEN = "10"
 EXT_TWENTY = "20"
-EXT_INC = "inc"
+EXT_INC = "modified"
 EXTS = [EXT_TEN, EXT_TWENTY, EXT_INC]
 
 # dev specific globals

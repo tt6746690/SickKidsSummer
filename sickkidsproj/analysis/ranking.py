@@ -5,8 +5,10 @@ from re import match
 import numpy as np
 
 from sickkidsproj import app, db
-from sickkidsproj.cache.g import ONE_EXONEXPR, TISSUE_SITES, GENE_PANELS, PANEL_REF, OPTION_RANKING_GENE, OPTION_RANKING_GENEPANEL
+from sickkidsproj.cache.g import ONE_EXONEXPR, TISSUE_SITES, GENE_PANELS, PANEL_REF, OPTION_EXONEXPR, OPTION_RANKING_ALL_GENE, OPTION_RANKING_ALL_GENEPANEL, OPTION_RANKING_GENE, EXT_INC
 from sickkidsproj.database.query import get_exonexpr_storepath
+from sickkidsproj.database.resources import traverse_resources_dir
+from sickkidsproj.utils.check import isEnsemblId
 
 
 def getSumStat(reads, threshold):
@@ -88,14 +90,17 @@ def getTissueRanking(exonExpr):
             } 
         } 
     """
+
     tissueRanking = {}
-    for tissueSite in TISSUE_SITES:
-        tissueRanking[tissueSite] = {}
 
     for exonNum, exon in exonExpr.copy().items():
         for tissueSite, sumStat in exon.copy().items():
 
             for otherTissueSite in sumStat["other"]:
+
+                # first time ... init data structure
+                if tissueSite not in tissueRanking:
+                    tissueRanking[tissueSite] = {}
                 if otherTissueSite not in tissueRanking[tissueSite]:
                     tissueRanking[tissueSite][otherTissueSite] = {}
                     tissueRanking[tissueSite][otherTissueSite]["exons"] = []
@@ -107,24 +112,26 @@ def getTissueRanking(exonExpr):
     return tissueRanking
 
 
-def rankOneGene(gp, threshold):
+def rankOneGene(ensembl_id, threshold):
     """ Generate ranking statistics for exonExpr of one gene
         based on the given threshold
         The output file have ext of `.threshold` 
 
         SideEffect: output file written to disk
 
-        @param str gp: path to data of one gene in exon_expr/ 
-            str gpp: output path 
+        @param str ensembl_id: 
+            str infp: path to data of one gene in exon_expr/, suffixed by .ext
+            str outfp: output path, suffixed by .threshold
         @param int threshold: cutoff to determine if an exon is expressed in sufficient amount
         @rType str: report for logging
     """
 
-    with open(gp, "r") as inf:
-        f_noexit, ext = os.splitext(gp)
-        gpp = f_noexit + '.' + str(threshold)
+    gp = get_exonexpr_storepath(ensembl_id)
+    infp = gp + "." + EXT_INC
+    outfp = gp + '.' + str(threshold)
 
-        with open(gpp, 'w+') as outf:
+    with open(infp, "r") as inf:
+        with open(outfp, 'w+') as outf:
             exonExpr = json.loads(inf.read())
             addSumStat(exonExpr, threshold)
 
@@ -142,21 +149,19 @@ def computeGeneLevelRanking(threshold):
         and generate tissueRanking for each 
 
         @param threshold: int
-        @rType str report: logging 
     """
-    report = []
 
-    for root, files in traverse_resources_dir(option):
+    for root, files in traverse_resources_dir(OPTION_EXONEXPR):
         for f in files:
 
-            f_noext, ext = os.splitext(f)
+            ensembl_id, ext = os.path.splitext(f)
+            assert (isEnsemblId(ensembl_id)), "invalid ensembl id {}".format(ensembl_id)
 
             # use data, which includes experimental data, for calculating ranking
-            if ext == EXT_INC:
-                gp = os.path.join(root, f)
-                report.append(rankOneGene(gp, threshold))
+            if ext == "." + EXT_INC:
+                print("Generate ranking {}".format(ensembl_id))
+                rankOneGene(ensembl_id, threshold)
 
-    return report
 
 
 def rankOnePanel(gps):
@@ -270,13 +275,11 @@ def computePanelLevelRanking(threshold):
         under /gene_panels/ranking
 
         @param threshold: int
-        @rType str report: logging 
     """
-    report = ""
 
     for panel in GENE_PANELS:
 
-        report += "ComputePanelLevelRanking:: {}\n".format(panel)
+        print("ComputePanelLevelRanking:: {}\n".format(panel)) 
 
         gps = []
         for gene in PANEL_REF[panel]:
@@ -284,7 +287,7 @@ def computePanelLevelRanking(threshold):
             if storepath:
                 gps.append(storepath + "." + str(threshold))
             else:
-                report += "---- {} missing\n".format(gene["ensembl_id"])
+                print("---- {} missing\n".format(gene["ensembl_id"]))
 
         ranking = rankOnePanel(gps)
 
@@ -293,22 +296,24 @@ def computePanelLevelRanking(threshold):
         with open(outp, "w+") as outf:
             json.dump(ranking, outf)
 
-    return report
 
 
 
-def computeRanking(option, threshold):
+def computeRanking(option, threshold, ensembl_id):
     """ Dispatch correct ranking methods given option
     
         @param option enum
         @param threshold int
+        @param ensembl_id str
     """
 
     assert (isinstance(threshold, int) and threshold >= 0), "invalid threshold"
 
     if option == OPTION_RANKING_GENE:
+        rankOneGene(ensembl_id, threshold)
+    elif option == OPTION_RANKING_ALL_GENE:
         computeGeneLevelRanking(threshold)
-    elif option == OPTION_RANKING_GENEPANEL:
+    elif option == OPTION_RANKING_ALL_GENEPANEL:
         computePanelLevelRanking(threshold)
     else:
         return
