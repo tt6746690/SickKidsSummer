@@ -1,7 +1,16 @@
 import "whatwg-fetch";
 
 import * as React from "react";
-import { Col, Grid, Panel, Row, Tab, Tabs } from "react-bootstrap";
+import {
+  Col,
+  Grid,
+  Panel,
+  Row,
+  Tab,
+  Tabs,
+  ButtonGroup,
+  Button
+} from "react-bootstrap";
 
 import FetchStatusContainer from "../containers/FetchStatusContainer";
 import GenePanelInfoContainer from "../containers/GenePanelInfoContainer";
@@ -24,9 +33,35 @@ class Layout extends React.Component<any, object> {
       viewType,
       selectedGene,
       selectedGenePanel,
+      selectedRefTissueSite,
       selectedRankedTissueSite,
+      color,
       onTabSelect
     } = this.props;
+
+    let selectedRankedTissueSiteGroup = (
+      <Panel>
+        <ButtonGroup>
+          <Button
+            className={"panelGeneButton"}
+            value={selectedRefTissueSite}
+            style={{ backgroundColor: color(selectedRefTissueSite) }}
+          >
+            {selectedRefTissueSite}
+          </Button>
+          {selectedRankedTissueSite.map((tissueSiteId: string, i: number) =>
+            <Button
+              className={"panelGeneButton"}
+              key={i.toString()}
+              value={tissueSiteId}
+              style={{ backgroundColor: color(tissueSiteId) }}
+            >
+              {tissueSiteId}
+            </Button>
+          )}
+        </ButtonGroup>
+      </Panel>
+    );
 
     return (
       <Grid>
@@ -54,6 +89,8 @@ class Layout extends React.Component<any, object> {
               </Col>
             </Panel>
           </Row>}
+        {isNonEmptyArray(selectedRankedTissueSite) &&
+          selectedRankedTissueSiteGroup}
         <Tabs
           activeKey={viewType}
           onSelect={onTabSelect}

@@ -12,15 +12,19 @@ const mapStateToProps = (state: stateInterface) => {
       select: {
         gene: selectedGene,
         genePanel: selectedGenePanel,
+        refTissueSite: selectedRefTissueSite,
         rankedTissueSite: selectedRankedTissueSite
-      }
+      },
+      plot: { color }
     }
   } = state;
 
   return {
+    color,
     viewType,
     selectedGene,
     selectedGenePanel,
+    selectedRefTissueSite,
     selectedRankedTissueSite
   };
 };

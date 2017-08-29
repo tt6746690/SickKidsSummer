@@ -1,5 +1,13 @@
 import * as React from "react";
-import { Button, Collapse, Panel, Table, Row, Col } from "react-bootstrap";
+import {
+  Button,
+  Collapse,
+  Panel,
+  Table,
+  Row,
+  Col,
+  ButtonGroup
+} from "react-bootstrap";
 
 import ExonPlotContainer from "../containers/ExonPlotContainer";
 import { isNonEmptyArray } from "../utils/Utils";
@@ -129,9 +137,11 @@ class TissueSiteRanking extends React.Component<any, object> {
     }
 
     return (
-      <Panel className={"tissueRankingPanel"}>
-        {tissueRankTable}
-      </Panel>
+      <div>
+        <Panel className={"tissueRankingPanel"}>
+          {tissueRankTable}
+        </Panel>
+      </div>
     );
   }
 }
