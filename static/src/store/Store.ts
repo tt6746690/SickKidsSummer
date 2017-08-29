@@ -14,6 +14,8 @@ import {
   ADD_TISSUE_SITE,
   LOAD_SEARCH_INDEX
 } from "../actions/EntitiesActions";
+import { VIEW_TYPE } from "../actions/UIActions";
+
 import { isNonEmptyArray } from "../utils/Utils";
 
 /* 
@@ -36,7 +38,7 @@ let defaultState: stateInterface = {
       geneForPlot: "",
       genePanel: "",
       refTissueSite: "",
-      rankedTissueSite: "",
+      rankedTissueSite: [],
       panelHistory: []
     },
     plot: {
@@ -48,7 +50,8 @@ let defaultState: stateInterface = {
     search: {
       selectedOptions: [],
       collapse: true
-    }
+    },
+    viewType: VIEW_TYPE.TISSUESITE_RANKING
   },
   networks: {
     isFetching: false,
@@ -60,26 +63,26 @@ const composeEnhancers =
   (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const devMiddlewares = [];
-if (!PROD) {
-  const logger = createLogger({
-    diff: true,
-    duration: true,
-    diffPredicate: (getState, action) => {
-      let blackList = [
-        ADD_TISSUE_SITE,
-        ADD_GENE,
-        ADD_GENE_PANEL,
-        LOAD_SEARCH_INDEX
-      ];
-      let { entities: { searchIndex }, networks: { isFetching } } = getState();
-      if (blackList.includes(action) || isFetching) {
-        return false;
-      }
-      return true;
-    }
-  });
-  devMiddlewares.push(logger);
-}
+// if (!PROD) {
+//   const logger = createLogger({
+//     diff: true,
+//     duration: true,
+//     diffPredicate: (getState, action) => {
+//       let blackList = [
+//         ADD_TISSUE_SITE,
+//         ADD_GENE,
+//         ADD_GENE_PANEL,
+//         LOAD_SEARCH_INDEX
+//       ];
+//       let { entities: { searchIndex }, networks: { isFetching } } = getState();
+//       if (blackList.includes(action) || isFetching) {
+//         return false;
+//       }
+//       return true;
+//     }
+//   });
+//   devMiddlewares.push(logger);
+// }
 
 let store = createStore(
   rootReducer,

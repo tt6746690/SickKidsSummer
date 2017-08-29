@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { setRankedTissueSite } from "../actions/UIActions";
+import { toggleRankedTissueSite } from "../actions/UIActions";
 import TissueSiteRanking from "../components/TissueSiteRanking";
 import { stateInterface } from "../Interfaces";
 import { getTissueRanking } from "../utils/Ranking";
@@ -47,7 +47,7 @@ const mapDispatchToProps = dispatch => {
     */
     onTissueSiteClick: evt => {
       let tissueSite = evt.target.value;
-      dispatch(setRankedTissueSite(tissueSite));
+      dispatch(toggleRankedTissueSite(tissueSite));
     }
   };
 };

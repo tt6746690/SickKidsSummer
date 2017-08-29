@@ -23,13 +23,15 @@ class ExonPlot extends React.Component<any, object> {
     } = this.props;
 
     let geneEntityList = getGeneEntityByIdList(gene, selectedGene);
+    let lastSelectedRankedTissueSite =
+      selectedRankedTissueSite[selectedRankedTissueSite.length - 1];
 
     geneEntityList.forEach(g => {
-      setUp(g.geneSymbol, selectedRankedTissueSite);
+      setUp(g.geneSymbol, lastSelectedRankedTissueSite);
       setUp(g.geneSymbol, selectedRefTissueSite);
 
       let refData = formatExonPlotData(g, selectedRefTissueSite);
-      let rankedData = formatExonPlotData(g, selectedRankedTissueSite);
+      let rankedData = formatExonPlotData(g, lastSelectedRankedTissueSite);
 
       if (preconditionSatisfied(rankedData) && preconditionSatisfied(refData)) {
         plot(rankedData, { noXLabel: true });
@@ -48,11 +50,14 @@ class ExonPlot extends React.Component<any, object> {
       cleanUp
     } = this.props;
 
+    let lastSelectedRankedTissueSite =
+      selectedRankedTissueSite[selectedRankedTissueSite.length - 1];
+
     let geneEntityList = getGeneEntityByIdList(gene, selectedGene);
     geneEntityList.forEach(
       g =>
         cleanUp(g.geneSymbol, selectedRefTissueSite) &&
-        cleanUp(g.geneSymbol, selectedRankedTissueSite)
+        cleanUp(g.geneSymbol, lastSelectedRankedTissueSite)
     );
   }
 
@@ -70,6 +75,10 @@ class ExonPlot extends React.Component<any, object> {
     } = this.props;
 
     let geneEntityList = getGeneEntityByIdList(gene, selectedGene);
+
+    let lastSelectedRankedTissueSite =
+      selectedRankedTissueSite[selectedRankedTissueSite.length - 1];
+
     /* 
       sort gene based on
       -- 1. fraction, descending
@@ -86,7 +95,7 @@ class ExonPlot extends React.Component<any, object> {
           gene,
           g.ensemblId,
           selectedRefTissueSite,
-          selectedRankedTissueSite
+          lastSelectedRankedTissueSite
         );
         let {
           exonNumLen: total,
@@ -98,9 +107,8 @@ class ExonPlot extends React.Component<any, object> {
           selectedRefTissueSite
         );
 
-        let fraction = total === 0
-          ? Number(0).toPrecision(3)
-          : (sub / total).toPrecision(3);
+        let fraction =
+          total === 0 ? Number(0).toPrecision(3) : (sub / total).toPrecision(3);
 
         return { g, sub, total, fraction };
       })
@@ -153,10 +161,9 @@ class ExonPlot extends React.Component<any, object> {
                 {fraction}
               </Col>
             </Row>
-
           </Col>
           <Col md={10}>
-            <div id={getPlotId(g.geneSymbol, selectedRankedTissueSite)} />
+            <div id={getPlotId(g.geneSymbol, lastSelectedRankedTissueSite)} />
             <div id={getPlotId(g.geneSymbol, selectedRefTissueSite)} />
           </Col>
         </Row>
@@ -189,7 +196,6 @@ class ExonPlot extends React.Component<any, object> {
           <Modal.Footer>
             <Button onClick={onModalClose}>Close</Button>
           </Modal.Footer>
-
         </Modal>
       </div>
     );

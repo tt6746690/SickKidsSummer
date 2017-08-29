@@ -58,11 +58,11 @@ const mapStateToProps = (state: stateInterface) => {
   if (
     selectedGenePanel !== "" &&
     selectedGeneForPlot !== "" &&
-    selectedRankedTissueSite !== ""
+    isNonEmptyArray(selectedRankedTissueSite)
   ) {
     data = formatExonBoxPlotData(geneEntity.exonExpr, [
       selectedRefTissueSite,
-      selectedRankedTissueSite
+      ...selectedRankedTissueSite
     ]);
 
     console.log(data);

@@ -47,7 +47,7 @@ export interface stateInterface {
       geneForPlot: string;
       genePanel: string;
       refTissueSite: string;
-      rankedTissueSite: string;
+      rankedTissueSite: string[];
       panelHistory: string[];
     };
     plot: {
@@ -60,6 +60,7 @@ export interface stateInterface {
       selectedOptions: searchIndexEntity[];
       collapse: boolean;
     };
+    viewType: string;
   };
   networks: {
     isFetching: boolean;

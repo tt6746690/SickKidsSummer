@@ -10,6 +10,7 @@ import TissueSiteListingContainer from "../containers/TissueSiteListingContainer
 import TissueSiteRankingContainer from "../containers/TissueSiteRankingContainer";
 import PanelHistoryListingContainer from "../containers/PanelHistoryListingContainer";
 import { isNonEmptyArray } from "../utils/Utils";
+import { VIEW_TYPE } from "../actions/UIActions";
 
 class Layout extends React.Component<any, object> {
   componentWillMount() {
@@ -18,7 +19,7 @@ class Layout extends React.Component<any, object> {
   }
 
   render() {
-    let { selectedGene, selectedGenePanel } = this.props;
+    let { viewType, selectedGene, selectedGenePanel, onTabSelect } = this.props;
 
     return (
       <Grid>
@@ -46,11 +47,30 @@ class Layout extends React.Component<any, object> {
               </Col>
             </Panel>
           </Row>}
-        <Row id="ranking">
-          <Col md={12}>
-            <TissueSiteRankingContainer />
-          </Col>
-        </Row>
+        <Tabs activeKey={viewType} onSelect={onTabSelect} animation={true}>
+          <Tab
+            eventKey={VIEW_TYPE.TISSUESITE_RANKING}
+            title="ranking"
+            id="tissueSiteRankingView"
+          >
+            <Row id="ranking">
+              <Col md={12}>
+                <TissueSiteRankingContainer />
+              </Col>
+            </Row>
+          </Tab>
+          <Tab
+            eventKey={VIEW_TYPE.MULTI_EXONBOXPLOT}
+            title="multi_exonboxplot"
+            id="multiExonBoxPlotView"
+          >
+            <Row id="exonboxplot">
+              <Col md={12}>
+                <div> here </div>
+              </Col>
+            </Row>
+          </Tab>
+        </Tabs>
       </Grid>
     );
   }

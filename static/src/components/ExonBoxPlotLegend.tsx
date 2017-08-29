@@ -12,7 +12,7 @@ class ExonBoxPlotLegend extends React.Component<any, object> {
 
     let selectedTissueButtons = [
       selectedRefTissueSite,
-      selectedRankedTissueSite
+      ...selectedRankedTissueSite
     ].map((tissueSiteId, index) => {
       return (
         <Button

@@ -22,6 +22,7 @@ export const SET_GENE_PANEL = "SET_GENE_PANEL";
 // ui.select.{ref,ranked}TissueSite
 export const SET_REF_TISSUESITE = "SET_REF_TISSUESITE";
 export const SET_RANKED_TISSUESITE = "SET_RANKED_TISSUESITE";
+export const TOGGLE_RANKED_TISSUESITE = "TOGGLE_RANKED_TISSUESITE";
 
 // ui.select.panelHistory
 export const APPEND_NEW_PANEL_HISTORY = "APPEND_NEW_PANEL_HISTORY";
@@ -29,6 +30,20 @@ export const APPEND_NEW_PANEL_HISTORY = "APPEND_NEW_PANEL_HISTORY";
 // ui.search
 export const UPDATE_SEARCH_OPTIONS = "UPDATE_SEARCH_OPTIONS";
 export const SET_SEARCH_COLLAPSE = "SET_SEARCH_COLLAPSE";
+
+// viewtype
+export const SELECT_VIEW = "SELECT_VIEW";
+export const VIEW_TYPE = {
+  TISSUESITE_RANKING: "TISSUESITE_RANKING",
+  MULTI_EXONBOXPLOT: "MULTI_EXONBOXPLOT"
+};
+
+export function setViewType(viewType = VIEW_TYPE.TISSUESITE_RANKING) {
+  return {
+    type: SELECT_VIEW,
+    viewType
+  };
+}
 
 /* actionCreators */
 export function toggleGene(ensemblId: string) {
@@ -69,6 +84,10 @@ export function setRefTissueSite(tissueSiteId: string = "") {
 
 export function setRankedTissueSite(tissueSiteId: string = "") {
   return { type: SET_RANKED_TISSUESITE, tissueSiteId };
+}
+
+export function toggleRankedTissueSite(tissueSiteId: string = "") {
+  return { type: TOGGLE_RANKED_TISSUESITE, tissueSiteId };
 }
 
 export function appendNewPanelHistory(genePanelId: string = "") {

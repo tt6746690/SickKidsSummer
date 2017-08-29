@@ -15,6 +15,11 @@ class TissueSiteRanking extends React.Component<any, object> {
       onTissueSiteClick
     } = this.props;
 
+    console.log(`tissueSiteRanking !! `);
+    selectedRankedTissueSite.forEach(x => {
+      console.log(x);
+    });
+
     let tissueRankTable = <Table />;
 
     /* 
@@ -61,12 +66,13 @@ class TissueSiteRanking extends React.Component<any, object> {
 
       const selectedTissueListGroupItem = ranking.map(
         ([tissueSiteId, totalExonCount, medianFrac, meanFrac], index) => {
-          let style = selectedRankedTissueSite === tissueSiteId ||
+          let lastSelectedRankedTissueSite =
+            selectedRankedTissueSite[selectedRankedTissueSite.length - 1];
+          let style =
+            selectedRankedTissueSite.includes(tissueSiteId) ||
             selectedRefTissueSite === tissueSiteId
-            ? {
-                backgroundColor: color(tissueSiteId)
-              }
-            : undefined;
+              ? { backgroundColor: color(tissueSiteId) }
+              : undefined;
 
           let tableRow = (
             <tr key={index.toString()}>
@@ -79,18 +85,24 @@ class TissueSiteRanking extends React.Component<any, object> {
                   {tissueSiteId}
                 </Button>
               </td>
-              <td>{totalExonCount}</td>
-              <td>{medianFrac.toPrecision(2)}</td>
-              <td>{meanFrac.toPrecision(2)}</td>
+              <td>
+                {totalExonCount}
+              </td>
+              <td>
+                {medianFrac.toPrecision(2)}
+              </td>
+              <td>
+                {meanFrac.toPrecision(2)}
+              </td>
             </tr>
           );
 
           return [
             tableRow,
-            selectedRankedTissueSite === tissueSiteId &&
-              selectedGenePanel !== "" &&
-              selectedRefTissueSite !== "" &&
-              selectedRankedTissueSite !== ""
+            selectedRankedTissueSite.includes(tissueSiteId) &&
+            selectedGenePanel !== "" &&
+            selectedRefTissueSite !== "" &&
+            selectedRankedTissueSite !== ""
               ? <Collapse in={true}>
                   <tr>
                     <td colSpan={4}>
@@ -109,7 +121,7 @@ class TissueSiteRanking extends React.Component<any, object> {
             <tr>
               <th>Tissue Site</th>
               <th>Total Exon Counts</th>
-              <th>Median Fraction</th>
+              <th>Median # of exon covered</th>
               <th>Mean Fraction</th>
             </tr>
           </thead>

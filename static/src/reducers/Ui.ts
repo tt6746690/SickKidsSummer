@@ -1,10 +1,12 @@
 import "../actions/EntitiesActions";
 
 import {
+  SELECT_VIEW,
   EMPTY_SELECTED_GENE,
   SET_GENE_PANEL,
   SET_GENEFORPLOT,
   SET_RANKED_TISSUESITE,
+  TOGGLE_RANKED_TISSUESITE,
   SET_REF_TISSUESITE,
   SET_SEARCH_COLLAPSE,
   SET_SELECTED_GENE,
@@ -14,6 +16,8 @@ import {
 
 function select(state, action) {
   switch (action.type) {
+    case SELECT_VIEW:
+      return { ...state, viewType: action.viewType };
     case SET_SELECTED_GENE:
       return { ...state, gene: [...action.ensemblIds] };
     case EMPTY_SELECTED_GENE:
@@ -25,7 +29,20 @@ function select(state, action) {
     case SET_REF_TISSUESITE:
       return { ...state, refTissueSite: action.tissueSiteId };
     case SET_RANKED_TISSUESITE:
-      return { ...state, rankedTissueSite: action.tissueSiteId };
+      return { ...state, rankedTissueSite: [...action.tissueSiteId] };
+    case TOGGLE_RANKED_TISSUESITE:
+      let pos = state.rankedTissueSite.indexOf(action.tissueSiteId);
+      let newRankedTissueSite = [...state.rankedTissueSite];
+      if (pos == -1) {
+        newRankedTissueSite.push(action.tissueSiteId);
+      } else {
+        newRankedTissueSite.splice(pos, 1);
+      }
+      return {
+        ...state,
+        rankedTissueSite: [...newRankedTissueSite]
+      };
+
     case APPEND_NEW_PANEL_HISTORY:
       let panelHistory: string[] = state.panelHistory.filter(
         genePanelId => genePanelId !== action.genePanelId
@@ -61,6 +78,7 @@ export default function ui(state, action) {
     case SET_GENE_PANEL:
     case SET_REF_TISSUESITE:
     case SET_RANKED_TISSUESITE:
+    case TOGGLE_RANKED_TISSUESITE:
     case APPEND_NEW_PANEL_HISTORY:
       return { ...state, select: select(state.select, action) };
     case UPDATE_SEARCH_OPTIONS:

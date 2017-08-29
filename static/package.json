@@ -1,7 +1,8 @@
 {
   "name": "sickkidsproj",
   "version": "1.0.0",
-  "description": "",
+  "repository": "tt6746690/SickkidsSummer",
+  "description": "A web based tool for finding similarly expressed tissuetype for gene panels",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
