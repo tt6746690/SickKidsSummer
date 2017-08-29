@@ -36,7 +36,8 @@ class Layout extends React.Component<any, object> {
       selectedRefTissueSite,
       selectedRankedTissueSite,
       color,
-      onTabSelect
+      onTabSelect,
+      onTissueSiteClick
     } = this.props;
 
     let selectedRankedTissueSiteGroup = (
@@ -45,6 +46,7 @@ class Layout extends React.Component<any, object> {
           <Button
             className={"panelGeneButton"}
             value={selectedRefTissueSite}
+            onClick={onTissueSiteClick}
             style={{ backgroundColor: color(selectedRefTissueSite) }}
           >
             {selectedRefTissueSite}
@@ -54,6 +56,7 @@ class Layout extends React.Component<any, object> {
               className={"panelGeneButton"}
               key={i.toString()}
               value={tissueSiteId}
+              onClick={onTissueSiteClick}
               style={{ backgroundColor: color(tissueSiteId) }}
             >
               {tissueSiteId}

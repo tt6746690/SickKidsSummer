@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import Layout from "../components/Layout";
 import { stateInterface } from "../Interfaces";
 import { hydrateInitialState } from "../actions/FetchActions";
-import { setViewType } from "../actions/UIActions";
+import { setViewType, toggleRankedTissueSite } from "../actions/UIActions";
 
 const mapStateToProps = (state: stateInterface) => {
   let {
@@ -37,6 +37,11 @@ const mapDispatchToProps = dispatch => {
 
     onTabSelect: tabType => {
       dispatch(setViewType(tabType));
+    },
+
+    onTissueSiteClick: evt => {
+      let tissueSite = evt.target.value;
+      dispatch(toggleRankedTissueSite(tissueSite));
     }
   };
 };
