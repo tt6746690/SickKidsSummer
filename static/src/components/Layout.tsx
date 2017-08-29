@@ -9,6 +9,7 @@ import SearchBarContainer from "../containers/SearchBarContainer";
 import TissueSiteListingContainer from "../containers/TissueSiteListingContainer";
 import TissueSiteRankingContainer from "../containers/TissueSiteRankingContainer";
 import PanelHistoryListingContainer from "../containers/PanelHistoryListingContainer";
+import ExonPlotMultiContainer from "../containers/ExonPlotMultiContainer";
 import { isNonEmptyArray } from "../utils/Utils";
 import { VIEW_TYPE } from "../actions/UIActions";
 
@@ -19,7 +20,13 @@ class Layout extends React.Component<any, object> {
   }
 
   render() {
-    let { viewType, selectedGene, selectedGenePanel, onTabSelect } = this.props;
+    let {
+      viewType,
+      selectedGene,
+      selectedGenePanel,
+      selectedRankedTissueSite,
+      onTabSelect
+    } = this.props;
 
     return (
       <Grid>
@@ -47,11 +54,15 @@ class Layout extends React.Component<any, object> {
               </Col>
             </Panel>
           </Row>}
-        <Tabs activeKey={viewType} onSelect={onTabSelect} animation={true}>
+        <Tabs
+          activeKey={viewType}
+          onSelect={onTabSelect}
+          animation={true}
+          id={"viewTabs"}
+        >
           <Tab
             eventKey={VIEW_TYPE.TISSUESITE_RANKING}
-            title="ranking"
-            id="tissueSiteRankingView"
+            title="tissueSiteRanking"
           >
             <Row id="ranking">
               <Col md={12}>
@@ -59,14 +70,12 @@ class Layout extends React.Component<any, object> {
               </Col>
             </Row>
           </Tab>
-          <Tab
-            eventKey={VIEW_TYPE.MULTI_EXONBOXPLOT}
-            title="multi_exonboxplot"
-            id="multiExonBoxPlotView"
-          >
+          <Tab eventKey={VIEW_TYPE.MULTI_EXONBOXPLOT} title="multi_exonboxplot">
             <Row id="exonboxplot">
               <Col md={12}>
-                <div> here </div>
+                {isNonEmptyArray(selectedRankedTissueSite) &&
+                  viewType === VIEW_TYPE.MULTI_EXONBOXPLOT &&
+                  <ExonPlotMultiContainer />}
               </Col>
             </Row>
           </Tab>

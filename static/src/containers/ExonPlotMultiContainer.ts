@@ -25,7 +25,7 @@ const mapStateToProps = (state: stateInterface) => {
   const getPlotId = (geneSymbol: string, tissueSite: string) => {
     return `${tissueSite
       .split(/\s|-|\(|\)/g)
-      .join("_")}_${geneSymbol}_${plotName}`;
+      .join("_")}_${geneSymbol}_${plotName}Multi`;
   };
 
   // plot config
@@ -56,7 +56,7 @@ const mapStateToProps = (state: stateInterface) => {
       return isNonEmptyArray(data);
     },
     setUp(geneSymbol: string, tissueSite: string) {
-      console.log("setup: " + tissueSite);
+      console.log("setupmulti: " + tissueSite);
       svg = d3
         .select(`#${getPlotId(geneSymbol, tissueSite)}`)
         .append("svg")
@@ -65,7 +65,6 @@ const mapStateToProps = (state: stateInterface) => {
         .append("g")
         .classed(`${getPlotId(geneSymbol, tissueSite)}Group`, true);
     },
-
     tearDown: (geneSymbol: string, tissueSite: string) => {
       d3
         .select(`.${getPlotId(geneSymbol, tissueSite)}Group`)
@@ -156,8 +155,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const ExonPlotContainer = connect(mapStateToProps, mapDispatchToProps)(
-  ExonPlot
+const ExonPlotMultiContainer = connect(mapStateToProps, mapDispatchToProps)(
+  ExonPlotMulti
 );
 
-export default ExonPlotContainer;
+export default ExonPlotMultiContainer;

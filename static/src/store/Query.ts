@@ -166,3 +166,24 @@ export function queryTissueRankingByGeneId(
     };
   }
 }
+
+// export function queryTissueRankingsByGeneId(
+//   gene: geneEntity[],
+//   ensemblId: string,
+//   refTissueSite: string,
+//   rankedTissueSites: string[]
+// ): { exonNumLen: number; exons: string[] } {
+//   let tissueRanking = getGeneEntityById(gene, ensemblId)["tissueRanking"];
+
+//   if (
+//     tissueRanking.hasOwnProperty(refTissueSite) &&
+//     tissueRanking[refTissueSite].hasOwnProperty(rankedTissueSite)
+//   ) {
+//     return tissueRanking[refTissueSite][rankedTissueSite];
+//   } else {
+//     return {
+//       exonNumLen: 0,
+//       exons: []
+//     };
+//   }
+// }

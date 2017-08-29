@@ -39,6 +39,7 @@ export const VIEW_TYPE = {
 };
 
 export function setViewType(viewType = VIEW_TYPE.TISSUESITE_RANKING) {
+  console.log("setviewtype" + viewType);
   return {
     type: SELECT_VIEW,
     viewType

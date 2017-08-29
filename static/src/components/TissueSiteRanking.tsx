@@ -15,11 +15,6 @@ class TissueSiteRanking extends React.Component<any, object> {
       onTissueSiteClick
     } = this.props;
 
-    console.log(`tissueSiteRanking !! `);
-    selectedRankedTissueSite.forEach(x => {
-      console.log(x);
-    });
-
     let tissueRankTable = <Table />;
 
     /* 
@@ -64,10 +59,11 @@ class TissueSiteRanking extends React.Component<any, object> {
         }
       });
 
+      let lastSelectedRankedTissueSite =
+        selectedRankedTissueSite[selectedRankedTissueSite.length - 1];
+
       const selectedTissueListGroupItem = ranking.map(
         ([tissueSiteId, totalExonCount, medianFrac, meanFrac], index) => {
-          let lastSelectedRankedTissueSite =
-            selectedRankedTissueSite[selectedRankedTissueSite.length - 1];
           let style =
             selectedRankedTissueSite.includes(tissueSiteId) ||
             selectedRefTissueSite === tissueSiteId
@@ -102,7 +98,7 @@ class TissueSiteRanking extends React.Component<any, object> {
             selectedRankedTissueSite.includes(tissueSiteId) &&
             selectedGenePanel !== "" &&
             selectedRefTissueSite !== "" &&
-            selectedRankedTissueSite !== ""
+            lastSelectedRankedTissueSite === tissueSiteId
               ? <Collapse in={true}>
                   <tr>
                     <td colSpan={4}>

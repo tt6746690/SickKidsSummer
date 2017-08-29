@@ -16,8 +16,6 @@ import {
 
 function select(state, action) {
   switch (action.type) {
-    case SELECT_VIEW:
-      return { ...state, viewType: action.viewType };
     case SET_SELECTED_GENE:
       return { ...state, gene: [...action.ensemblIds] };
     case EMPTY_SELECTED_GENE:
@@ -84,6 +82,8 @@ export default function ui(state, action) {
     case UPDATE_SEARCH_OPTIONS:
     case SET_SEARCH_COLLAPSE:
       return { ...state, search: search(state.search, action) };
+    case SELECT_VIEW:
+      return { ...state, viewType: action.viewType };
     default:
       return state;
   }

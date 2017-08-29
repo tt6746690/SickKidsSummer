@@ -9,11 +9,20 @@ const mapStateToProps = (state: stateInterface) => {
   let {
     ui: {
       viewType,
-      select: { gene: selectedGene, genePanel: selectedGenePanel }
+      select: {
+        gene: selectedGene,
+        genePanel: selectedGenePanel,
+        rankedTissueSite: selectedRankedTissueSite
+      }
     }
   } = state;
 
-  return { selectedGene, selectedGenePanel };
+  return {
+    viewType,
+    selectedGene,
+    selectedGenePanel,
+    selectedRankedTissueSite
+  };
 };
 
 const mapDispatchToProps = dispatch => {
