@@ -97,6 +97,7 @@ class ExonPlot extends React.Component<any, object> {
           selectedRefTissueSite,
           lastSelectedRankedTissueSite
         );
+
         let {
           exonNumLen: total,
           exons: refTissueSiteExons

@@ -158,6 +158,7 @@ export function queryTissueRankingByGeneId(
     tissueRanking.hasOwnProperty(refTissueSite) &&
     tissueRanking[refTissueSite].hasOwnProperty(rankedTissueSite)
   ) {
+    console.log(tissueRanking);
     return tissueRanking[refTissueSite][rankedTissueSite];
   } else {
     return {

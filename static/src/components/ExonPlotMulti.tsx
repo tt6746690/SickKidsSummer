@@ -39,10 +39,6 @@ class ExonPlotMulti extends React.Component<any, object> {
       selectedRankedTissueSite.forEach(tissueSiteId => {
         let rankedData = formatExonPlotData(g, tissueSiteId);
         if (preconditionSatisfied(rankedData)) {
-          console.log({
-            where: "plotting" + tissueSiteId,
-            rankedData
-          });
           plot(rankedData, { noXLabel: true });
         }
       });
@@ -94,54 +90,68 @@ class ExonPlotMulti extends React.Component<any, object> {
       -- 2. exonNumLen, descending
       -- 3. geneSymbol, alphabetical
     */
-    // let geneSorted = geneEntityList
-    //   .map((g, i) => {
-    //     let geneSymbol = g.geneSymbol;
-    //     let {
-    //       exonNumLen: sub,
-    //       exons: rankedTissueSiteExons
-    //     } = queryTissueRankingByGeneId(
-    //       gene,
-    //       g.ensemblId,
-    //       selectedRefTissueSite,
-    //       lastSelectedRankedTissueSite
-    //     );
-    //     let {
-    //       exonNumLen: total,
-    //       exons: refTissueSiteExons
-    //     } = queryTissueRankingByGeneId(
-    //       gene,
-    //       g.ensemblId,
-    //       selectedRefTissueSite,
-    //       selectedRefTissueSite
-    //     );
+    let geneSorted = geneEntityList
+      .map((g, i) => {
+        let geneSymbol = g.geneSymbol;
 
-    //     let fraction =
-    //       total === 0 ? Number(0).toPrecision(3) : (sub / total).toPrecision(3);
+        let subExons = [];
+        selectedRankedTissueSite.forEach(tissueSiteId => {
+          let {
+            exonNumLen: sub,
+            exons: rankedTissueSiteExons
+          } = queryTissueRankingByGeneId(
+            gene,
+            g.ensemblId,
+            selectedRefTissueSite,
+            tissueSiteId
+          );
 
-    //     return { g, sub, total, fraction };
-    //   })
-    //   .sort((a, b) => {
-    //     let { fraction: aFrac, sub: aSub, g: { geneSymbol: aGeneSymbol } } = a;
-    //     let { fraction: bFrac, sub: bSub, g: { geneSymbol: bGeneSymbol } } = b;
+          subExons = subExons.concat(
+            rankedTissueSiteExons.filter(exon => {
+              return subExons.indexOf(exon) === -1;
+            })
+          );
+        });
 
-    //     if (aFrac < bFrac) {
-    //       return 1;
-    //     } else if (aFrac > bFrac) {
-    //       return -1;
-    //     } else {
-    //       if (aSub < bSub) {
-    //         return 1;
-    //       } else if (aSub > bSub) {
-    //         return -1;
-    //       } else {
-    //         return aGeneSymbol.length - bGeneSymbol.length;
-    //       }
-    //     }
-    //   });
+        console.log(subExons);
 
-    // let ExonPlotList = geneSorted.map(({ g, sub, total, fraction }, i) => {
-    let ExonPlotList = geneEntityList.map((g, i) => {
+        let sub = subExons.length;
+
+        let {
+          exonNumLen: total,
+          exons: refTissueSiteExons
+        } = queryTissueRankingByGeneId(
+          gene,
+          g.ensemblId,
+          selectedRefTissueSite,
+          selectedRefTissueSite
+        );
+
+        let fraction =
+          total === 0 ? Number(0).toPrecision(3) : (sub / total).toPrecision(3);
+
+        return { g, sub, total, fraction };
+      })
+      .sort((a, b) => {
+        let { fraction: aFrac, sub: aSub, g: { geneSymbol: aGeneSymbol } } = a;
+        let { fraction: bFrac, sub: bSub, g: { geneSymbol: bGeneSymbol } } = b;
+
+        if (aFrac < bFrac) {
+          return 1;
+        } else if (aFrac > bFrac) {
+          return -1;
+        } else {
+          if (aSub < bSub) {
+            return 1;
+          } else if (aSub > bSub) {
+            return -1;
+          } else {
+            return aGeneSymbol.length - bGeneSymbol.length;
+          }
+        }
+      });
+
+    let ExonPlotList = geneSorted.map(({ g, sub, total, fraction }, i) => {
       return (
         <Row key={i.toString()}>
           <Col md={2}>
@@ -154,6 +164,14 @@ class ExonPlotMulti extends React.Component<any, object> {
                 >
                   {g.geneSymbol.toUpperCase()}
                 </Button>
+              </Col>
+            </Row>
+            <Row style={{ paddingTop: "7px" }}>
+              <Col xs={4}>
+                {sub + "/" + total}
+              </Col>
+              <Col xs={6}>
+                {fraction}
               </Col>
             </Row>
           </Col>
