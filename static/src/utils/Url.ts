@@ -1,4 +1,4 @@
-export const PROD = false;
+export const PROD = true;
 // prefix
 export const SCHEME = PROD ? "https" : "http";
 export const HOST = PROD ? "page.ccm.sickkids.ca" : "127.0.0.1";

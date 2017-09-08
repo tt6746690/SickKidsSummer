@@ -40,8 +40,6 @@ class ExonPlot extends React.Component<any, object> {
     });
   }
   componentWillUnmount() {
-    console.log("ExonPlot: cleanUp()");
-
     let {
       gene,
       selectedGene,
@@ -155,12 +153,8 @@ class ExonPlot extends React.Component<any, object> {
               </Col>
             </Row>
             <Row style={{ paddingTop: "7px" }}>
-              <Col xs={4}>
-                {sub + "/" + total}
-              </Col>
-              <Col xs={6}>
-                {fraction}
-              </Col>
+              <Col xs={4}>{sub + "/" + total}</Col>
+              <Col xs={6}>{fraction}</Col>
             </Row>
           </Col>
           <Col md={10}>
@@ -173,9 +167,7 @@ class ExonPlot extends React.Component<any, object> {
 
     return (
       <div>
-        <Panel>
-          {ExonPlotList}
-        </Panel>
+        <Panel>{ExonPlotList}</Panel>
         <Modal
           bsSize={"large"}
           show={selectedGeneForPlot !== ""}

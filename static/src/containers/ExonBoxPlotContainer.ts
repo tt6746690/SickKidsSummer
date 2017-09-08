@@ -32,8 +32,14 @@ const mapStateToProps = (state: stateInterface) => {
   let xAxisLength = width - offset * 2;
   let yAxisLength = height - offset * 4;
 
-  let x = d3.scaleLinear().range([0, xAxisLength]).nice();
-  let y = d3.scaleLog().range([yAxisLength, 0]).base(10);
+  let x = d3
+    .scaleLinear()
+    .range([0, xAxisLength])
+    .nice();
+  let y = d3
+    .scaleLog()
+    .range([yAxisLength, 0])
+    .base(10);
 
   let xAxis = d3.axisBottom(x);
   let yAxis = d3.axisLeft(y).tickFormat(d3.format(".5"));
@@ -64,8 +70,6 @@ const mapStateToProps = (state: stateInterface) => {
       selectedRefTissueSite,
       ...selectedRankedTissueSite
     ]);
-
-    console.log(data);
 
     xTicks = Object.keys(geneEntity.exonExpr).map(x => parseInt(x));
     xTickCount = xTicks.length;
@@ -107,11 +111,20 @@ const mapStateToProps = (state: stateInterface) => {
         -- svg everytime component unmounted
     */,
     tearDown: () => {
-      d3.select("." + plotName + "Group").selectAll("*").remove();
-      d3.select("#" + plotName).select("svg").on(".zoom", null);
+      d3
+        .select("." + plotName + "Group")
+        .selectAll("*")
+        .remove();
+      d3
+        .select("#" + plotName)
+        .select("svg")
+        .on(".zoom", null);
     },
     cleanUp: () => {
-      d3.select("#" + plotName).selectAll("*").remove();
+      d3
+        .select("#" + plotName)
+        .selectAll("*")
+        .remove();
     },
     /* 
         Plotting 
@@ -164,8 +177,6 @@ const mapStateToProps = (state: stateInterface) => {
         .append("g")
         .classed(plotName + "_box", true)
         .on("mouseover", d => {
-          console.log("rect::mouseover");
-
           let xpos = x(d.x) + xTicOffset(d.i) + xGroupingWidthPer / 2 + "px";
 
           d3

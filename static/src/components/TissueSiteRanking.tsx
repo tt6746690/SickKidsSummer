@@ -89,15 +89,9 @@ class TissueSiteRanking extends React.Component<any, object> {
                   {tissueSiteId}
                 </Button>
               </td>
-              <td>
-                {totalExonCount}
-              </td>
-              <td>
-                {medianFrac.toPrecision(2)}
-              </td>
-              <td>
-                {meanFrac.toPrecision(2)}
-              </td>
+              <td>{totalExonCount}</td>
+              <td>{medianFrac.toPrecision(2)}</td>
+              <td>{meanFrac.toPrecision(2)}</td>
             </tr>
           );
 
@@ -106,15 +100,17 @@ class TissueSiteRanking extends React.Component<any, object> {
             selectedRankedTissueSite.includes(tissueSiteId) &&
             selectedGenePanel !== "" &&
             selectedRefTissueSite !== "" &&
-            lastSelectedRankedTissueSite === tissueSiteId
-              ? <Collapse in={true}>
-                  <tr>
-                    <td colSpan={4}>
-                      <ExonPlotContainer />
-                    </td>
-                  </tr>
-                </Collapse>
-              : undefined
+            lastSelectedRankedTissueSite === tissueSiteId ? (
+              <Collapse in={true}>
+                <tr>
+                  <td colSpan={4}>
+                    <ExonPlotContainer />
+                  </td>
+                </tr>
+              </Collapse>
+            ) : (
+              undefined
+            )
           ];
         }
       );
@@ -126,21 +122,17 @@ class TissueSiteRanking extends React.Component<any, object> {
               <th>Tissue Site</th>
               <th>Total Exon Counts</th>
               <th>Median # of exon covered</th>
-              <th>Mean Fraction</th>
+              <th>Mean Fraction of exon covered</th>
             </tr>
           </thead>
-          <tbody>
-            {selectedTissueListGroupItem}
-          </tbody>
+          <tbody>{selectedTissueListGroupItem}</tbody>
         </Table>
       );
     }
 
     return (
       <div>
-        <Panel className={"tissueRankingPanel"}>
-          {tissueRankTable}
-        </Panel>
+        <Panel className={"tissueRankingPanel"}>{tissueRankTable}</Panel>
       </div>
     );
   }

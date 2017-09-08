@@ -58,14 +58,6 @@ export const computePanelRanking = (
 
             let fraction = sub / total;
 
-            // console.log(
-            //   `${sub}/${total} for ${rankedTissueSite}/${refTissueSite}`,
-            //   {
-            //     refTissueSiteRanking,
-            //     rankedTissueSiteRanking
-            //   }
-            // );
-
             panelRanking[refTissueSite][rankedTissueSite]["exonNumLen"] += sub;
             panelRanking[refTissueSite][rankedTissueSite]["fractions"].push(
               fraction

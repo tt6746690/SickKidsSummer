@@ -38,7 +38,10 @@ const mapStateToProps = (state: stateInterface) => {
   let xAxisLength = width - offset * 2;
   let yAxisLength = height - offset * 2;
 
-  let x = d3.scaleLinear().range([0, xAxisLength]).nice();
+  let x = d3
+    .scaleLinear()
+    .range([0, xAxisLength])
+    .nice();
   let xTickCount = 0;
 
   let xGroupingWidthRatio = 0.5;
@@ -56,7 +59,6 @@ const mapStateToProps = (state: stateInterface) => {
       return isNonEmptyArray(data);
     },
     setUp(geneSymbol: string, tissueSite: string) {
-      console.log("setupmulti: " + tissueSite);
       svg = d3
         .select(`#${getPlotId(geneSymbol, tissueSite)}`)
         .append("svg")

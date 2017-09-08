@@ -16,6 +16,7 @@ from sickkidsproj.utils.check import isEnsemblId
 
 @app.route('/')
 def index():
+    print "index here"
     return app.send_static_file('index.html')
 
 

@@ -26,8 +26,14 @@ const mapStateToProps = (state: stateInterface) => {
   let xAxisLength = width - offset * 2;
   let yAxisLength = height - offset * 4;
 
-  let x = d3.scaleBand().range([0, xAxisLength]).paddingOuter(0.25);
-  let y = d3.scaleLog().range([yAxisLength, 0]).base(10);
+  let x = d3
+    .scaleBand()
+    .range([0, xAxisLength])
+    .paddingOuter(0.25);
+  let y = d3
+    .scaleLog()
+    .range([yAxisLength, 0])
+    .base(10);
 
   let xAxis = d3.axisBottom(x);
   let yAxis = d3.axisLeft(y).tickFormat(d3.format(".5"));
@@ -87,11 +93,20 @@ const mapStateToProps = (state: stateInterface) => {
         -- svg everytime component unmounted
     */,
     tearDown: () => {
-      d3.select("." + plotName + "Group").selectAll("*").remove();
-      d3.select("#" + plotName).select("svg").on(".zoom", null);
+      d3
+        .select("." + plotName + "Group")
+        .selectAll("*")
+        .remove();
+      d3
+        .select("#" + plotName)
+        .select("svg")
+        .on(".zoom", null);
     },
     cleanUp: () => {
-      d3.select("#" + plotName).selectAll("*").remove();
+      d3
+        .select("#" + plotName)
+        .selectAll("*")
+        .remove();
     } /* 
         Plotting 
         -- x and y axis
@@ -150,8 +165,6 @@ const mapStateToProps = (state: stateInterface) => {
         .classed(plotName + "_box", true)
         .attr("transform", "translate(" + x.bandwidth() / 2 + ",0)") //.. not aligned properly so have to hard code a fix
         .on("mouseover", d => {
-          console.log("rect::mouseover");
-
           let xpos =
             x.bandwidth() / 2 +
             x(d.x) +

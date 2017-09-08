@@ -24,7 +24,6 @@ class ExonPlotMulti extends React.Component<any, object> {
 
     let geneEntityList = getGeneEntityByIdList(gene, selectedGene);
 
-    console.log("ExonPlotMulti: componentDidMount");
 
     geneEntityList.forEach(g => {
       selectedRankedTissueSite.forEach(tissueSiteId => {
@@ -47,7 +46,6 @@ class ExonPlotMulti extends React.Component<any, object> {
     });
   }
   componentWillUnmount() {
-    console.log("ExonPlotMulti: cleanUp()");
 
     let {
       gene,
@@ -113,7 +111,7 @@ class ExonPlotMulti extends React.Component<any, object> {
           );
         });
 
-        console.log(subExons);
+
 
         let sub = subExons.length;
 

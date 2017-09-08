@@ -51,7 +51,7 @@ class Layout extends React.Component<any, object> {
           >
             {selectedRefTissueSite}
           </Button>
-          {selectedRankedTissueSite.map((tissueSiteId: string, i: number) =>
+          {selectedRankedTissueSite.map((tissueSiteId: string, i: number) => (
             <Button
               className={"panelGeneButton"}
               key={i.toString()}
@@ -61,7 +61,7 @@ class Layout extends React.Component<any, object> {
             >
               {tissueSiteId}
             </Button>
-          )}
+          ))}
         </ButtonGroup>
       </Panel>
     );
@@ -81,7 +81,7 @@ class Layout extends React.Component<any, object> {
             </Col>
           </Panel>
         </Row>
-        {isNonEmptyArray(selectedGene) &&
+        {isNonEmptyArray(selectedGene) && (
           <Row id="gene-panel">
             <Panel>
               <Col md={9} xs={9}>
@@ -91,7 +91,8 @@ class Layout extends React.Component<any, object> {
                 <PanelHistoryListingContainer />
               </Col>
             </Panel>
-          </Row>}
+          </Row>
+        )}
         {isNonEmptyArray(selectedRankedTissueSite) &&
           selectedRankedTissueSiteGroup}
         <Tabs
@@ -110,12 +111,13 @@ class Layout extends React.Component<any, object> {
               </Col>
             </Row>
           </Tab>
-          <Tab eventKey={VIEW_TYPE.MULTI_EXONBOXPLOT} title="multi_exonboxplot">
+          <Tab eventKey={VIEW_TYPE.MULTI_EXONBOXPLOT} title="multi-tissue">
             <Row id="exonboxplot">
               <Col md={12}>
                 {isNonEmptyArray(selectedRankedTissueSite) &&
-                  viewType === VIEW_TYPE.MULTI_EXONBOXPLOT &&
-                  <ExonPlotMultiContainer />}
+                viewType === VIEW_TYPE.MULTI_EXONBOXPLOT && (
+                  <ExonPlotMultiContainer />
+                )}
               </Col>
             </Row>
           </Tab>
