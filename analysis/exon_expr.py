@@ -9,12 +9,13 @@ import os
 
 #  mg = mygene.MyGeneInfo()
 
-WD="/hpf/projects/brudno/wangpeiq/sickkids_summer/"
-# WD="../"
+# WD = "/hpf/projects/brudno/wangpeiq/sickkids_summer/"
+WD = "../"
 SAMPLE_ANNOTATION = WD + "data/annotation/GTEx_Data_V6_Annotations_SampleAttributesDS.txt"
 EXON_EXPR_DATA = WD + "data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_exon_reads.txt"
 EXON_REF = WD + "data/gencode.v19.genes.patched_contigs_exons.txt"
-PHENOTYPE_ANNOTATION = WD + "data/annotation/GTEx_Data_V6_Annotations_SubjectPhenotypesDS.txt"
+PHENOTYPE_ANNOTATION = WD + \
+    "data/annotation/GTEx_Data_V6_Annotations_SubjectPhenotypesDS.txt"
 
 DEST_STORE = WD + "resources/exon_expr/"
 STORAGE_MAPPING = WD + "resources/exon_expr.mapping"
@@ -33,6 +34,12 @@ exon_ref["Id"] = exon_ref["Gene"]
 del exon_ref["Gene"]
 
 
+# total read counts for calculating rpkm
+mapped_read_counts = []
+with open(RPKM_EXONEXPR_READ_COUNTS, 'r') as inf:
+    mapped_read_counts = json.loads(inf.read())
+
+
 # Get proper exon number based on strand +/-
 # Given id = ENSG00000000003.10_0, exon_num = 0
 # if strand -> + : exon += 1
@@ -45,14 +52,18 @@ def getProperExonNumber(row):
     else:
         raise Exception("invalid strand value (not +/-)")
 
+
 def processOne(exon, line_num):
 
     gid = exon["ensemblGeneId"].iloc[0]
 
-    # exon_count is number of exon per gene; exon indicates proper exon enumeratinon 
+    # exon_count is number of exon per gene; exon indicates proper exon
+    # enumeratinon
     exon = exon.set_index('Id').join(exon_ref.set_index('Id')).reset_index()
-    exon["exon_count"] = exon.groupby("ensemblGeneId")["ensemblGeneId"].transform('count')
+    exon["exon_count"] = exon.groupby("ensemblGeneId")[
+        "ensemblGeneId"].transform('count')
     exon["exon"] = exon.apply(getProperExonNumber, axis=1)
+    exon_lengths = list(abs(exon["start"] - exon["stop"]))
 
     # dataframe transposed
     df_t = exon.transpose()
@@ -68,6 +79,16 @@ def processOne(exon, line_num):
                       "exon",
                       "Id"])
 
+    # convert raw reads to rpkm
+    # rpkm = (10^9 *  read ) / (total_read_count_for_1_sample * exonLength)
+    row_num = 0
+    for (idx, row) in df_t.iterrows():
+        assert(len(row) == len(exon_lengths))
+        for i, l in enumerate(exon_lengths):
+            row.iloc[i] = (1000000000 * row.iloc[i]) / \
+                (mapped_read_counts[row_num] * l)
+        row_num += 1
+
     # Group gene-specific exon expression by tissue type
     # End result a 53 (SMTSD) x ~10 (exon_counts), each cell holds an array
     # merge with sample annotation (specifically SMTSD, tissue type detail)
@@ -82,7 +103,7 @@ def processOne(exon, line_num):
             col].apply(lambda x: list(x)).to_dict()
         all_tissue_expr[col] = cur_tissue_expr
 
-    # separate into 200 bins 
+    # separate into 200 bins
 
     dir_path = os.path.join(DEST_STORE, str(line_num % 200))
     full_path = os.path.join(dir_path, gid)
@@ -94,105 +115,34 @@ def processOne(exon, line_num):
         json.dump(all_tissue_expr, fp)
     with open(STORAGE_MAPPING, "a") as fp:
         fp.write(gid + '\t' + full_path + '\n')
-    
+
     del exon
     del df_t
     del df_m
     del all_tissue_expr
 
 
-
-
-
 # Pre-process data for bar plots
 def subsetBasedOnTissue(data, tissues):
     """ extract expression data for one gene
     given a list of tissues in interest 
-        
+
         @param data: pre-computed data (per gene)
         @param tissues: [tissueType: str]
         @rType:            
             [{tissueType: {indexas(exon_num): [expr...]}}...]
     """
     expr = genedata["exon_expression"]
-    
+
     ret = []
-    
+
     for tissue in tissues:
         cur_tissue_expr = {}
         for exon_num in expr:
             cur_tissue_expr[exon_num] = expr[exon_num][tissue]
-        ret.append({tissue: cur_tissue_expr}) 
+        ret.append({tissue: cur_tissue_expr})
     return ret
 
-def getDataForPlot(subset):
-    # plotdata: [ each tissue:{means:[], exons: []}, ... ]
-    plotdata = []
-
-    for t in subset:
-        tissue_expression = t.values()
-        exons = []
-        means = []
-        stdevs = []
-        for exons_expr in tissue_expression:
-            # k: {indexas(exon_num): [expr...]}
-            for exon_num in exons_expr.keys():
-                exons.append(exon_num)
-                means.append(np.mean(exons_expr[exon_num]))
-                stdevs.append(np.std(exons_expr[exon_num]))
-        plotdata.append({
-            "mean": means,
-            "exon": exons,
-            "stdev": stdevs
-        })
-    return plotdata
-
-def plotBarGraph(plotd):
-    # Plotting barplot y-axis: raw counts, x-axis: exon number for GENE_SYMBOL
-    # given TISSUES
-
-
-    # These are the "Tableau 20" colors as RGB.
-    tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),
-                (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),
-                (148, 103, 189), (197, 176, 213), (140, 86, 75), (196, 156, 148),
-                (227, 119, 194), (247, 182, 210), (127, 127, 127), (199, 199, 199),
-                (188, 189, 34), (219, 219, 141), (23, 190, 207), (158, 218, 229)]
-    # Scale the RGB values to the [0, 1] range, which is the format matplotlib
-    # accepts.
-    for i in range(len(tableau20)):
-        r, g, b = tableau20[i]
-        tableau20[i] = (r / 255., g / 255., b / 255.)
-
-    num_of_exons = len(plotd[0]["mean"])
-
-    fig, ax = plt.subplots()
-    fig.set_size_inches((10, 10))
-
-    width = 0.25
-
-    ticks = []
-    ind = np.empty(num_of_exons)
-
-    for i, tissue in enumerate(plotd):
-        ind = np.arange(len(tissue["mean"]))
-
-        ax.bar(ind + width * i, tissue["mean"], width,
-            color=tableau20[i % 20], yerr=tissue["stdev"])
-        ticks = tissue["exon"]
-
-    ax.set_title("Raw counts for {} given {}".format(
-        GENE_SYMBOL, ",".join(TISSUES)))
-    ax.set_ylabel("RNAseq exon raw counts")
-    ax.set_xlabel("Exon number")
-
-    plt.xticks(ind + width / 2, ticks)
-
-    plt.show()
-
-
-# subs = subsetBasedOnTissue(genedata, TISSUES)
-# plotd = getDataForPlot(subs)
 
 def getNext(reader):
     exon = reader.get_chunk()
@@ -208,13 +158,12 @@ def iterProcess():
     headers = pd.read_table(EXON_EXPR_DATA, nrows=1).columns
     one_gene = pd.DataFrame(columns=headers)
 
-
     prev_ensembl_id = ""
     cur_ensembl_id = ""
 
     line_num = 1
 
-    while True:
+    while line_num < 20:
 
         cur_row = pd.DataFrame()
 
@@ -237,7 +186,8 @@ def iterProcess():
             # releaase memory before starting on the next gene
 
             processOne(one_gene, line_num)
-            print("Successfully processed {} at line {}".format(prev_ensembl_id, line_num))
+            print("Successfully processed {} at line {}".format(
+                prev_ensembl_id, line_num))
 
             del one_gene
             one_gene = pd.DataFrame(columns=headers)
@@ -247,6 +197,6 @@ def iterProcess():
         cur_ensembl_id = None
         line_num += 1
 
+
 if __name__ == "__main__":
     iterProcess()
-

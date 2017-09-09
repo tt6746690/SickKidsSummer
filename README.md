@@ -3,6 +3,7 @@
 
 > A web-based tool for finding similarly expressed (RNA) tissues  
 
+--- 
 
 #### `sickkidsproj` backend
 
@@ -26,7 +27,7 @@
     + `scipy`
     + `numpy`
 + _run_
-    ```sh 
+    ```
     export FLASK_APP=sickkidsproj
     export FLASK_DEBUG=true
     python3 -m flask run
@@ -47,13 +48,11 @@
     + `interface.ts`: some simple typescript interfaces for state 
     + `index.ts`: entry point to application
 + _setup_ 
-    ```sh 
+    ```
     npm install 
     ```
 + _run_ 
-    ```sh
-    tsc -w      // typescript compiler watch mode 
     ```
-    ```sh 
+    tsc -w      // typescript compiler watch mode 
     webpack -w  // for compiling to es6 in watch mode 
     ```
