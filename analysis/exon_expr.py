@@ -9,13 +9,14 @@ import os
 
 #  mg = mygene.MyGeneInfo()
 
-# WD = "/hpf/projects/brudno/wangpeiq/sickkids_summer/"
-WD = "../"
+WD = "/hpf/projects/brudno/wangpeiq/sickkids_summer/"
+#  WD = "../"
 SAMPLE_ANNOTATION = WD + "data/annotation/GTEx_Data_V6_Annotations_SampleAttributesDS.txt"
 EXON_EXPR_DATA = WD + "data/GTEx_Analysis_v6_RNA-seq_RNA-SeQCv1.1.8_exon_reads.txt"
 EXON_REF = WD + "data/gencode.v19.genes.patched_contigs_exons.txt"
 PHENOTYPE_ANNOTATION = WD + \
     "data/annotation/GTEx_Data_V6_Annotations_SubjectPhenotypesDS.txt"
+RPKM_EXONEXPR_READ_COUNTS = WD + "data/read_counts.txt"
 
 DEST_STORE = WD + "resources/exon_expr/"
 STORAGE_MAPPING = WD + "resources/exon_expr.mapping"
@@ -163,7 +164,7 @@ def iterProcess():
 
     line_num = 1
 
-    while line_num < 20:
+    while True:
 
         cur_row = pd.DataFrame()
 
