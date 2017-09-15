@@ -7,6 +7,8 @@ import numpy as np
 import json
 import os
 
+import multiprocessing as mp
+
 #  mg = mygene.MyGeneInfo()
 
 WD = "/hpf/projects/brudno/wangpeiq/sickkids_summer/"
@@ -154,6 +156,7 @@ def getNext(reader):
 
 def iterProcess():
 
+    pool = mp.Pool(16)
     reader = pd.read_table(EXON_EXPR_DATA, chunksize=1)
 
     headers = pd.read_table(EXON_EXPR_DATA, nrows=1).columns
@@ -163,6 +166,7 @@ def iterProcess():
     cur_ensembl_id = ""
 
     line_num = 1
+    work_list = []
 
     while True:
 
@@ -172,7 +176,11 @@ def iterProcess():
             cur_row = getNext(reader)
         except(StopIteration):
             # process the last bit...
-            processOne(one_gene)
+            #  processOne(one_gene)
+
+            work = pool.apply_async(processOne, (one_gene, line_num))
+            work_list.append(work)
+
             print("Successfully processed {} before EOF".format(prev_ensembl_id))
             print("stopping iteration...")
             break
@@ -186,7 +194,10 @@ def iterProcess():
             # do processing on exon expression for one gene
             # releaase memory before starting on the next gene
 
-            processOne(one_gene, line_num)
+            #  processOne(one_gene, line_num)
+            work = pool.apply_async(processOne, (one_gene, line_num))
+            work_list.append(work)
+
             print("Successfully processed {} at line {}".format(
                 prev_ensembl_id, line_num))
 
@@ -197,6 +208,12 @@ def iterProcess():
         prev_ensembl_id = cur_ensembl_id
         cur_ensembl_id = None
         line_num += 1
+
+    try:
+        for result in work_list:
+            result.get()
+    except TimeoutError: 
+        print("timeout for a single task")
 
 
 if __name__ == "__main__":
