@@ -51,7 +51,7 @@ class SearchBar extends React.Component<any, object> {
         selected={selectedOptions}
         onChange={onSearchBarChange}
         renderMenuItemChildren={this._renderMenuItemChildren}
-        placeholder="Pick a gene or gene panel..."
+        placeholder="Pick a gene or gene panel."
       />
     );
   }

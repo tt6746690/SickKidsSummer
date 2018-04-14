@@ -4,10 +4,10 @@ CPPFLAGS = -std=c++1z -stdlib=libc++ -Wall -I.
 CPP_FILES = $(wildcard ./*.cpp)
 EXECUTABLES = $(CPP_FILES:.cpp=)
 
-HEADERS = to_rpkm.h
-OBJS = to_rpkm.o
+HEADERS = counts.h
+OBJS = counts.o
 
-all: to_rpkm
+all: counts
 
 counts: $(OBJS) 
 	$(COMPILER) $(CPPFLAGS) -o $@ $^
@@ -17,4 +17,4 @@ counts: $(OBJS)
 
 clean:
 	rm ./*.o
-	rm to_rpkm
+	rm counts
